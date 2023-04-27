@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
-from engine.button import Button
-from engine.constants import *
+from app.engine.button import Button
+from app.engine.constants import *
 
 class MainMenu:
     def __init__(self, game):
@@ -17,7 +17,6 @@ class MainMenu:
         pygame.mixer.music.load('assets/music/deku.mp3')
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.5)
-        pygame.mixer.music.fadeout(1000)
 
 
     def draw(self):

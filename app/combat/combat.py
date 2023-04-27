@@ -1,10 +1,10 @@
 import pygame, random
 from pygame.locals import *
-from engine.button import Button
-from engine.constants import *
-from combat.card import Card
-from menus.victory_screen import VictoryScreen
-from menus.main_menu import MainMenu
+from app.engine.button import Button
+from app.engine.constants import *
+from app.combat.card import Card
+from app.menus.victory_screen import VictoryScreen
+from app.menus.main_menu import MainMenu
 
 class Combat:
     def __init__(self, game, player, enemy):

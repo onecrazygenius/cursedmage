@@ -1,10 +1,10 @@
 import pygame
 from pygame.locals import *
-from engine.button import Button
-from engine.constants import *
-from menus.components.room import Room
-from characters.enemy import generate_enemy
-from combat.combat import Combat
+from app.engine.button import Button
+from app.engine.constants import *
+from app.menus.components.room import Room
+from app.characters.enemy import generate_enemy
+from app.combat.combat import Combat
 
 class Dungeon:
     def __init__(self, game, game_data=None):

@@ -1,11 +1,11 @@
 import pygame, pickle
 from pygame.locals import *
-from engine.constants import *
-from menus.main_menu import MainMenu
-from menus.character_selection import CharacterSelection
-from menus.dungeon import Dungeon
-from menus.settings_menu import SettingsMenu
-from menus.victory_screen import VictoryScreen
+from app.engine.constants import *
+from app.menus.main_menu import MainMenu
+from app.menus.character_selection import CharacterSelection
+from app.menus.dungeon import Dungeon
+from app.menus.settings_menu import SettingsMenu
+from app.menus.victory_screen import VictoryScreen
 
 
 class Game:

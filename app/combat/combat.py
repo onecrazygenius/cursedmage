@@ -15,11 +15,7 @@ class Combat:
         self.enemy_health = self.enemy.max_health
         self.player_shield = 0
         self.enemy_shield = 0
-        self.player_hand = [
-            Card("Attack 1", 5, 0, "enemy"),
-            Card("Attack 2", 10, 0, "enemy"),
-            Card("Shield", 0, 5, "player")
-        ]
+        self.player_hand = self.player.hand
         self.player_turn = True
 
     def apply_damage(self, damage, target):

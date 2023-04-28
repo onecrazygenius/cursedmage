@@ -91,7 +91,6 @@ class Game:
         self.states.append(SettingsMenu(self))
         self.settings_menu_open = True
 
-
     def hide_settings(self):
         self.states.pop()
         self.settings_menu_open = False

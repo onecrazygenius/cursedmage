@@ -47,7 +47,6 @@ class Combat:
             # update next room to be available
             x, y = self.game.dungeon.player_position
             self.game.dungeon.rooms[x][y].next = True
-            print("Player position: ", self.game.dungeon.player_position)
             self.game.save_game()
 
             # check if the player has completed the dungeon

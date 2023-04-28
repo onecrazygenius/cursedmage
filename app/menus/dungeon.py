@@ -55,11 +55,6 @@ class Dungeon:
         room = self.rooms[position[0]][position[1]]
         room.visited = True
 
-        print("Room details:")
-        print("Position: {}".format(room.position))
-        print("Visited: {}".format(room.visited))
-        print("Enemy: {}".format(room.enemy))
-
         if room.enemy:
             self.game.save_game()
             self.game.combat = Combat(self.game, self.game.character, room.enemy)

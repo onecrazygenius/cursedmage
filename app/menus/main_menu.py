@@ -8,9 +8,9 @@ class MainMenu:
         self.game = game
         self.buttons = [
             Button("New Game", SCREEN_WIDTH // 2, 200, self.game.new_game),
-            Button("Load Game", SCREEN_WIDTH // 2, 250, self.game.load_game),
-            Button("Settings", SCREEN_WIDTH // 2, 300, self.game.show_settings),
-            Button("Quit", SCREEN_WIDTH // 2, 400, self.game.quit_game)
+            Button("Load Game", SCREEN_WIDTH // 2, 300, self.game.load_game),
+            Button("Settings", SCREEN_WIDTH // 2, 400, self.game.show_settings),
+            Button("Quit", SCREEN_WIDTH // 2, 500, self.game.quit_game)
         ]
         
         # Music

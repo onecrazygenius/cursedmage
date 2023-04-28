@@ -4,4 +4,4 @@ __pycache__
 /dist/assets
 */*.pkl
 */.env
-/venv
+venv/*

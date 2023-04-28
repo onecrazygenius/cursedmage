@@ -1,7 +1,0 @@
-README.md
-setup.py
-CursedMage.egg-info/PKG-INFO
-CursedMage.egg-info/SOURCES.txt
-CursedMage.egg-info/dependency_links.txt
-CursedMage.egg-info/requires.txt
-CursedMage.egg-info/top_level.txt

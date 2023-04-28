@@ -5,3 +5,5 @@ venv
 /dist/assets
 */*.pkl
 */.env
+*.egg-info
+

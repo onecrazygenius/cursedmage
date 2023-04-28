@@ -1,6 +1,7 @@
-import pygame, pickle, os
+import pygame, os
 from pygame.locals import *
 from app.engine.constants import *
+from app.engine.save_manager import SaveManager
 from app.menus.main_menu import MainMenu
 from app.menus.character_selection import CharacterSelection
 from app.menus.dungeon import Dungeon
@@ -27,6 +28,7 @@ class Game:
 
         # Initialize game variables
         self.done = False
+        self.save_manager = SaveManager()
 
         self.character = None
         self.difficulty = None
@@ -62,28 +64,24 @@ class Game:
             self.pop_state()
         self.push_state(state)
 
-    def new_game(self):
-        self.change_state(CharacterSelection(self))
-
     def save_game(self):
-        with open("savegame.pkl", "wb") as savefile:
-            game_data = {
-                "character": self.character,
-                "difficulty": self.difficulty,
-                "dungeon": self.dungeon.get_data(),
-            }
-            pickle.dump(game_data, savefile)
+        game_data = {
+            "character": self.character,
+            "difficulty": self.difficulty,
+            "dungeon": self.dungeon.get_data(),
+        }
+        self.save_manager.save(game_data)
 
     def load_game(self):
-        try:
-            with open("savegame.pkl", "rb") as savefile:
-                game_data = pickle.load(savefile)
-                self.character = game_data["character"]
-                self.difficulty = game_data["difficulty"]
-                self.dungeon = Dungeon(self, game_data=game_data["dungeon"])
-                self.change_state(self.dungeon)
-        except FileNotFoundError:
-            print("No save file found.")
+        data = self.save_manager.load()
+        self.character = data["character"]
+        self.difficulty = data["difficulty"]
+        self.dungeon = Dungeon(self, game_data=data["dungeon"])
+        self.change_state(self.dungeon)
+
+
+    def new_game(self):
+        self.change_state(CharacterSelection(self))
 
     def show_main_menu(self):
         self.change_state(MainMenu(self))

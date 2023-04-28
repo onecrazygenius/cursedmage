@@ -1,4 +1,4 @@
-import pygame, pickle
+import pygame, pickle, os
 from pygame.locals import *
 from app.engine.constants import *
 from app.menus.main_menu import MainMenu
@@ -18,8 +18,9 @@ class Game:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
 
-        # Set the window title and icon
-        icon = pygame.image.load("assets/images/team_logo.png")
+        path = os.path.dirname(os.path.abspath(__file__))
+        # Set the window title and icon in assets/images
+        icon = pygame.image.load(os.path.join(path, "assets/images/team_logo.png"))
         
         pygame.display.set_caption("Cursed Mage")
         pygame.display.set_icon(icon)

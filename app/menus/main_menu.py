@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from pygame.locals import *
 from app.engine.button import Button
 from app.engine.constants import *
@@ -14,7 +14,8 @@ class MainMenu:
         ]
         
         # Music
-        pygame.mixer.music.load('assets/music/deku.mp3')
+        path = os.path.dirname(os.path.abspath(__file__))
+        pygame.mixer.music.load(os.path.join(path, "../assets/music/deku.mp3"))
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.5)
 

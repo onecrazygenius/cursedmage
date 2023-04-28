@@ -79,6 +79,11 @@ class Game:
         self.dungeon = Dungeon(self, game_data=data["dungeon"])
         self.change_state(self.dungeon)
 
+    def change_master_volume(self, volume):
+        pygame.mixer.music.set_volume(volume)
+
+    def change_sfx_volume(self, volume):
+        pass
 
     def new_game(self):
         self.change_state(CharacterSelection(self))

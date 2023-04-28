@@ -1,6 +1,6 @@
 import pygame
 from pygame.locals import *
-from app.engine.button import Button
+from app.engine.components.button import Button
 from app.engine.constants import *
 from app.characters.character import Character
 from app.menus.dungeon import Dungeon

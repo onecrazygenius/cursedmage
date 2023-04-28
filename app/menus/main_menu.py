@@ -1,6 +1,6 @@
 import pygame, os
 from pygame.locals import *
-from app.engine.button import Button
+from app.engine.components.button import Button
 from app.engine.constants import *
 
 class MainMenu:

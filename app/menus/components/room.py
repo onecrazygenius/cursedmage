@@ -27,13 +27,10 @@ class Room:
         screen.blit(room_surface, rect)
 
     def handle_click(self, event):
-        if self.visited:
-            return
-        
         x, y = self.position
         rect = pygame.Rect(x * 100 + 50, y * 100 + 50, 50, 50)
         if event.type == MOUSEBUTTONUP and event.button == 1:
-            if rect.collidepoint(event.pos) and not self.visited:
+            if rect.collidepoint(event.pos) and not self.completed:
                 print(f"Clicked on room at position {self.position}")
                 # Check if the room is the next available room starting with 0,0
                 if self.position == self.game.dungeon.player_position:

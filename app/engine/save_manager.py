@@ -20,6 +20,8 @@ class SaveManager:
 
     def load(self):
         # Load the game state from a file
+        if not os.path.exists(self.save_file):
+            return None
         with open(self.save_file, "rb") as f:
             data = pickle.load(f)
         return data

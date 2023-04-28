@@ -74,6 +74,8 @@ class Game:
 
     def load_game(self):
         data = self.save_manager.load()
+        if not data:
+            return
         self.character = data["character"]
         self.difficulty = data["difficulty"]
         self.dungeon = Dungeon(self, game_data=data["dungeon"])

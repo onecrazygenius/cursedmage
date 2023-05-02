@@ -1,8 +1,8 @@
-import pygame
-from pygame.locals import *
 from app.engine.components.button import Button
 from app.engine.components.slider import Slider
 from app.engine.constants import *
+from pygame.locals import *
+import pygame
 
 
 class SettingsMenu:
@@ -15,8 +15,8 @@ class SettingsMenu:
             Button("Exit", SCREEN_WIDTH // 2, SCREEN_HEIGHT-100 , self.exit_game)
         ]
         self.sliders = [
-            Slider(200, 250, 200, 100, 100, self.game.change_master_volume),
-            Slider((SCREEN_WIDTH // 2) + 100, 250, 200, 100, 100, self.game.change_sfx_volume)
+            Slider(200, 250, 200, self.game.get_master_volume(), 100, self.game.change_master_volume),
+            Slider((SCREEN_WIDTH // 2) + 100, 250, 200, self.game.get_sfx_volume(), 100, self.game.change_sfx_volume)
         ]
         self.slider_labels = [
             ("Master Volume", (160, 220)),

@@ -3,6 +3,7 @@ from pygame.locals import *
 from app.engine.components.button import Button
 from app.engine.constants import *
 from app.combat.card import Card
+from app.combat.cursedCard import CursedCard
 from app.menus.victory_screen import VictoryScreen
 from app.menus.main_menu import MainMenu
 
@@ -86,13 +87,14 @@ class Combat:
                     # Check if the enemy is dead
                     if self.enemy_health >= 0:
                         pygame.time.wait(1000)  # Delay to simulate enemy's turn
-                        self.enemy_turn()
+                        self.enemy_turn(card)
                     self.check_win_condition()
 
-    def enemy_turn(self):
+    def enemy_turn(self, card):
         # Simulate enemy's turn
-        damage = random.randint(5, 10)
-        self.apply_damage(damage, "player")
+        if isinstance(card, CursedCard) == False:
+            damage = random.randint(5, 10)
+            self.apply_damage(damage, "player")
         self.player_turn = True
 
     def draw(self):
@@ -107,4 +109,19 @@ class Combat:
             text_rect = text_surface.get_rect(center=(card_x + CARD_WIDTH // 2, card_y + CARD_HEIGHT // 2))
             self.game.screen.blit(text_surface, text_rect)
 
+        pygame.display.flip()
+
+    def popup(self, text):
+        popup_width = 300
+        popup_height = 100
+        popup_x = SCREEN_WIDTH // 2 - popup_width // 2
+        popup_y = SCREEN_HEIGHT // 2 - popup_height // 2
+        popup_rect = pygame.Rect(popup_x, popup_y, popup_width, popup_height)
+        pygame.draw.rect(self.game.screen, (255, 255, 255), popup_rect)
+        font = pygame.font.Font('app\\assets\\fonts\\cursedFont.tff', 24)
+        text_surface = font.render(text, True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(popup_x + popup_width // 2, popup_y + popup_height // 2))
+        self.game.screen.blit(text_surface, text_rect)
+        pygame.display.flip()
+        pygame.time.wait(1000)
         pygame.display.flip()

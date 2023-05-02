@@ -1,4 +1,5 @@
 from app.combat.card import Card
+from app.combat.cursedCard import CursedCard
 
 class Character:
     def __init__(self, name, max_health, attack, defense, shield=0):
@@ -13,8 +14,8 @@ class Character:
             Card("Attack 1", 5, 0, "enemy"),
             Card("Attack 2", 10, 0, "enemy"),
             Card("Shield", 0, 5, "player"),
+            CursedCard(),
         ]
 
     def is_dead(self):
         return self.current_health <= 0
-    

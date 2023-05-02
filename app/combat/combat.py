@@ -4,6 +4,7 @@ from app.engine.components.button import Button
 from app.engine.constants import *
 from app.combat.card import Card
 from app.combat.cursedCard import CursedCard
+from app.menus.card_pickup import CardPickupScreen
 from app.menus.victory_screen import VictoryScreen
 from app.menus.main_menu import MainMenu
 
@@ -40,6 +41,9 @@ class Combat:
 
     def check_win_condition(self):
         if self.enemy_health <= 0:
+            #display the victory and card pickup screen
+            self.game.push_state(CardPickupScreen(self.game, self.player))
+            self.game.pop_state()
             # update room to be completed
             x, y = self.game.dungeon.player_position
             self.game.dungeon.rooms[x][y].completed = True
@@ -57,7 +61,7 @@ class Combat:
             self.game.pop_state()
         elif self.player_health <= 0:
             # return to main menu
-            print("You died!")
+            self.popup("You died!")
             self.game.change_state(MainMenu(self.game))
 
     def play_card(self, card_index):
@@ -85,8 +89,9 @@ class Combat:
                     self.play_card(i)
                     self.player_turn = False
                     # Check if the enemy is dead
-                    if self.enemy_health >= 0:
-                        pygame.time.wait(1000)  # Delay to simulate enemy's turn
+                    if self.enemy_health > 0:
+                        self.popup("Enemy's turn!")
+                        # Delay to simulate enemy's turn in the popup window
                         self.enemy_turn(card)
                     self.check_win_condition()
 
@@ -104,7 +109,7 @@ class Combat:
             card_x = CARD_START_X + (CARD_WIDTH + CARD_GAP) * i
             card_y = CARD_START_Y
             pygame.draw.rect(self.game.screen, (255, 255, 255), pygame.Rect(card_x, card_y, CARD_WIDTH, CARD_HEIGHT))
-            font = pygame.font.Font(None, 24)
+            font = pygame.font.Font('app\\assets\\fonts\\cursedFont.tff', 24)
             text_surface = font.render(card.name, True, (0, 0, 0))
             text_rect = text_surface.get_rect(center=(card_x + CARD_WIDTH // 2, card_y + CARD_HEIGHT // 2))
             self.game.screen.blit(text_surface, text_rect)

@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from pygame.locals import *
 from app.engine.components.button import Button
 from app.engine.constants import *
@@ -19,7 +19,11 @@ class VictoryScreen:
 
     def draw(self):
         self.game.screen.fill((0, 255, 0))  # Green background for victory screen
-        font = pygame.font.Font(None, 36)
+
+
+        path = os.path.dirname(os.path.abspath(__file__))
+
+        font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursedFont.tff'), 24)
         text_surface = font.render("Victory!", True, (255, 255, 255))  # White text
         text_rect = text_surface.get_rect(center=(self.game.config.get_width() // 2, 200))
         self.game.screen.blit(text_surface, text_rect)

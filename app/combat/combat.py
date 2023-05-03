@@ -42,8 +42,7 @@ class Combat:
     def check_win_condition(self):
         if self.enemy_health <= 0:
             #display the victory and card pickup screen
-            self.game.push_state(CardPickupScreen(self.game, self.player))
-            self.game.pop_state()
+            self.game.push_state(CardPickupScreen(self.game, self.player))            
             # update room to be completed
             x, y = self.game.dungeon.player_position
             self.game.dungeon.rooms[x][y].completed = True

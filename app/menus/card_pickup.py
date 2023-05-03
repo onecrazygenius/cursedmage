@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from pygame.locals import *
 from app.combat.card import Card
 from app.engine.components.button import Button
@@ -8,13 +8,13 @@ class CardPickupScreen:
     def __init__(self, game, player):
         self.game = game
         self.player = player
-        self.font = pygame.font.Font('app\\assets\\fonts\\cursedFont.tff', 24)
+        path = os.path.dirname(os.path.abspath(__file__))
+        self.font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursedFont.tff'), 24)
         self.cards = [
             Card("Enemy's Card 1", 5, 0, "enemy"),
             Card("Enemy's Card 2", 50, 0, "enemy"),
         ]
-        self.button = Button("Back to Main Menu", SCREEN_WIDTH // 2, 300, self.back_to_main_menu)
-        self.draw()
+        self.button = Button("Back to Main Menu", self.game.config.get_width() // 2, 300, self.back_to_main_menu)
 
     def back_to_main_menu(self):
         self.game.show_main_menu()
@@ -25,12 +25,13 @@ class CardPickupScreen:
                 self.button.handle_click(event)
 
     def draw(self):
+        print(self.game.states)
         # Green background for victory screen
         self.game.screen.fill((0, 255, 0))  # Black background for card pickup screen
 
         # Draw text
         text_surface = self.font.render("Victory!", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 200))
+        text_rect = text_surface.get_rect(center=(self.game.config.get_width() // 2, 200))
         self.game.screen.blit(text_surface, text_rect)
         self.button.draw(self.game.screen)
         
@@ -45,8 +46,6 @@ class CardPickupScreen:
 
         # Update the display
         pygame.display.flip()
-        # Wait for click event
-        self.wait_for_click()
         
     # Wait for button click
     def wait_for_click(self):

@@ -30,12 +30,18 @@ class SettingsMenu:
             self.game.toggle_fullscreen()
         
         # Change screen size
-        if self.game.screen.get_size() == (self.game.config.get_width(), self.game.config.get_height()):
+        if self.game.screen.get_size() == (800, 600):
+            self.game.resize_screen(1024, 768)
+            self.buttons[0].set_text("Screen Size: 1024x768")
+        elif self.game.screen.get_size() == (1024, 768):
+            self.game.resize_screen(1280, 720)
+            self.buttons[0].set_text("Screen Size: 1280x720")
+        elif self.game.screen.get_size() == (1280, 720):
+            self.game.resize_screen(1920, 1080)
+            self.buttons[0].set_text("Screen Size: 1920x1080")
+        elif self.game.screen.get_size() == (1920, 1080):
             self.game.resize_screen(800, 600)
-            self.buttons[0].text = "Screen Size: 800x600"
-        else:
-            self.game.resize_screen(self.game.config.get_width(), self.game.config.get_height())
-            self.buttons[0].text = "Screen Size: 1280x720"
+            self.buttons[0].set_text("Screen Size: 800x600")
 
     def return_to_main_menu(self):
         self.game.show_main_menu()

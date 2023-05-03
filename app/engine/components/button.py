@@ -13,6 +13,9 @@ class Button:
         self.font_size = font_size
         self.rect = pygame.Rect(x - width // 2, y - height // 2, width, height)
 
+    def set_text(self, text):
+        self.text = text
+
     def draw(self, screen):
         pygame.draw.rect(screen, BLACK, self.rect)
         font = pygame.font.Font(None, self.font_size)

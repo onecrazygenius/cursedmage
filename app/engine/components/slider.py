@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 class Slider:
+
     def __init__(self, x, y, width, value, max_value, callback):
         self.x = x
         self.y = y

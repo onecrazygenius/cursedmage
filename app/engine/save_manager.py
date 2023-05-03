@@ -1,5 +1,4 @@
-import pickle
-import os
+import os, pickle
 
 # Create a save manager class to handle saving and loading
 class SaveManager:

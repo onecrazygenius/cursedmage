@@ -1,12 +1,13 @@
-import pygame, os
-from pygame.locals import *
-from app.engine.constants import *
+from app.engine.config_manager import ConfigManager
 from app.engine.save_manager import SaveManager
-from app.menus.main_menu import MainMenu
+from app.engine.constants import *
 from app.menus.character_selection import CharacterSelection
-from app.menus.dungeon import Dungeon
-from app.menus.settings_menu import SettingsMenu
 from app.menus.victory_screen import VictoryScreen
+from app.menus.settings_menu import SettingsMenu
+from app.menus.main_menu import MainMenu
+from app.menus.dungeon import Dungeon
+from pygame.locals import *
+import pygame, os
 
 
 class Game:
@@ -15,8 +16,12 @@ class Game:
         pygame.init()
         pygame.mixer.init()
 
+        # Initialize the config and save managers
+        self.config = ConfigManager()
+        self.save_manager = SaveManager()
+
         # Initialize the screen and clock
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((self.config.get_width(), self.config.get_height()))
         self.clock = pygame.time.Clock()
 
         path = os.path.dirname(os.path.abspath(__file__))
@@ -28,8 +33,6 @@ class Game:
 
         # Initialize game variables
         self.done = False
-        self.save_manager = SaveManager()
-
         self.character = None
         self.difficulty = None
 
@@ -42,14 +45,19 @@ class Game:
 
     def resize_screen(self, width, height):
         self.screen = pygame.display.set_mode((width, height), self.screen.get_flags())
+        # Update the screen size in the config
+        self.config.update("graphics", "width", str(width))
+        self.config.update("graphics", "height", str(height))
 
     def toggle_fullscreen(self):
         if self.screen.get_flags() & pygame.FULLSCREEN:
             # Switch to windowed mode
-            pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.RESIZABLE)
+            self.config.update("graphics", "fullscreen", "False")
         else:
             # Switch to fullscreen mode
-            pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.RESIZABLE)
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.FULLSCREEN | pygame.RESIZABLE)
+            self.config.update("graphics", "fullscreen", "True")
 
 
     def push_state(self, state):
@@ -82,10 +90,24 @@ class Game:
         self.change_state(self.dungeon)
 
     def change_master_volume(self, volume):
+        # Convert the volume to a float between 0 and 1
+        volume = float(volume) / 100
         pygame.mixer.music.set_volume(volume)
+        # Save the volume to the config
+        self.config.update("audio", "master_volume", str(volume))
 
     def change_sfx_volume(self, volume):
+        # Convert the volume to a float between 0 and 1
+        volume = float(volume) / 100
+        # Save the volume to the config
+        self.config.update("audio", "sfx_volume", str(volume))
         pass
+
+    def get_master_volume(self):
+        return int(float(self.config.get("audio", "master_volume")) * 100)
+    
+    def get_sfx_volume(self):
+        return int(float(self.config.get("audio", "sfx_volume")) * 100)
 
     def new_game(self):
         self.change_state(CharacterSelection(self))

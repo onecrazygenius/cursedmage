@@ -52,11 +52,11 @@ class Game:
     def toggle_fullscreen(self):
         if self.screen.get_flags() & pygame.FULLSCREEN:
             # Switch to windowed mode
-            pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.RESIZABLE)
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.RESIZABLE)
             self.config.update("graphics", "fullscreen", "False")
         else:
             # Switch to fullscreen mode
-            pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.RESIZABLE)
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.FULLSCREEN | pygame.RESIZABLE)
             self.config.update("graphics", "fullscreen", "True")
 
 

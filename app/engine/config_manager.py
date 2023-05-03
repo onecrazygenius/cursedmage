@@ -45,3 +45,9 @@ class ConfigManager:
     def update(self, section, option, value):
         self.config.set(section, option, value)
         self.save()
+
+    def get_width(self):
+        return int(self.config.get("graphics", "width"))
+    
+    def get_height(self):
+        return int(self.config.get("graphics", "height"))

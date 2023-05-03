@@ -16,8 +16,12 @@ class Game:
         pygame.init()
         pygame.mixer.init()
 
+        # Initialize the config and save managers
+        self.config = ConfigManager()
+        self.save_manager = SaveManager()
+
         # Initialize the screen and clock
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((self.config.get_width(), self.config.get_height()))
         self.clock = pygame.time.Clock()
 
         path = os.path.dirname(os.path.abspath(__file__))
@@ -29,9 +33,6 @@ class Game:
 
         # Initialize game variables
         self.done = False
-        self.save_manager = SaveManager()
-        self.config = ConfigManager()
-
         self.character = None
         self.difficulty = None
 

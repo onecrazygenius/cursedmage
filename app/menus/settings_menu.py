@@ -8,8 +8,11 @@ import pygame
 class SettingsMenu:
     def __init__(self, game):
         self.game = game
+
+        current_screen_size = self.game.screen.get_size()
+        text = "Screen Size: {}x{}".format(current_screen_size[0], current_screen_size[1])
         self.buttons = [
-            Button("Screen Size: 800x600", 200, 200, self.change_screen_size),
+            Button(text, 200, 200, self.change_screen_size),
             Button("Toggle Fullscreen", (self.game.config.get_width() //2) + 100, 200, self.game.toggle_fullscreen),
             Button("Return to Main Menu", self.game.config.get_width() // 2, self.game.config.get_height() - 200, self.return_to_main_menu),
             Button("Exit", self.game.config.get_width() // 2, self.game.config.get_height()-100 , self.exit_game)

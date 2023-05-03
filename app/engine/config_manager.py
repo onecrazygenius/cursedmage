@@ -51,3 +51,6 @@ class ConfigManager:
     
     def get_height(self):
         return int(self.config.get("graphics", "height"))
+    
+    def get_master_volume(self):
+        return float(self.config.get("audio", "master_volume"))

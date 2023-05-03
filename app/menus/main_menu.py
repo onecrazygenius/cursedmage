@@ -17,7 +17,7 @@ class MainMenu:
         path = os.path.dirname(os.path.abspath(__file__))
         pygame.mixer.music.load(os.path.join(path, "../assets/music/deku.mp3"))
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.set_volume(self.game.config.get_master_volume())
 
 
     def draw(self):

@@ -4,7 +4,7 @@ from app.combat.card import Card
 from app.engine.components.button import Button
 from app.engine.constants import *
 
-class CardPickupScreen:
+class CardPickupScreen():
     def __init__(self, game, player):
         self.game = game
         self.player = player
@@ -16,16 +16,7 @@ class CardPickupScreen:
         ]
         self.button = Button("Back to Main Menu", self.game.config.get_width() // 2, 300, self.back_to_main_menu)
 
-    def back_to_main_menu(self):
-        self.game.show_main_menu()
-
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # Left mouse button
-                self.button.handle_click(event)
-
     def draw(self):
-        print(self.game.states)
         # Green background for victory screen
         self.game.screen.fill((0, 255, 0))  # Black background for card pickup screen
 
@@ -46,13 +37,15 @@ class CardPickupScreen:
 
         # Update the display
         pygame.display.flip()
-        
-    # Wait for button click
-    def wait_for_click(self):
+
+    def back_to_main_menu(self):
+        self.game.show_main_menu()
+
+    def handle_event(self, event):
         buttonClick = False
         while buttonClick == False:
             for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     for i, card in enumerate(self.cards):
                         card_x = CARD_START_X + (CARD_WIDTH + CARD_GAP) * i
                         card_y = CARD_START_Y
@@ -61,10 +54,12 @@ class CardPickupScreen:
                             self.pickup_card(card)
                         elif self.button.rect.collidepoint(event.pos):
                             self.back_to_main_menu()
-                        buttonClick = True    
+                        buttonClick = True  
                 elif event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
 
     def pickup_card(self, card):
         self.player.add_card(card)
+        #Go back to dungeon screen
+        self.game.pop_state()

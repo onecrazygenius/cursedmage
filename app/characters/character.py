@@ -12,7 +12,7 @@ class Character:
         self.level = 1
         self.hand = [
             Card("Attack 1", 5, 0, "enemy"),
-            Card("Attack 2", 50, 0, "enemy"),
+            Card("Attack 2", 10, 0, "enemy"),
             Card("Shield", 0, 5, "player"),
             CursedCard(),
         ]

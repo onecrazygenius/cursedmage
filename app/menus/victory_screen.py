@@ -7,7 +7,6 @@ class VictoryScreen:
     def __init__(self, game):
         self.game = game
         self.button = Button("Back to Main Menu", self.game.config.get_width() // 2, 300, self.back_to_main_menu)
-        self.draw()
 
     def back_to_main_menu(self):
         self.game.show_main_menu()
@@ -18,8 +17,8 @@ class VictoryScreen:
                 self.button.handle_click(event)
 
     def draw(self):
+        print("Victory Screen")
         self.game.screen.fill((0, 255, 0))  # Green background for victory screen
-
 
         path = os.path.dirname(os.path.abspath(__file__))
 
@@ -28,13 +27,4 @@ class VictoryScreen:
         text_rect = text_surface.get_rect(center=(self.game.config.get_width() // 2, 200))
         self.game.screen.blit(text_surface, text_rect)
         self.button.draw(self.game.screen)
-        pygame.display.flip()  
-        # Wait for button click
-        buttonClick = True
-        while buttonClick:
-            for event in pygame.event.get():
-                if event.type == event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                    buttonClick = False
-                elif event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+        pygame.display.flip()

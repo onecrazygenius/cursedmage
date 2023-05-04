@@ -6,6 +6,7 @@ from app.menus.victory_screen import VictoryScreen
 from app.menus.settings_menu import SettingsMenu
 from app.menus.main_menu import MainMenu
 from app.menus.dungeon import Dungeon
+from app.menus.card_pickup import CardPickupScreen
 from pygame.locals import *
 import pygame, os
 
@@ -146,13 +147,11 @@ class Game:
                             self.show_settings()
                 if current_state:
                     current_state.handle_event(event)
-
             current_state.draw()
         
         # Quit the game
         pygame.mixer.quit()
         pygame.quit()
-
 
 if __name__ == "__main__":
     game = Game()

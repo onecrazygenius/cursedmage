@@ -1,5 +1,5 @@
 from app.combat.card import Card
-from app.combat.cursedCard import CursedCard
+from app.combat.cursed_card import CursedCard
 
 class Character:
     def __init__(self, name, max_health, attack, defense, shield=0):

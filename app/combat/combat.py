@@ -167,6 +167,7 @@ class Combat:
             self.enemy_turn()
             self.player_turn = True
             self.check_win_condition()
+            self.update_health_bars()
             self.popup("Your turn!")
 
     def enemy_turn(self):

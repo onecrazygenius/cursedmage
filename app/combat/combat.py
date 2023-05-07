@@ -166,7 +166,6 @@ class Combat:
 
             # Check if enemy's turn event has been triggered
         elif event.type == ENEMY_TURN_EVENT:
-            print("Enemy's turn!")
             pygame.time.set_timer(ENEMY_TURN_EVENT, 0)  # Stop the timer
             self.enemy_turn()
             self.player_turn = True

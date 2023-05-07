@@ -13,12 +13,12 @@ PLAYER_HEALTH_COLOR = (0, 255, 0)  # Green color for player health bar
 ENEMY_HEALTH_COLOR = (255, 0, 0)  # Red color for enemy health bar
 
 # Sprite Sizings
-SPRITE_WIDTH = 250
-SPRITE_HEIGHT = 250
+SPRITE_WIDTH = 125
+SPRITE_HEIGHT = 125
 
 # Card sizings
-CARD_WIDTH = 200
-CARD_HEIGHT = 200
+CARD_WIDTH = 100
+CARD_HEIGHT = 150
 CARD_START_X = 50
 CARD_START_Y = 500
-CARD_GAP = -100
+CARD_GAP = 10

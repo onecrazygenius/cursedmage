@@ -42,22 +42,15 @@ class CardPickupScreen():
         self.game.show_main_menu()
 
     def handle_event(self, event):
-        buttonClick = False
-        while buttonClick == False:
-            for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    for i, card in enumerate(self.cards):
-                        card_x = CARD_START_X + (CARD_WIDTH + CARD_GAP) * i
-                        card_y = CARD_START_Y
-                        card_rect = pygame.Rect(card_x, card_y, CARD_WIDTH, CARD_HEIGHT)
-                        if card_rect.collidepoint(event.pos):
-                            self.pickup_card(card)
-                        elif self.button.rect.collidepoint(event.pos):
-                            self.back_to_main_menu()
-                        buttonClick = True  
-                elif event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            for i, card in enumerate(self.cards):
+                card_x = CARD_START_X + (CARD_WIDTH + CARD_GAP) * i
+                card_y = CARD_START_Y
+                card_rect = pygame.Rect(card_x, card_y, CARD_WIDTH, CARD_HEIGHT)
+                if card_rect.collidepoint(event.pos):
+                    self.pickup_card(card)
+                elif self.button.rect.collidepoint(event.pos):
+                    self.back_to_main_menu()
 
     def pickup_card(self, card):
         self.player.add_card(card)

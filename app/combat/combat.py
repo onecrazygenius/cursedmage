@@ -90,12 +90,14 @@ class Combat:
         pygame.draw.rect(self.game.screen, ENEMY_HEALTH_COLOR, (self.game.config.get_width() - 50 - enemy_bar_width, 50, enemy_bar_width, HEALTH_BAR_HEIGHT))
 
     def handle_event(self, event):
-        # check if the player is dragging a card
+        # check if the player turn
         if self.player_turn:
             card_played = False
             # check if the player clicked the mouse button
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 for i, card in enumerate(self.player_hand):
+                    if isinstance(card, CursedCard):
+                        continue
                     card_x = CARD_START_X + (CARD_WIDTH + CARD_GAP) * i
                     card_y = CARD_START_Y
                     card_rect = pygame.Rect(card_x, card_y, CARD_WIDTH, CARD_HEIGHT)

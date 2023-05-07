@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, os
 from pygame.locals import *
 from app.engine.components.button import Button
 from app.engine.components.popup import Popup
@@ -120,12 +120,13 @@ class Combat:
                     card_x, card_y = card.position
 
                     # create two rectangles to represent the left and right areas of the screen
-                    left_area = pygame.Rect(0, 0, self.game.config.get_width() // 2, self.game.config.get_height())
                     right_area = pygame.Rect(self.game.config.get_width() // 2, 0, self.game.config.get_width() // 2, self.game.config.get_height())
+                    # get the player sprite's rectangle
+                    player_sprite = pygame.Rect((self.game.config.get_width() / 4), (self.game.config.get_height()/3), SPRITE_WIDTH, SPRITE_HEIGHT)
 
                     # check if the card was dropped in the left or right area
                     try: 
-                        if left_area.collidepoint(event.pos):
+                        if player_sprite.collidepoint(event.pos):
                             if not self.play_card(self.dragging_card, "player"):
                                 # raise an exception if the card couldn't be played
                                 raise Exception("Invalid target!")
@@ -181,6 +182,12 @@ class Combat:
     def draw(self):
         # draw health bars
         self.update_health_bars()
+
+        # draw the player sprite
+        path = os.path.dirname(os.path.abspath(__file__))
+        player_sprite = pygame.image.load(os.path.join(path + '/../assets/sprites/' + self.player.sprite + '.png'))
+        player_sprite = pygame.transform.scale(player_sprite, (SPRITE_WIDTH, SPRITE_HEIGHT))
+        self.game.screen.blit(player_sprite, ((self.game.config.get_width() / 4), (self.game.config.get_height()/3)))
 
         # for each card in the player's hand, draw the card
         for i, card in enumerate(self.player_hand):

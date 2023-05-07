@@ -133,6 +133,9 @@ class Combat:
                             if not self.play_card(self.dragging_card, "enemy"):
                                 # raise an exception if the card couldn't be played
                                 raise Exception("Invalid target!")
+                        else:
+                            # raise an exception if the card couldn't be played
+                            raise Exception("Invalid target!")
                             
                         # if the card was played, it's no longer in the player's hand
                         card_played = True

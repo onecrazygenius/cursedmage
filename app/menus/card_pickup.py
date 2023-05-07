@@ -9,7 +9,7 @@ class CardPickupScreen():
         self.game = game
         self.player = player
         path = os.path.dirname(os.path.abspath(__file__))
-        self.font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursedFont.tff'), 24)
+        self.font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursed_font.tff'), 24)
         self.cards = [
             Card("Enemy's Card 1", 5, 0, "enemy"),
             Card("Enemy's Card 2", 50, 0, "enemy"),

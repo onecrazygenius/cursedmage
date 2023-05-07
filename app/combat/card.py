@@ -24,6 +24,6 @@ class Card:
         
         pygame.draw.rect(screen, (255, 255, 255), (position[0], position[1], 100, 150))
         path = os.path.dirname(os.path.abspath(__file__))
-        font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursedFont.tff'), 20)
+        font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursed_font.tff'), 20)
         text = font.render(self.name, True, (0, 0, 0))
         screen.blit(text, (position[0] + 10, position[1] + 10))

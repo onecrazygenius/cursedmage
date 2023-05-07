@@ -1,11 +1,13 @@
 import pygame, os
+from app.engine.constants import *
 
 class Card:
-    def __init__(self, name, damage, shield, target):
+    def __init__(self, name, damage, shield, target, sprite="cards/back"):
         self.name = name
         self.damage = damage
         self.shield = shield
         self.target = target
+        self.sprite = sprite
         self.position = (0, 0)
 
     def play(self, combat):
@@ -21,9 +23,13 @@ class Card:
             position = self.position
 
         self.position = position
-        
-        pygame.draw.rect(screen, (255, 255, 255), (position[0], position[1], 100, 150))
+
+        # draw card with sprite
         path = os.path.dirname(os.path.abspath(__file__))
+        card_sprite = pygame.image.load(os.path.join(path + '/../assets/sprites/' + self.sprite + '.png'))
+        card_sprite = pygame.transform.scale(card_sprite, (CARD_WIDTH, CARD_HEIGHT))
+        screen.blit(card_sprite, position)
+        
         font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursed_font.tff'), 20)
         text = font.render(self.name, True, (0, 0, 0))
         screen.blit(text, (position[0] + 10, position[1] + 10))

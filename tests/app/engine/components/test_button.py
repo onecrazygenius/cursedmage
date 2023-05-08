@@ -28,8 +28,7 @@ class TestButton(unittest.TestCase):
 
     @patch("app.engine.components.button.pygame.draw.rect")
     @patch("app.engine.components.button.pygame.font.Font")
-    @patch("app.engine.components.button.pygame.Surface")
-    def test_draw(self, surface_mock, font_mock, rect_mock):
+    def test_draw(self, font_mock, rect_mock):
         screen_mock = MagicMock()
         font_instance_mock = font_mock.return_value
         text_surface_mock = font_instance_mock.render.return_value
@@ -40,9 +39,6 @@ class TestButton(unittest.TestCase):
         font_mock.assert_called_once_with(None, self.font_size)
         font_instance_mock.render.assert_called_once_with(self.text, True, (255, 255, 255))
         text_surface_mock.get_rect.assert_called_once()
-
-    # It's very difficult to test the button being clicked as an independent unit test without PyGame.
-    # A more effective test can be implemented using PyGame.
 
 
 if __name__ == "__main__":

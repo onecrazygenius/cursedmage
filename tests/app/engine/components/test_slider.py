@@ -8,7 +8,6 @@ from app.engine.components.slider import Slider
 class TestSlider(unittest.TestCase):
 
     def setUp(self):
-        pygame.init()
         self.callback = MagicMock()
         self.slider = Slider(10, 20, 100, 50, 200, self.callback)
 

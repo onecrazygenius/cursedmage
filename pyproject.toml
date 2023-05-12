@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "python"
+version = "0.1.0"
+description = ""
+authors = ["Ensor, Charlie George (Capgemini) <charlie.ensor@capgemini.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "**/*" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pygame = "^2.4.0"
+pytest = "^7.3.1"
+pytest-repeat = "^0.9.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

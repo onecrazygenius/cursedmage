@@ -10,3 +10,4 @@ venv
 */.env
 *.egg-info
 
+poetry.lock

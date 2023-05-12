@@ -13,8 +13,7 @@ class Card:
             combat.apply_damage(self.damage, "enemy")
         elif self.target == "player":
             combat.apply_damage(self.damage, "player")
-        elif self.target == "self":
-            combat.apply_shield(self.shield)
+        combat.apply_shield(self.shield)
 
     def draw(self, screen, position=None):
         if position is None:

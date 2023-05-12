@@ -2,12 +2,12 @@ import pygame, random
 from pygame.locals import *
 from app.engine.components.button import Button
 from app.engine.components.popup import Popup
-from app.engine.constants import *
+from app.constants import *
 from app.combat.deck.card import Card
-from app.combat.cursed_card import CursedCard
-from app.menus.card_pickup import CardPickupScreen
+from app.combat.deck.cursed_card import CursedCard
+from app.states.card_pickup import CardPickupScreen
 from app.menus.victory_screen import VictoryScreen
-from app.menus.main_menu import MainMenu
+from app.states.main_menu import MainMenu
 
 # Timers
 ENEMY_TURN_EVENT = pygame.USEREVENT + 1

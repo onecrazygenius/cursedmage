@@ -3,8 +3,8 @@ from unittest.mock import MagicMock, patch
 
 from pygame import KEYDOWN
 
-from app.engine.constants import DUNGEON_SIZE_X, DUNGEON_SIZE_Y
-from app.menus.dungeon import Dungeon
+from app.constants import DUNGEON_SIZE_X, DUNGEON_SIZE_Y
+from app.states.dungeon import Dungeon
 
 
 class TestDungeon(unittest.TestCase):

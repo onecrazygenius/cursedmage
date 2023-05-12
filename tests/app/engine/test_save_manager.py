@@ -3,7 +3,7 @@ import unittest
 import tempfile
 import shutil
 import pickle
-from app.engine.save_manager import SaveManager
+from app.logic.save_manager import SaveManager
 
 
 class TestSaveManager(unittest.TestCase):

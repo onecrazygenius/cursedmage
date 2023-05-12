@@ -3,12 +3,12 @@ from unittest.mock import MagicMock, patch
 
 from pygame import FULLSCREEN, RESIZABLE
 
-from app.engine.constants import SCREEN_WIDTH, SCREEN_HEIGHT
-from app.engine.save_manager import SaveManager
+from app.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from app.logic.save_manager import SaveManager
 from app.main import Game
-from app.menus.character_selection import CharacterSelection
-from app.menus.main_menu import MainMenu
-from app.menus.settings_menu import SettingsMenu
+from app.states.character_selection import CharacterSelection
+from app.states.main_menu import MainMenu
+from app.states.settings_menu import SettingsMenu
 from app.menus.victory_screen import VictoryScreen
 
 

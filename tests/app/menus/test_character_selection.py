@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 import pygame
 from pygame import MOUSEBUTTONUP, MOUSEBUTTONDOWN
 
-from app.menus.character_selection import CharacterSelection
+from app.states.character_selection import CharacterSelection
 
 
 class TestCharacterSelection(unittest.TestCase):

@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 from pygame import MOUSEBUTTONDOWN, MOUSEBUTTONUP
 
-from app.menus.main_menu import MainMenu
+from app.states.main_menu import MainMenu
 
 
 # Most of this class isn't testable through unit tests

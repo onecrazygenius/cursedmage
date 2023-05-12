@@ -1,9 +1,9 @@
 import pygame
 from pygame.locals import *
 from app.engine.components.button import Button
-from app.engine.constants import *
+from app.constants import *
 from app.characters.character import Character
-from app.menus.dungeon import Dungeon
+from app.states.dungeon import Dungeon
 
 class CharacterSelection:
     def __init__(self, game):

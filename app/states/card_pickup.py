@@ -2,7 +2,7 @@ import pygame, os
 from pygame.locals import *
 from app.combat.deck.card import Card
 from app.engine.components.button import Button
-from app.engine.constants import *
+from app.constants import *
 
 class CardPickupScreen():
     def __init__(self, game, player):

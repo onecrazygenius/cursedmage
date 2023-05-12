@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 from pygame import MOUSEBUTTONDOWN
 
 from app.engine.components.button import Button
-from app.engine.constants import SCREEN_WIDTH
+from app.constants import SCREEN_WIDTH
 from app.menus.victory_screen import VictoryScreen
 
 

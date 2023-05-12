@@ -13,6 +13,7 @@ class Card:
                  description="", 
                  target="enemy", 
                  image="", 
+                 cursed=False,
                  position=(0,0)
             ):
         self.name = name
@@ -22,6 +23,7 @@ class Card:
         self.description = description
         self.target = target
         self.image = image
+        self.cursed = cursed
         self.position = position
 
     def draw(self, screen, position=None):

@@ -4,7 +4,6 @@ from unittest.mock import MagicMock, patch
 from pygame import MOUSEBUTTONDOWN
 
 from app.engine.components.button import Button
-from app.engine.constants import SCREEN_WIDTH
 from app.menus.victory_screen import VictoryScreen
 
 
@@ -16,7 +15,7 @@ class TestVictoryScreen(unittest.TestCase):
     def test_init(self):
         self.assertIsInstance(self.victory_screen.button, Button)
         self.assertEqual(self.victory_screen.button.text, "Back to Main Menu")
-        self.assertEqual(self.victory_screen.button.x, SCREEN_WIDTH // 2)
+        self.assertEqual(self.victory_screen.button.x, self.game.config.get_width() // 2)
         self.assertEqual(self.victory_screen.button.y, 300)
         self.assertEqual(self.victory_screen.button.callback, self.victory_screen.back_to_main_menu)
 

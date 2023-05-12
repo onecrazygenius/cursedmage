@@ -8,7 +8,7 @@ import pytest
 from app.combat.card import Card
 from app.combat.combat import Combat
 from app.engine.constants import HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT, PLAYER_HEALTH_COLOR, ENEMY_HEALTH_COLOR, \
-    SCREEN_WIDTH, CARD_START_X, CARD_START_Y
+    CARD_START_X, CARD_START_Y
 from app.menus.main_menu import MainMenu
 from app.menus.victory_screen import VictoryScreen
 
@@ -230,7 +230,7 @@ class TestCombat(unittest.TestCase):
             # Assert that pygame.draw.rect is called with the correct arguments
             rect_mock.assert_has_calls([
                 call(self.game.screen, PLAYER_HEALTH_COLOR, (50, 50, player_bar_width, HEALTH_BAR_HEIGHT)),
-                call(self.game.screen, ENEMY_HEALTH_COLOR, (SCREEN_WIDTH - 50 - enemy_bar_width, 50, enemy_bar_width, HEALTH_BAR_HEIGHT))
+                call(self.game.screen, ENEMY_HEALTH_COLOR, (self.game.config.get_width() - 50 - enemy_bar_width, 50, enemy_bar_width, HEALTH_BAR_HEIGHT))
             ])
 
     # These are unit tests so user input and rendering are not tested. This tests that the appropriate methods are

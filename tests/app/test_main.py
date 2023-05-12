@@ -3,7 +3,6 @@ from unittest.mock import MagicMock, patch
 
 from pygame import FULLSCREEN, RESIZABLE
 
-from app.engine.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from app.engine.save_manager import SaveManager
 from app.main import Game
 from app.menus.character_selection import CharacterSelection
@@ -44,7 +43,7 @@ class TestGame(unittest.TestCase):
     def test_toggle_fullscreen(self):
         with patch("pygame.display.set_mode") as mock_set_mode:
             self.game.toggle_fullscreen()
-            mock_set_mode.assert_called_once_with((SCREEN_WIDTH, SCREEN_HEIGHT), FULLSCREEN | RESIZABLE)
+            mock_set_mode.assert_called_once_with((self.game.config.get_width(), self.game.config.get_height()), FULLSCREEN | RESIZABLE)
 
     def test_toggle_fullscreen_off(self):
         screen_mock = MagicMock()
@@ -52,7 +51,7 @@ class TestGame(unittest.TestCase):
         with patch("pygame.display.set_mode", return_value=screen_mock) as mock_set_mode:
             self.game.screen = screen_mock
             self.game.toggle_fullscreen()
-            mock_set_mode.assert_called_once_with((SCREEN_WIDTH, SCREEN_HEIGHT), RESIZABLE)
+            mock_set_mode.assert_called_once_with((self.game.config.get_width(), self.game.config.get_height()), RESIZABLE)
 
     def test_push_state(self):
         new_state = MagicMock()

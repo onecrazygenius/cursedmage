@@ -74,7 +74,6 @@ class SettingsMenu(State):
             for slider in self.sliders:
                 slider.handle_event(event, canvas_mouse_pos)
         if event.type == pygame.MOUSEBUTTONUP:
-            print("Here")
             # Convert mouse position to canvas coordinates
             screen_width, screen_height = pygame.display.get_surface().get_size()
             canvas_mouse_pos = (

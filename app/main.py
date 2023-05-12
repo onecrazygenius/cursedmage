@@ -6,7 +6,6 @@ from app.constants import *
 from app.states.settings_menu import SettingsMenu
 from app.states.main_menu import MainMenu
 #from app.states.dungeon import Dungeon
-from pygame.locals import *
 import pygame, os
 
 
@@ -155,8 +154,7 @@ class Game:
                             self.hide_settings()
                         else:
                             self.show_settings()
-                for state in self.states:
-                    state.handle_event(event)
+                self.states[-1].handle_event(event)
             for state in self.states:
                 state.draw(self.canvas)
             pygame.transform.scale(self.canvas, (self.config.get_width(), self.config.get_height()), self.screen)

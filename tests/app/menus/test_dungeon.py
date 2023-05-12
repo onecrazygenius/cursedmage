@@ -46,6 +46,7 @@ class TestDungeon(unittest.TestCase):
         event = MagicMock()
         event.type = KEYDOWN
         with patch.object(self.dungeon, "move_to_room", wraps=self.dungeon.move_to_room) as mock_dungeon:
+            # There are 2 handle_event methods with the same signature causing this test to fail
             self.dungeon.handle_event(event)
             mock_dungeon.assert_called_once()
 

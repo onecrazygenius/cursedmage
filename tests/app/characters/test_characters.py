@@ -48,7 +48,7 @@ class TestCharacter(unittest.TestCase):
 
     def test_default_hand(self):
         # Check the character has the correct number of cards by default
-        self.assertEqual(len(self.character.hand), 3)
+        self.assertEqual(len(self.character.hand), 4)
         # Check each card in the hand is an instance of Card
         for card in self.character.hand:
             self.assertIsInstance(card, Card)

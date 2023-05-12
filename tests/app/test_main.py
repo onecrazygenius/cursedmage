@@ -75,7 +75,8 @@ class TestGame(unittest.TestCase):
     def test_change_master_volume(self, mock_set_volume):
         test_volume = 5
         self.game.change_master_volume(test_volume)
-        mock_set_volume.assert_called_once_with(test_volume)
+        # The volume is divided by 100 in the method, check this happened when the pygame set volume method is called
+        mock_set_volume.assert_called_once_with(0.05)
 
     def test_sfx_volume(self):
         self.fail("SFX Volume not implemented yet")

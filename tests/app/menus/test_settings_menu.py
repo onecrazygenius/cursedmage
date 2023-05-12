@@ -34,8 +34,15 @@ class TestSettingsMenu(unittest.TestCase):
         event = MagicMock()
         event.pos = (10, 10)  # At this point it doesn't actually matter where the click pos is - It just can't be None
         event.type = pygame.MOUSEBUTTONDOWN
+        self.settings_menu.sliders = []  # To not test the sliders, override and remove them
+
+        # For each button set the callback method to a MagicMock and set the position of each card.
+        base_position = 200
         for button in self.settings_menu.buttons:
             button.callback = MagicMock()
+            button.y = 200
+            button.x = base_position
+            base_position += 200
 
         self.settings_menu.handle_event(event)
 

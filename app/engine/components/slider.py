@@ -39,4 +39,4 @@ class Slider:
 
     def _is_on_handle(self, pos):
         distance = ((pos[0] - self.handle_x) ** 2 + (pos[1] - (self.y + self.slider_height // 2)) ** 2) ** 0.5
-        return distance < self.handle_radius
+        return distance <= self.handle_radius

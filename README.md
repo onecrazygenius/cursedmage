@@ -1,31 +1,32 @@
 # Cursed Mage - A game made with pygame
 
 ## Install
-To get started, clone the repository and install the dependencies in a virtual environment.
+To get started, clone the repository and setup using poetry
 #### Clone the repository
 ```bash
 mkdir cursedmage
 cd cursedmage
 git clone https://github.com/onecrazygenius/cursedmage.git .
 ```
-#### Create a virtual environment
+#### Install Poetry
+Install [Poetry](https://python-poetry.org/docs/#installation)
+1. On Linux or MacOS run the following command
 ```bash
-python -m venv venv
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+```
+2. On Windows run the following command in PowerShell
+```powershell
+(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python -
 ```
 
-#### Activate the virtual environment
-1. Windows
+#### Install dependencies
 ```bash
-venv\Scripts\activate.bat
-```
-2. Linux
-```bash
-source venv/bin/activate
+poetry install
 ```
 
-#### Install the dependencies
+#### Spawn a shell
 ```bash
-pip install -e .
+poetry shell
 ```
 
 #### Run

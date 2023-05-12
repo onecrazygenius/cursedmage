@@ -1,6 +1,6 @@
 import pygame, os
 from pygame.locals import *
-from app.combat.card import Card
+from app.combat.deck.card import Card
 from app.engine.components.button import Button
 from app.engine.constants import *
 

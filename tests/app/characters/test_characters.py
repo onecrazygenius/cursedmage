@@ -1,7 +1,7 @@
 import unittest
 
 from app.characters.character import Character
-from app.combat.card import Card
+from app.combat.deck.card import Card
 
 
 class TestCharacter(unittest.TestCase):

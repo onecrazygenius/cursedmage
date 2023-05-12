@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from app.combat.card import Card
+from app.combat.deck.card import Card
 
 
 class TestCard(unittest.TestCase):

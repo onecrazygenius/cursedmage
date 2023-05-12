@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pygame
 import pytest
 
-from app.combat.card import Card
+from app.combat.deck.card import Card
 from app.combat.combat import Combat
 from app.engine.constants import HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT, PLAYER_HEALTH_COLOR, ENEMY_HEALTH_COLOR, \
     SCREEN_WIDTH, CARD_START_X, CARD_START_Y

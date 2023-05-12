@@ -1,4 +1,4 @@
-from app.combat.card import Card
+from app.combat.deck.card import Card
 
 class CursedCard(Card):
     def __init__(self):

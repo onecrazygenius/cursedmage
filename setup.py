@@ -7,6 +7,7 @@ setup(
     install_requires=[
         'pygame',
         'pyinstaller',
-        'pytest'
+        'pytest',
+        'pytest-repeat'
     ],
 )

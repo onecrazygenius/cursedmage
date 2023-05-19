@@ -1,6 +1,27 @@
 from app.logic.combat.deck.card import Card
 import random
 
+x = [
+            Card(
+                name="Test Card",
+                card_type="attack",
+                power=10,
+                cost=1,
+            ),
+            Card(
+                name="Test Card 2",
+                card_type="attack",
+                power=20,
+                cost=2,
+            ),
+            Card(
+                name="Test Card 3",
+                card_type="attack",
+                power=30,
+                cost=3,
+            )
+        ]
+
 class Deck:
     '''
     Base class for all decks in the game.
@@ -8,10 +29,9 @@ class Deck:
     def __init__(self, 
                  cards=[],
                 ):
-        self.cards = cards
-
+        self.cards = cards + x 
         # Per turn variables
-        self.deck    = []
+        self.deck    = [] + x
         self.hand    = []
         self.discard = []
 

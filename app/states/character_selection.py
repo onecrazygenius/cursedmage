@@ -13,9 +13,9 @@ class CharacterSelection(State):
 
         self.game = game
         self.characters = [
-            Character("Warrior", 150, 15, 5),
-            Character("Mage", 100, 25, 3),
-            Character("Rogue", 120, 10, 7)
+            Character("Warrior"),
+            Character("Mage"),
+            Character("Rogue"),
         ]
         self.difficulties = ["Easy", "Normal", "Hard"]
         self.selected_character = 0

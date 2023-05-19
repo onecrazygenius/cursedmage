@@ -42,10 +42,9 @@ class Combat(State):
     def handle_event(self, event):
         # check if the player turn
         if self.battle_manager.current_turn == self.battle_manager.player:
-            card_played = False
             # check if the player clicked the mouse button
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                for i, card in enumerate(self.player_hand):
+                for i, card in enumerate(self.battle_manager.player.deck.hand):
                     if card.cursed:
                         continue
                     card_x = 100 + (100 + 100) * i
@@ -59,56 +58,35 @@ class Combat(State):
             elif event.type == pygame.MOUSEMOTION and self.dragging_card is not None:
                 card_x = event.pos[0] - self.dragging_card_offset[0]
                 card_y = event.pos[1] - self.dragging_card_offset[1]
-                self.player_hand[self.dragging_card].position = (card_x, card_y)
+                self.battle_manager.player.deck.hand[self.dragging_card].position = (card_x, card_y)
 
             # check if the player released the mouse button
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 # check if the player was dragging a card
                 if self.dragging_card is not None:
                     # get the card that was being dragged
-                    card = self.player_hand[self.dragging_card]
+                    card = self.battle_manager.player.deck.hand[self.dragging_card]
                     card_x, card_y = card.position
 
-                    # create two rectangles to represent the left and right areas of the screen
+                    # create collison boxes for the player sprite and the enemy sprites
                     left_area = pygame.Rect(0, 0, self.game.config.get_width() // 2, self.game.config.get_height())
                     right_area = pygame.Rect(self.game.config.get_width() // 2, 0, self.game.config.get_width() // 2, self.game.config.get_height())
 
                     # check if the card was dropped in the left or right area
                     try: 
-                        if left_area.collidepoint(event.pos):
-                            if not self.play_card(self.dragging_card, "player"):
-                                # raise an exception if the card couldn't be played
-                                raise Exception("Invalid target!")
-                        elif right_area.collidepoint(event.pos):
-                            if not self.play_card(self.dragging_card, "enemy"):
-                                # raise an exception if the card couldn't be played
-                                raise Exception("Invalid target!")
+                        if left_area.collidepoint(self.game.screen_to_canvas(event.pos)):
+                            self.battle_manager.handle_turn(card)
+                        elif right_area.collidepoint(self.game.screen_to_canvas(event.pos)):
+                            # raise an exception if the card couldn't be played
+                            raise Exception("Invalid target!")
                         else:
                             # raise an exception if the card couldn't be played
                             raise Exception("Invalid target!")
                             
-                        # if the card was played, it's no longer in the player's hand
-                        card_played = True
-                        self.player_turn = False
                     except:
-                        self.popup("Invalid target!")
                         card.position = (100 + (100 + 100) * self.dragging_card, 100)
                 
-                # if the card was played, it's no longer in the player's hand
-                if card_played:
-                    
-                    # Remove the played card from the player's hand
-                    # self.player_hand.pop(self.dragging_card)
-
-                    # Update the enemy health bar and check win condition
-                    self.update_health_bars()
-                    self.check_win_condition()
-
-                    # If the enemy is still alive, wait a second before the enemy's turn
-                    if self.enemy_health > 0:
-                        self.popup("Enemy's turn!")
-                        pygame.time.set_timer(ENEMY_TURN_EVENT, 1000)
-
+                self.update_health_bars()
 
                 pygame.display.flip()
                 self.dragging_card = None
@@ -140,7 +118,7 @@ class Combat(State):
 
         # if the player is dragging a card, draw it last so it's on top
         if self.dragging_card is not None:
-            card = self.player_hand[self.dragging_card]
+            card = self.battle_manager.player.deck.hand[self.dragging_card]
             card_x, card_y = card.position
             card.draw(surface, (card_x, card_y))
 

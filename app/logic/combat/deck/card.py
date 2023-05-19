@@ -10,7 +10,6 @@ class Card:
                  card_type, 
                  power=1,
                  cost=1, 
-                 collision="enemy",
                  target=None, 
                  image="", 
                  cursed=False,
@@ -20,7 +19,6 @@ class Card:
         self.card_type = card_type
         self.power = power
         self.cost = cost
-        self.collision = collision
         self.target = target
         self.image = image
         self.cursed = cursed
@@ -37,7 +35,7 @@ class Card:
         
         # Load the font
         path = os.path.dirname(os.path.abspath(__file__))
-        font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursed_font.tff'), 20)
+        font = pygame.font.Font(os.path.join(path + '/../../../assets/fonts/cursed_font.tff'), 20)
         # Render text
         text = font.render(self.name, True, (0, 0, 0))
 

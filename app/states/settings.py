@@ -16,18 +16,18 @@ class SettingsMenu(State):
         current_screen_size = SCREEN_WIDTH, SCREEN_HEIGHT
         text = "Screen Size: {}x{}".format(current_screen_size[0], current_screen_size[1])
         self.buttons = [
-            Button(text, 200, 200, self.change_screen_size),
-            Button("Toggle Fullscreen", SCREEN_WIDTH // 2 + 100, 200, self.game.toggle_fullscreen),
+            Button(text, 200, 250, self.change_screen_size),
+            Button("Toggle Fullscreen", 200, 350, self.game.toggle_fullscreen),
             Button("Return to Main Menu", SCREEN_WIDTH // 2, SCREEN_HEIGHT - 200, self.return_to_main_menu),
             Button("Exit", SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100, self.exit_game)
         ]
         self.sliders = [
-            Slider(200, 250, 200, self.game.get_master_volume(), 100, self.game.change_master_volume),
-            Slider(SCREEN_WIDTH // 2 + 100, 250, 200, self.game.get_sfx_volume(), 100, self.game.change_sfx_volume)
+            Slider(SCREEN_WIDTH // 2 + 100, 250, 200, self.game.get_master_volume(), 100, self.game.change_master_volume),
+            Slider(SCREEN_WIDTH // 2 + 100, 350, 200, self.game.get_sfx_volume(), 100, self.game.change_sfx_volume)
         ]
         self.slider_labels = [
-            ("Master Volume", (160, 220)),
-            ("SFX Volume", (SCREEN_WIDTH // 2 + 60, 220))
+            ("Master Volume", (SCREEN_WIDTH // 2 + 60, 220)),
+            ("SFX Volume", (SCREEN_WIDTH // 2 + 60, 320))
         ]
 
     def change_screen_size(self):
@@ -36,25 +36,17 @@ class SettingsMenu(State):
             self.game.toggle_fullscreen()
         
         # Change screen size
-        if self.game.screen.get_size() == (800, 600):
-            self.game.resize_screen(1024, 768)
-            self.buttons[0].set_text("Screen Size: 1024x768")
-        elif self.game.screen.get_size() == (1024, 768):
-            self.game.resize_screen(1280, 720)
-            self.buttons[0].set_text("Screen Size: 1280x720")
-        elif self.game.screen.get_size() == (1280, 720):
-            self.game.resize_screen(1920, 1080)
-            self.buttons[0].set_text("Screen Size: 1920x1080")
-        elif self.game.screen.get_size() == (1920, 1080):
-            self.game.resize_screen(800, 600)
-            self.buttons[0].set_text("Screen Size: 800x600")
-            
-        # Update the positions and sizes of the buttons and sliders
-        for button in self.buttons:
-            button.update_size_and_position()  # This is a new method that you would need to implement in the Button class
+        # Default: 1920x1080
+        #        : 1080x720
 
-        for slider in self.sliders:
-            slider.update_size_and_position()  # This is a new method that you would need to implement in the Slider class
+        if self.game.config.get_width() == 1920:
+            self.game.resize_screen(1080, 720)
+            # Update the button text
+            self.buttons[0].text = "Screen Size: 1080x720"
+        else:
+            self.game.resize_screen(1920, 1080)
+            # Update the button text
+            self.buttons[0].text = "Screen Size: 1920x1080"
 
     def return_to_main_menu(self):
         self.game.hide_settings()

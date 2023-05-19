@@ -3,7 +3,7 @@ from app.logic.save_manager import SaveManager
 from app.constants import *
 #from app.states.character_selection import CharacterSelection
 #from app.states.victory_screen import VictoryScreen
-from app.states.settings_menu import SettingsMenu
+from app.states.settings import SettingsMenu
 from app.states.main_menu import MainMenu
 #from app.states.dungeon import Dungeon
 import pygame, os

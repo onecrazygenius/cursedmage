@@ -8,7 +8,7 @@ from app.logic.save_manager import SaveManager
 from app.main import Game
 from app.states.character_selection import CharacterSelection
 from app.states.main_menu import MainMenu
-from app.states.settings_menu import SettingsMenu
+from app.states.settings import SettingsMenu
 from app.menus.victory_screen import VictoryScreen
 
 

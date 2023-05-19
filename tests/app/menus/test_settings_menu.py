@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 import pygame
 
-from app.states.settings_menu import SettingsMenu
+from app.states.settings import SettingsMenu
 
 
 class TestSettingsMenu(unittest.TestCase):

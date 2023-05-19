@@ -1,12 +1,16 @@
-import pygame
-from pygame.locals import *
-from app.engine.components.button import Button
+from app.logic.combat.characters.character import Character
+from app.states.components.button import Button
+#from app.states.dungeon import Dungeon
+from app.states.state import State
 from app.constants import *
-from app.characters.character import Character
-from app.states.dungeon import Dungeon
+from pygame.locals import *
+import pygame
 
-class CharacterSelection:
+class CharacterSelection(State):
     def __init__(self, game):
+        # Call the parent class (State) constructor
+        super().__init__(game)
+
         self.game = game
         self.characters = [
             Character("Warrior", 150, 15, 5),
@@ -22,28 +26,29 @@ class CharacterSelection:
         self.difficulty_left_arrow = Button("<", self.game.config.get_width() // 3, 200, self.select_previous_difficulty)
         self.difficulty_right_arrow = Button(">", 2 * self.game.config.get_width() // 3, 200, self.select_next_difficulty)
 
-    def draw(self):
-        self.game.screen.fill(WHITE)
+    def draw(self, surface):
+        surface.fill(WHITE)
 
         character_font = pygame.font.Font(None, 36)
         character_text = self.characters[self.selected_character].name
         character_surface = character_font.render(character_text, True, BLACK)
         character_rect = character_surface.get_rect()
         character_rect.center = (self.game.config.get_width() // 2, 150)
-        self.game.screen.blit(character_surface, character_rect)
+        # blitz onto canvas
+        surface.blit(character_surface, character_rect)
 
         difficulty_font = pygame.font.Font(None, 36)
         difficulty_text = self.difficulties[self.selected_difficulty]
         difficulty_surface = difficulty_font.render(difficulty_text, True, BLACK)
         difficulty_rect = difficulty_surface.get_rect()
         difficulty_rect.center = (self.game.config.get_width() // 2, 200)
-        self.game.screen.blit(difficulty_surface, difficulty_rect)
+        surface.blit(difficulty_surface, difficulty_rect)
 
-        self.start_game_button.draw(self.game.screen)
-        self.character_left_arrow.draw(self.game.screen)
-        self.character_right_arrow.draw(self.game.screen)
-        self.difficulty_left_arrow.draw(self.game.screen)
-        self.difficulty_right_arrow.draw(self.game.screen)
+        self.start_game_button.draw(surface)
+        self.character_left_arrow.draw(surface)
+        self.character_right_arrow.draw(surface)
+        self.difficulty_left_arrow.draw(surface)
+        self.difficulty_right_arrow.draw(surface)
 
         pygame.display.flip()
 

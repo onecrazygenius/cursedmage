@@ -1,4 +1,4 @@
-1. Scale issue                            |1hr
+1. ~~Scale issue                            |1hr~~
 2. Reintroduce the game screens           |0.5hr
 3. Save + Loading                         |1.5hr
 4. Rewrite combat                         |2hr

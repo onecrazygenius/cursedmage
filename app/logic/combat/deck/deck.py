@@ -1,4 +1,4 @@
-from app.combat.deck.card import Card
+from app.logic.combat.deck.card import Card
 import random
 
 class Deck:

@@ -1,7 +1,7 @@
 from app.logic.config_manager import ConfigManager
 from app.logic.save_manager import SaveManager
 from app.constants import *
-#from app.states.character_selection import CharacterSelection
+from app.states.character_selection import CharacterSelection
 #from app.states.victory_screen import VictoryScreen
 from app.states.settings import SettingsMenu
 from app.states.main_menu import MainMenu
@@ -24,8 +24,6 @@ class Game:
         self.canvas = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
 
-        self.wait_time_after_state = STATE_WAIT_TIME
-
         path = os.path.dirname(os.path.abspath(__file__))
         # Set the window title and icon in assets/images
         icon = pygame.image.load(os.path.join(path, "assets/images/team_logo.png"))
@@ -44,11 +42,9 @@ class Game:
 
     # State management
     def push_state(self, state):
-        pygame.time.wait(self.wait_time_after_state_change)
         self.states.append(state)
 
     def pop_state(self):
-        pygame.time.wait(self.wait_time_after_state_change)
         if self.states:
             self.states.pop()
 
@@ -120,8 +116,8 @@ class Game:
 
 
     # Change scene
-    # def new_game(self):
-    #     self.change_state(CharacterSelection(self))
+    def new_game(self):
+        self.change_state(CharacterSelection(self))
 
     def show_main_menu(self):
         self.change_state(MainMenu(self))

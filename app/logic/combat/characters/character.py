@@ -1,4 +1,4 @@
-from app.combat.deck.deck import Deck
+from app.logic.combat.deck.deck import Deck
 
 class Character:
     '''

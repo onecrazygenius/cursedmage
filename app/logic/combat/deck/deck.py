@@ -40,21 +40,18 @@ class Deck:
         for i in range(num):
             # If deck is empty, shuffle discard into deck
             if len(self.deck) == 0:
-                self.shuffle()
-                self.replenish()
+                self.shuffle_discard_to_deck()
             # Draw card
             self.hand.append(self.deck.pop())
 
-    def discard_card(self, index=0):
+    def discard_card(self, card):
+        # Add the card played to the discard pile
+        self.discard.append(card)
         # Discard card from hand
-        self.discard.append(self.hand.pop(index))
+        self.hand.remove(card)
 
-    def shuffle(self):
+    def shuffle_discard_to_deck(self):
         # Shuffle discard into deck
         random.shuffle(self.discard)
         self.deck = self.discard
         self.discard = []
-
-    def replenish(self):
-        # Replenish deck from discard
-        self.deck = self.discard

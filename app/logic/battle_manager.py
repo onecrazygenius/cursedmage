@@ -1,6 +1,6 @@
 # app/logic/battle_manager.py
-import pygame
-from app.constants import *
+from app.constants import FLOOR_COMPLETE, GAME_OVER, CONTINUE
+
 
 class BattleManager:
 
@@ -15,14 +15,14 @@ class BattleManager:
         for enemy in self.enemies:
             if card.target == enemy:
                 # apply damage to enemy
-                enemy.cur_health -= card.damage - enemy.defense - enemy.shield
+                enemy.cur_health -= card.power - enemy.defense - enemy.shield
                 # check if enemy is dead
                 if enemy.is_dead():
                     # remove enemy from list
                     self.enemies.remove(enemy)
                 return
         # if no enemy was found, apply damage to player
-        self.player.cur_health -= card.damage - self.player.defense - self.player.shield
+        self.player.cur_health -= card.power - self.player.defense - self.player.shield
 
     # Cost handler
     def apply_cost(self, card):
@@ -35,7 +35,7 @@ class BattleManager:
         # Apply cost to player
         self.apply_cost(card)
         # Discard card from who currently playing
-        self.current_turn.deck.discard(card)
+        self.current_turn.deck.discard_card(card)
 
     # win condition check
     def check_floor_cleared(self):
@@ -54,11 +54,13 @@ class BattleManager:
     def handle_turn(self, card):
         # Play card
         self.play_card(card)
+        # Redraw another card
+        self.current_turn.deck.draw_card(1)
         # Check if floor is cleared
         if self.check_floor_cleared():
-            return "floor_cleared"
+            return FLOOR_COMPLETE
         # Check if player is dead
         if self.check_player_dead():
-            return "game_over"
+            return GAME_OVER
         # If player is alive and floor is not cleared, continue
-        return "continue"
+        return CONTINUE

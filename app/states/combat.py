@@ -68,30 +68,30 @@ class Combat(State):
                     card = self.battle_manager.player.deck.hand[self.dragging_card]
                     card_x, card_y = card.position
 
-                    # create collison boxes for the player sprite and the enemy sprites
-                    left_area = pygame.Rect(0, 0, self.game.config.get_width() // 2, self.game.config.get_height())
-                    right_area = pygame.Rect(self.game.config.get_width() // 2, 0, self.game.config.get_width() // 2, self.game.config.get_height())
+                    turn_result = None
+                    # check if the card was dropped on an enemy
+                    for enemy in self.battle_manager.enemies:
+                        enemy_sprite_pos = pygame.Rect((self.game.config.get_width() / 2),
+                                                        (self.game.config.get_height() / 2), 250, 250)
+                        if enemy_sprite_pos.collidepoint(self.game.screen_to_canvas(event.pos)):
+                            card.target = self.battle_manager.enemies[0] #TODO: Make this actually work for multiple enemies
+                            turn_result = self.battle_manager.handle_turn(card)
+                            self.post_turn_actions(turn_result)
 
-                    # check if the card was dropped in the left or right area
-                    try: 
-                        if left_area.collidepoint(self.game.screen_to_canvas(event.pos)):
-                            self.battle_manager.handle_turn(card)
-                        elif right_area.collidepoint(self.game.screen_to_canvas(event.pos)):
-                            # raise an exception if the card couldn't be played
-                            raise Exception("Invalid target!")
-                        else:
-                            # raise an exception if the card couldn't be played
-                            raise Exception("Invalid target!")
-                            
-                    except:
+                    # check if the card was dropped on a player
+                    player_sprite_pos = pygame.Rect((self.game.config.get_width() / 4), (self.game.config.get_height() / 2), 250, 250)
+                    if player_sprite_pos.collidepoint(self.game.screen_to_canvas(event.pos)):
+                        card.target = self.battle_manager.player
+                        turn_result = self.battle_manager.handle_turn(card)
+                        self.post_turn_actions(turn_result)
+
+                    # If the card wasn't on a character put it back into the hand
+                    # If turn result isn't defined then the card wasn't dropped on a target
+                    if turn_result is None:
                         card.position = (100 + (100 + 100) * self.dragging_card, 100)
-                
-                self.update_health_bars()
+                        self.dragging_card = None
 
-                pygame.display.flip()
-                self.dragging_card = None
-
-            # Check if enemy's turn event has been triggered
+        # Check if enemy's turn event has been triggered
         elif event.type == ENEMY_TURN_EVENT:
             print("Enemy's turn!")
             pygame.time.set_timer(ENEMY_TURN_EVENT, 0)  # Stop the timer
@@ -101,9 +101,26 @@ class Combat(State):
             self.update_health_bars()
             self.popup("Your turn!")
 
+    def post_turn_actions(self, turn_result):
+        # Check Turn Result and perform the appropriate actions
+        if turn_result == GAME_OVER:
+            self.game.quit_game()
+            # TODO: Game over screen
+        if turn_result == FLOOR_COMPLETE:
+            self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player))
+        if turn_result == CONTINUE:
+            self.update_health_bars()
+            pygame.display.flip()
+            self.dragging_card = None
+
     def draw(self, surface):
         # draw health bars
         self.update_health_bars()
+
+        # Visually draw an enemy and player respectively
+        #TODO: Support multiple enemies
+        pygame.draw.rect(surface, RED, pygame.Rect((self.game.config.get_width() / 2), (self.game.config.get_height() / 2), 250, 250))
+        pygame.draw.rect(surface, GREEN, pygame.Rect((self.game.config.get_width() / 4), (self.game.config.get_height() / 2), 250, 250))
 
         # for each card in the player's hand, draw the card
         for i, card in enumerate(self.battle_manager.player.deck.hand):

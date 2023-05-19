@@ -25,8 +25,8 @@ class Character:
             cards=cards,
         )
 
-        # do the first draw
+        # do the first card draw
         self.deck.draw_card(2)
 
     def is_dead(self):
-        return self.current_health <= 0
+        return self.cur_health <= 0

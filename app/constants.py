@@ -16,3 +16,8 @@ DUNGEON_SIZE_Y = 5
 
 # Events
 ENEMY_TURN_EVENT = pygame.USEREVENT + 1
+
+# Turn Results
+CONTINUE = "continue"
+GAME_OVER = "game_over"
+FLOOR_COMPLETE = "floor_complete"

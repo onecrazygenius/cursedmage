@@ -1,98 +1,47 @@
 from app.states.card_pickup import CardPickupScreen
 from app.states.victory_screen import VictoryScreen
+from app.logic.battle_manager import BattleManager
 from app.states.components.popup import Popup
 from app.states.main_menu import MainMenu
 from app.states.state import State
 from pygame.locals import *
 from app.constants import *
-import pygame, random
+import pygame
 
 # Timers
 ENEMY_TURN_EVENT = pygame.USEREVENT + 1
 
 class Combat(State):
-    def __init__(self, game, player, enemy):
+    def __init__(self, game, player, enemies):
         super().__init__(game)
 
         self.game = game
-        self.player = player
-        self.enemy = enemy
-        self.player_health = self.player.max_health
-        self.enemy_health = self.enemy.max_health
-        self.player_shield = 0
-        self.enemy_shield = 0
-        self.player_hand = self.player.deck.hand
-        self.player_turn = True
+        self.battle_manager = BattleManager(player, enemies)
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
 
-    def apply_damage(self, damage, target):
-        if target == "enemy":
-            remaining_damage = damage - self.enemy_shield
-            if remaining_damage > 0:
-                self.enemy_shield = 0
-                self.enemy_health -= remaining_damage
-            else:
-                self.enemy_shield -= damage
-        elif target == "player":
-            remaining_damage = damage - self.player_shield
-            if remaining_damage > 0:
-                self.player_shield = 0
-                self.player_health -= remaining_damage
-            else:
-                self.player_shield -= damage
-
-    def apply_shield(self, shield):
-        self.player_shield += shield
-
-    def check_win_condition(self):
-        if self.enemy_health <= 0:
-            #display the victory and card pickup screen
-            self.game.change_state(CardPickupScreen(self.game, self.player))
-            # update room to be completed
-            x, y = self.game.dungeon.player_position
-            self.game.dungeon.rooms[x][y].completed = True
-            # return to dungeon, update player position and save game
-            self.game.dungeon.update_player_position()
-            # update next room to be available
-            x, y = self.game.dungeon.player_position
-            self.game.dungeon.rooms[x][y].next = True
-            self.game.save_game()
-
-            # check if the player has completed the dungeon
-            if self.game.dungeon.player_position == (DUNGEON_SIZE_X - 1, DUNGEON_SIZE_Y - 1):
-                # Victory!
-                self.game.push_state(VictoryScreen(self.game))       
-        elif self.player_health <= 0:
-            # return to main menu
-            self.popup("You died!")
-            self.game.change_state(MainMenu(self.game))
-
-    def play_card(self, card_index, target):
-        if card_index >= len(self.player_hand):
-            return False
-        
-        card = self.player_hand[card_index]
-
-        if card.target != target:
-            return False
-    
-        card.play(self)
-        return True
-
     def update_health_bars(self):
-        player_health_ratio = self.player_health / self.player.max_health
-        enemy_health_ratio = self.enemy_health / self.enemy.max_health
+        player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
+        # for each enemy, draw the enemy's health bar
+        for i, enemy in enumerate(self.battle_manager.enemies):
+            enemy_health_ratio = enemy.cur_health / enemy.max_health
+            enemy_bar_width = int(enemy_health_ratio * 100)
+            pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50, enemy_bar_width, 100))
         player_bar_width = int(player_health_ratio * 100)
         enemy_bar_width = int(enemy_health_ratio * 100)
 
         self.surface.fill(BLACK)
         pygame.draw.rect(self.surface, GREEN, (50, 50, player_bar_width, 100))
-        pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50, enemy_bar_width, 100))
+        
+        # draw the enemies health bars
+        for i, enemy in enumerate(self.battle_manager.enemies):
+            enemy_health_ratio = enemy.cur_health / enemy.max_health
+            enemy_bar_width = int(enemy_health_ratio * 100)
+            pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50, enemy_bar_width, 100))
 
     def handle_event(self, event):
         # check if the player turn
-        if self.player_turn:
+        if self.battle_manager.current_turn == self.battle_manager.player:
             card_played = False
             # check if the player clicked the mouse button
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -170,21 +119,16 @@ class Combat(State):
             pygame.time.set_timer(ENEMY_TURN_EVENT, 0)  # Stop the timer
             self.enemy_turn()
             self.player_turn = True
-            self.check_win_condition()
+            #self.check_win_condition()
             self.update_health_bars()
             self.popup("Your turn!")
-
-    def enemy_turn(self):
-        # Simulate enemy's turn
-        damage = random.randint(5, 10)
-        self.apply_damage(damage, "player")
 
     def draw(self, surface):
         # draw health bars
         self.update_health_bars()
 
         # for each card in the player's hand, draw the card
-        for i, card in enumerate(self.player_hand):
+        for i, card in enumerate(self.battle_manager.player.deck.hand):
             # if the card is being dragged, don't draw it here
             if i == self.dragging_card:
                 continue

@@ -10,8 +10,8 @@ class Card:
                  card_type, 
                  power=1,
                  cost=1, 
-                 description="", 
-                 target="enemy", 
+                 collision="enemy",
+                 target=None, 
                  image="", 
                  cursed=False,
                  position=(0,0)
@@ -20,7 +20,7 @@ class Card:
         self.card_type = card_type
         self.power = power
         self.cost = cost
-        self.description = description
+        self.collision = collision
         self.target = target
         self.image = image
         self.cursed = cursed

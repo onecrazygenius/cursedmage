@@ -1,19 +1,19 @@
-import pygame, random
-from pygame.locals import *
-from app.engine.components.button import Button
-from app.engine.components.popup import Popup
-from app.constants import *
-from app.combat.deck.card import Card
-from app.combat.deck.cursed_card import CursedCard
 from app.states.card_pickup import CardPickupScreen
-from app.menus.victory_screen import VictoryScreen
+from app.states.victory_screen import VictoryScreen
+from app.states.components.popup import Popup
 from app.states.main_menu import MainMenu
+from app.states.state import State
+from pygame.locals import *
+from app.constants import *
+import pygame, random
 
 # Timers
 ENEMY_TURN_EVENT = pygame.USEREVENT + 1
 
-class Combat:
+class Combat(State):
     def __init__(self, game, player, enemy):
+        super().__init__(game)
+
         self.game = game
         self.player = player
         self.enemy = enemy
@@ -21,7 +21,7 @@ class Combat:
         self.enemy_health = self.enemy.max_health
         self.player_shield = 0
         self.enemy_shield = 0
-        self.player_hand = self.player.hand
+        self.player_hand = self.player.deck.hand
         self.player_turn = True
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
@@ -83,12 +83,12 @@ class Combat:
     def update_health_bars(self):
         player_health_ratio = self.player_health / self.player.max_health
         enemy_health_ratio = self.enemy_health / self.enemy.max_health
-        player_bar_width = int(player_health_ratio * HEALTH_BAR_WIDTH)
-        enemy_bar_width = int(enemy_health_ratio * HEALTH_BAR_WIDTH)
+        player_bar_width = int(player_health_ratio * 100)
+        enemy_bar_width = int(enemy_health_ratio * 100)
 
-        self.game.screen.fill((0, 0, 0))
-        pygame.draw.rect(self.game.screen, PLAYER_HEALTH_COLOR, (50, 50, player_bar_width, HEALTH_BAR_HEIGHT))
-        pygame.draw.rect(self.game.screen, ENEMY_HEALTH_COLOR, (self.game.config.get_width() - 50 - enemy_bar_width, 50, enemy_bar_width, HEALTH_BAR_HEIGHT))
+        self.surface.fill(BLACK)
+        pygame.draw.rect(self.surface, GREEN, (50, 50, player_bar_width, 100))
+        pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50, enemy_bar_width, 100))
 
     def handle_event(self, event):
         # check if the player turn
@@ -97,11 +97,11 @@ class Combat:
             # check if the player clicked the mouse button
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 for i, card in enumerate(self.player_hand):
-                    if isinstance(card, CursedCard):
+                    if card.cursed:
                         continue
-                    card_x = CARD_START_X + (CARD_WIDTH + CARD_GAP) * i
-                    card_y = CARD_START_Y
-                    card_rect = pygame.Rect(card_x, card_y, CARD_WIDTH, CARD_HEIGHT)
+                    card_x = 100 + (100 + 100) * i
+                    card_y = 100
+                    card_rect = pygame.Rect(card_x, card_y, 100, 100)
                     if card_rect.collidepoint(event.pos):
                         self.dragging_card = i
                         self.dragging_card_offset = (event.pos[0] - card_x, event.pos[1] - card_y)
@@ -143,7 +143,7 @@ class Combat:
                         self.player_turn = False
                     except:
                         self.popup("Invalid target!")
-                        card.position = (CARD_START_X + (CARD_WIDTH + CARD_GAP) * self.dragging_card, CARD_START_Y)
+                        card.position = (100 + (100 + 100) * self.dragging_card, 100)
                 
                 # if the card was played, it's no longer in the player's hand
                 if card_played:
@@ -179,7 +179,7 @@ class Combat:
         damage = random.randint(5, 10)
         self.apply_damage(damage, "player")
 
-    def draw(self):
+    def draw(self, surface):
         # draw health bars
         self.update_health_bars()
 
@@ -189,16 +189,16 @@ class Combat:
             if i == self.dragging_card:
                 continue
             # offset the x position of the card based on the index
-            card_x = CARD_START_X + (CARD_WIDTH + CARD_GAP) * i
-            card_y = CARD_START_Y
+            card_x = 100 + (100 + 100) * i
+            card_y = 100
             # draw the card
-            card.draw(self.game.screen, (card_x, card_y))
+            card.draw(surface, (card_x, card_y))
 
         # if the player is dragging a card, draw it last so it's on top
         if self.dragging_card is not None:
             card = self.player_hand[self.dragging_card]
             card_x, card_y = card.position
-            card.draw(self.game.screen, (card_x, card_y))
+            card.draw(surface, (card_x, card_y))
 
         # update the display
         pygame.display.flip()
@@ -211,7 +211,7 @@ class Combat:
             width=300,
             height=100
         )
-        popup.draw(self.game.screen)
+        popup.draw(self.surface)
         pygame.display.flip()
         pygame.time.wait(500)
         pygame.display.flip()

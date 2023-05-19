@@ -21,7 +21,7 @@ class Game:
 
         # Initialize the screen and clock
         self.screen = pygame.display.set_mode((self.config.get_width(), self.config.get_height()))
-        self.canvas = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
 
         path = os.path.dirname(os.path.abspath(__file__))
@@ -152,8 +152,8 @@ class Game:
                             self.show_settings()
                 self.states[-1].handle_event(event)
             for state in self.states:
-                state.draw(self.canvas)
-            pygame.transform.scale(self.canvas, (self.config.get_width(), self.config.get_height()), self.screen)
+                state.draw(self.surface)
+            pygame.transform.scale(self.surface, (self.config.get_width(), self.config.get_height()), self.screen)
             pygame.display.flip()
 
 if __name__ == "__main__":

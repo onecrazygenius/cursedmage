@@ -1,7 +1,7 @@
 import pygame, os
 from pygame.locals import *
-from app.combat.deck.card import Card
-from app.engine.components.button import Button
+from app.logic.combat.deck.card import Card
+from app.states.components.button import Button
 from app.constants import *
 
 class CardPickupScreen():

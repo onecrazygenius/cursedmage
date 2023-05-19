@@ -1,6 +1,6 @@
 from app.logic.combat.characters.character import Character
 from app.states.components.button import Button
-#from app.states.dungeon import Dungeon
+from app.states.dungeon import Dungeon
 from app.states.state import State
 from app.constants import *
 from pygame.locals import *

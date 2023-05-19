@@ -1,15 +1,22 @@
-import pygame
-from pygame.locals import *
-from app.constants import *
-from app.logic.combat.characters.enemy import generate_enemy
 from app.states.components.room import Room
 from app.states.combat import Combat
+from app.logic.combat.characters.enemy import Enemy
+from app.states.state import State
+from app.constants import *
+from pygame.locals import *
+import pygame
 
-class Dungeon:
+class Dungeon(State):
+
     def __init__(self, game, game_data=None):
+        # Call the parent class (State) constructor
+        super().__init__(game)
+
+
         self.game = game
         self.player_position = (0, 0)
         self.rooms = []
+
         if game_data:
             self.load_data(game_data)
         else:
@@ -17,12 +24,15 @@ class Dungeon:
             # set first room as next
             self.rooms[0][0].next = True
 
-    def draw(self):
-        self.game.screen.fill(WHITE)
+    def draw(self, surface):
+        # Set white background
+        surface.fill(WHITE)
+        # Generate map
         for x in range(DUNGEON_SIZE_X):
             for y in range(DUNGEON_SIZE_Y):
                 room = self.rooms[x][y]
-                room.draw(self.game.screen)
+                room.draw(surface)
+        # Update the display
         pygame.display.flip()
 
     def handle_event(self, event):
@@ -45,7 +55,8 @@ class Dungeon:
             self.rooms.append([])
             for y in range(DUNGEON_SIZE_Y):
                 position = (x, y)
-                enemy = generate_enemy(self.game.character.level)
+                # Make an enemy character
+                enemy = Enemy()
                 room = Room(self.game, position, enemy)
                 self.rooms[x].append(room)
 
@@ -60,7 +71,7 @@ class Dungeon:
             self.game.push_state(self.game.combat)
         else:
             self.update_player_position()
-            self.draw()
+            self.draw(self.surface)
 
     def update_player_position(self):
         # move the player 1 room forward

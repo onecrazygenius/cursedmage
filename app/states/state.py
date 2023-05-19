@@ -7,7 +7,7 @@ class State:
     '''
     def __init__(self, game):
         self.game = game
-        self.screen = game.canvas
+        self.surface = game.surface
         self.const = constants
 
         path = os.path.dirname(os.path.abspath(__file__))
@@ -16,5 +16,5 @@ class State:
     def handle_event(self):
         pass
 
-    def draw(self):
+    def draw(self, canvas):
         pass

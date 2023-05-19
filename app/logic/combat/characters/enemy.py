@@ -6,4 +6,11 @@ class Enemy(Character):
     Base class for all enemies in the game.
     '''
     def __init__(self):
-        pass
+        super().__init__(
+            name="Enemy",
+            health=100,
+            attack=10,
+            defense=5,
+            shield=0,
+            cost=3,
+        )

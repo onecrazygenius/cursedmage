@@ -2,10 +2,10 @@ from app.logic.config_manager import ConfigManager
 from app.logic.save_manager import SaveManager
 from app.constants import *
 from app.states.character_selection import CharacterSelection
-#from app.states.victory_screen import VictoryScreen
+from app.states.victory_screen import VictoryScreen
 from app.states.settings import SettingsMenu
 from app.states.main_menu import MainMenu
-#from app.states.dungeon import Dungeon
+from app.states.dungeon import Dungeon
 import pygame, os
 
 
@@ -73,7 +73,7 @@ class Game:
             return
         self.character = data["character"]
         self.difficulty = data["difficulty"]
-        #self.dungeon = Dungeon(self, game_data=data["dungeon"])
+        self.dungeon = Dungeon(self, game_data=data["dungeon"])
         self.change_state(self.dungeon)
 
     # Sounds
@@ -122,8 +122,8 @@ class Game:
     def show_main_menu(self):
         self.change_state(MainMenu(self))
 
-    # def victory(self):
-    #     self.change_state(VictoryScreen(self))
+    def victory(self):
+        self.change_state(VictoryScreen(self))
 
     def show_settings(self):
         if not self.settings_menu_open:

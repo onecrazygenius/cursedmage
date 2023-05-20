@@ -18,6 +18,7 @@ class Combat(State):
         self.battle_manager = BattleManager(player, enemies)
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
+        self.end_turn_button = Button("End Turn", self.game.config.get_width() // 2, 300, self.end_turn)
 
     def update_health_bars(self):
         player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
@@ -37,6 +38,12 @@ class Combat(State):
         if self.battle_manager.current_turn == self.battle_manager.player:
             # check if the player clicked the mouse button
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+
+                # Was the end turn button clicked?
+                if self.end_turn_button.rect.collidepoint(event.pos):
+                    self.battle_manager.end_turn()
+                    return
+
                 for i, card in enumerate(self.battle_manager.player.deck.hand):
                     if card.cursed:
                         continue
@@ -138,6 +145,9 @@ class Combat(State):
         text_rect = text_surface.get_rect()
         text_rect.center = (self.game.config.get_width() // 2, 50)
         surface.blit(text_surface, text_rect)
+
+        # add an end turn button
+        self.end_turn_button.draw(surface)
 
         # update the display
         pygame.display.flip()

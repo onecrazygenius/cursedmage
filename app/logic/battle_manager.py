@@ -74,7 +74,7 @@ class BattleManager:
     # handle end of turn
     def end_turn(self):
         print("End of Turn")
-        # the player has doen their turn,
+        # the player has done their turn,
         # now we pause to let each enemy attack
         # then we give the turn back to the player
         for enemy in self.enemies:
@@ -82,7 +82,7 @@ class BattleManager:
             self.simulate_enemy_turn()
         self.current_turn = self.player
         self.player.cost = self.player.max_cost
-        self.player.deck.draw_card(2)
+        self.player.deck.draw_card(3 - len(self.player.deck.hand))
 
     
     # handle logic of a turn

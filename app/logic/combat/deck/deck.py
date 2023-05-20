@@ -59,3 +59,4 @@ class Deck:
     def add_card(self, card):
         # Add card to deck
         self.cards.append(card)
+        self.deck.append(card)

@@ -15,8 +15,18 @@ class CardPickupScreen(State):
         self.font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursed_font.tff'), 24)
 
         self.cards = [
-            Card("Enemy's Card 1", 5, 0, "enemy"),
-            Card("Enemy's Card 2", 50, 0, "enemy"),
+            Card(
+                name="Enemy Card 1",
+                card_type="attack",
+                power=50,
+                cost=1,
+            ),
+            Card(
+                name="Enemy Card 2",
+                card_type="attack",
+                power=75,
+                cost=2,
+            ),
         ]
 
         self.button = Button("Back to Main Menu", self.game.config.get_width() // 2, 300, self.back_to_main_menu)

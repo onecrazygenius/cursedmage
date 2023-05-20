@@ -125,6 +125,9 @@ class Game:
     def victory(self):
         self.change_state(VictoryScreen(self))
 
+    def show_dungeon(self):
+        self.change_state(Dungeon(self))
+
     def show_settings(self):
         if not self.settings_menu_open:
             self.states.append(SettingsMenu(self))

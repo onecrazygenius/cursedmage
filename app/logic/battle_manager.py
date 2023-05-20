@@ -37,8 +37,6 @@ class BattleManager:
     # win condition check
     def check_floor_cleared(self):
         # List current enemies and their health/max health
-        for enemy in self.enemies:
-            print(f"{enemy.name}: {enemy.cur_health}/{enemy.max_health}")
         # Check if all enemies are dead
         for enemy in self.enemies:
             if not enemy.is_dead():

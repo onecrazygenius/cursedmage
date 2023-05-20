@@ -68,7 +68,6 @@ class Combat(State):
                         if enemy.is_dead():
                             continue
                         enemy_sprite_pos = pygame.Rect((self.game.config.get_width() / 2 + (i * 300)), (self.game.config.get_height() / 2), 250, 250)
-                        print(enemy_sprite_pos)
                         if enemy_sprite_pos.collidepoint(self.game.screen_to_canvas(event.pos)):
                             card.target = enemy
                             turn_result = self.battle_manager.handle_turn(card)
@@ -112,7 +111,6 @@ class Combat(State):
     def draw(self, surface):
         # draw health bars
         self.update_health_bars()
-
         # Visually draw an enemy and player respectively
         # Multiple enmies will be offset from each other
         for i, enemy in enumerate(self.battle_manager.enemies):

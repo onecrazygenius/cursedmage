@@ -55,3 +55,7 @@ class Deck:
         random.shuffle(self.discard)
         self.deck = self.discard
         self.discard = []
+
+    def add_card(self, card):
+        # Add card to deck
+        self.cards.append(card)

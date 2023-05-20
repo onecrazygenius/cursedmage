@@ -66,13 +66,22 @@ class Dungeon(State):
         room = self.rooms[position[0]][position[1]]
         room.visited = True
 
-        if room.has_enemies():
+        if not room.enemies_defeated():
             self.game.save_game()
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.push_state(self.game.combat)
         else:
             self.update_player_position()
             self.draw(self.surface)
+
+    def progress_to_next_room(self):
+        x, y = self.player_position
+        room = self.rooms[x][y]
+        room.completed = True
+        room.next = False
+        self.update_player_position()
+        self.rooms[self.player_position[0]][self.player_position[1]].next = True
+        self.draw(self.surface)
 
     def update_player_position(self):
         # move the player 1 room forward

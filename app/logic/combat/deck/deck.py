@@ -5,7 +5,7 @@ x = [
             Card(
                 name="Test Card",
                 card_type="attack",
-                power=10,
+                power=1000,
                 cost=1,
             ),
             Card(

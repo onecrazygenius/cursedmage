@@ -14,7 +14,6 @@ class BattleManager:
         # check who the card is targeting
         for enemy in self.enemies:
             if card.target == enemy:
-                print(f"Applying {card.power} damage to {enemy.name}")
                 # apply damage to enemy
                 enemy.cur_health -= card.power - enemy.defense - enemy.shield
                 return

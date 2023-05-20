@@ -62,5 +62,15 @@ class CardPickupScreen(State):
         # Add the card to the player's deck
         self.player.deck.add_card(card)
 
+        # Update the current room to be completed from player position
+        player_x, player_y = self.game.dungeon.player_position
+        room = self.game.dungeon.rooms[player_x][player_y]
+        room.completed = True
+
+        print(room.position)
+
+        # Progress to the next room
+        self.game.dungeon.progress_to_next_room()
+
         # Return to dungeon as room completed
         self.game.show_dungeon()

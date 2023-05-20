@@ -45,3 +45,6 @@ class Room:
     
     def has_enemies(self):
         return len(self.enemies) > 0
+    
+    def enemies_defeated(self):
+        return all([enemy.cur_health <= 0 for enemy in self.enemies])

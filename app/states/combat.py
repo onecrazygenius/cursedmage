@@ -139,10 +139,6 @@ class Combat(State):
         text_rect.center = (self.game.config.get_width() // 2, 50)
         surface.blit(text_surface, text_rect)
 
-        # add an end turn button
-        end_turn_button = Button("End Turn", self.game.config.get_width() // 2, 300, self.end_turn)
-        end_turn_button.draw(surface)
-
         # update the display
         pygame.display.flip()
 

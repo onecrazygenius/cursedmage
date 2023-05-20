@@ -36,7 +36,7 @@ class Character:
         )
 
         # do the first card draw
-        self.deck.draw_card(2)
+        self.deck.draw_card()
 
     def is_dead(self):
         return self.cur_health <= 0

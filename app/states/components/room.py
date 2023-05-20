@@ -2,10 +2,10 @@ import pygame
 from pygame.locals import *
 
 class Room:
-    def __init__(self, game, position, enemy=None, next=False, visited=False, completed=False):
+    def __init__(self, game, position, enemies=[], next=False, visited=False, completed=False):
         self.game = game
         self.position = position
-        self.enemy = enemy
+        self.enemies = enemies
         self.next = next
         self.visited = visited
         self.completed = completed
@@ -37,8 +37,11 @@ class Room:
 
     def get_data(self):
         return {
-            "enemy": self.enemy,
+            "enemies": self.enemies,
             "next": self.next,
             "visited": self.visited,
             "completed": self.completed,
         }
+    
+    def has_enemies(self):
+        return len(self.enemies) > 0

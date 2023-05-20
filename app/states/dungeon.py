@@ -57,7 +57,8 @@ class Dungeon(State):
                 position = (x, y)
                 # Make an enemy character
                 enemy = Enemy()
-                room = Room(self.game, position, enemy)
+                enemy2 = Enemy()
+                room = Room(self.game, position, [enemy, enemy2])
                 self.rooms[x].append(room)
 
     def move_to_room(self, position):
@@ -65,9 +66,9 @@ class Dungeon(State):
         room = self.rooms[position[0]][position[1]]
         room.visited = True
 
-        if room.enemy:
+        if room.has_enemies():
             self.game.save_game()
-            self.game.combat = Combat(self.game, self.game.character, [room.enemy, room.enemy])
+            self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.push_state(self.game.combat)
         else:
             self.update_player_position()
@@ -104,9 +105,9 @@ class Dungeon(State):
             self.rooms.append([])
             for y, room_data in enumerate(row):
                 position = (x, y)
-                enemy = room_data["enemy"]
+                enemies = room_data["enemies"]
                 next = room_data["next"]
                 visited = room_data["visited"]
                 completed = room_data["completed"]
-                room = Room(self.game, position, enemy, next, visited, completed)
+                room = Room(self.game, position, enemies, next, visited, completed)
                 self.rooms[x].append(room)

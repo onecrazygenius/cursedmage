@@ -14,12 +14,9 @@ class BattleManager:
         # check who the card is targeting
         for enemy in self.enemies:
             if card.target == enemy:
+                print(f"Applying {card.power} damage to {enemy.name}")
                 # apply damage to enemy
                 enemy.cur_health -= card.power - enemy.defense - enemy.shield
-                # check if enemy is dead
-                if enemy.is_dead():
-                    # remove enemy from list
-                    self.enemies.remove(enemy)
                 return
         # if no enemy was found, apply damage to player
         self.player.cur_health -= card.power - self.player.defense - self.player.shield
@@ -39,10 +36,14 @@ class BattleManager:
 
     # win condition check
     def check_floor_cleared(self):
+        # List current enemies and their health/max health
+        for enemy in self.enemies:
+            print(f"{enemy.name}: {enemy.cur_health}/{enemy.max_health}")
         # Check if all enemies are dead
         for enemy in self.enemies:
             if not enemy.is_dead():
                 return False
+        # If all enemies are dead, return True
         return True
  
     # check if the player is dead

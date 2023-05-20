@@ -7,10 +7,11 @@ class Enemy(Character):
     '''
     def __init__(self):
         super().__init__(
-            name="Enemy",
+            name="Goblin",
             health=100,
             attack=10,
             defense=5,
             shield=0,
             cost=3,
+            filename="enemies"
         )

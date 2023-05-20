@@ -1,0 +1,34 @@
+[
+  {
+		"name": "Fireball",
+		"card_type": "attack",
+		"power": 20,
+		"cost": 1,
+		"cursed": false,
+		"image": "None"
+	},
+	{
+		"name": "Meteor",
+		"card_type": "attack",
+		"power": 25,
+		"cost": 1,
+		"cursed": false,
+		"image": "None"
+	},
+	{
+		"name": "Earthquake",
+		"card_type": "attack",
+		"power": 50,
+		"cost": 1,
+		"cursed": false,
+		"image": "None"
+	},
+	{
+		"name": "Thunder",
+		"card_type": "attack",
+		"power": 40,
+		"cost": 1,
+		"cursed": false,
+		"image": "None"
+	}
+]

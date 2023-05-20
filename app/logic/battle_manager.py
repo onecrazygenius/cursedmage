@@ -69,33 +69,33 @@ class BattleManager:
             turn_result = self.handle_turn(card)
             # Draw cards
             enemy.deck.draw_card(3 - len(enemy.deck.hand))
-            self.current_turn = self.enemies[i+1] if i+1 < len(self.enemies) else None
+            self.current_turn = self.enemies[i+1] if i+1 < len(self.enemies) else self.enemies[0]
         self.end_turn()
         return turn_result
 
     
     # handle end of turn
     def end_turn(self):
+        self.current_turn.cost = self.current_turn.max_cost
         if self.current_turn == self.player:
             self.current_turn = self.enemies[0]
             pygame.event.post(pygame.event.Event(ENEMY_TURN_EVENT))
         else:
             self.current_turn = self.player
-            self.player.cost = self.player.max_cost
             self.player.deck.draw_card(3 - len(self.player.deck.hand))
 
     
     # handle logic of a turn
     def handle_turn(self, card):
-        # Play card
-        if not self.play_card(card):
-            return FAILED
-        # Check if floor is cleared
-        if self.check_floor_cleared():
-            return FLOOR_COMPLETE
         # Check if player is dead
         if self.check_player_dead():
             return GAME_OVER
+        # Check if floor is cleared
+        if self.check_floor_cleared():
+            return FLOOR_COMPLETE
+        # Play card
+        if not self.play_card(card):
+            return FAILED
         # If player is alive and floor is not cleared, continue
         # Check if they have enough cost to play another card
         if self.current_turn.cost < 1:

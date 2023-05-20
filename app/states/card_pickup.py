@@ -67,8 +67,6 @@ class CardPickupScreen(State):
         room = self.game.dungeon.rooms[player_x][player_y]
         room.completed = True
 
-        print(room.position)
-
         # Progress to the next room
         self.game.dungeon.progress_to_next_room()
 

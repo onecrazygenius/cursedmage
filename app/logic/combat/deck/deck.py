@@ -19,6 +19,24 @@ x = [
                 card_type="attack",
                 power=30,
                 cost=3,
+            ),
+            Card(
+                name="Test Card 4",
+                card_type="attack",
+                power=1000,
+                cost=1,
+            ),
+            Card(
+                name="Test Card 5",
+                card_type="attack",
+                power=20,
+                cost=2,
+            ),
+            Card(
+                name="Test Card 6",
+                card_type="attack",
+                power=30,
+                cost=3,
             )
         ]
 
@@ -36,13 +54,14 @@ class Deck:
         self.discard = []
 
     def draw_card(self, num=5):
-        # Draw cards from deck
+        # Draw cards from deck, up to a maximum of 5
         for i in range(num):
-            # If deck is empty, shuffle discard into deck
             if len(self.deck) == 0:
                 self.shuffle_discard_to_deck()
-            # Draw card
-            self.hand.append(self.deck.pop())
+            if len(self.deck) == 0:
+                return
+            card = self.deck.pop()
+            self.hand.append(card)
 
     def discard_card(self, card):
         # Add the card played to the discard pile

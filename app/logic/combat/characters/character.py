@@ -20,6 +20,7 @@ class Character:
         self.defense = defense
         self.shield = shield
         self.cost = cost
+        self.max_cost = cost
         self.level = 1
         self.deck = Deck(
             cards=cards,

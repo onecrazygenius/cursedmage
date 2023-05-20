@@ -1,8 +1,7 @@
 from app.states.card_pickup import CardPickupScreen
-from app.states.victory_screen import VictoryScreen
 from app.logic.battle_manager import BattleManager
+from app.states.components.button import Button
 from app.states.components.popup import Popup
-from app.states.main_menu import MainMenu
 from app.states.state import State
 from pygame.locals import *
 from app.constants import *
@@ -86,18 +85,13 @@ class Combat(State):
                         card.position = (100 + (100 + 100) * self.dragging_card, 100)
                         self.dragging_card = None
 
-        # Check if enemy's turn event has been triggered
-        elif event.type == ENEMY_TURN_EVENT:
-            print("Enemy's turn!")
-            pygame.time.set_timer(ENEMY_TURN_EVENT, 0)  # Stop the timer
-            self.enemy_turn()
-            self.player_turn = True
-            #self.check_win_condition()
-            self.update_health_bars()
-            self.popup("Your turn!")
-
     def post_turn_actions(self, turn_result):
         # Check Turn Result and perform the appropriate actions
+        if turn_result == END_TURN:
+            self.battle_manager.end_turn()
+        if turn_result == FAILED:
+            # Not enough cost
+            self.popup("Not enough cost")
         if turn_result == GAME_OVER:
             self.game.quit_game()
             # TODO: Game over screen
@@ -105,8 +99,8 @@ class Combat(State):
             self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
         if turn_result == CONTINUE:
             self.update_health_bars()
-            pygame.display.flip()
-            self.dragging_card = None
+        self.dragging_card = None
+        pygame.display.flip()
 
     def draw(self, surface):
         # draw health bars
@@ -138,8 +132,23 @@ class Combat(State):
             card_x, card_y = card.position
             card.draw(surface, (card_x, card_y))
 
+        # Show the player's cost
+        font = pygame.font.Font(None, 24)
+        text_surface = font.render("Cost: " + str(self.battle_manager.player.cost), True, WHITE)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (self.game.config.get_width() // 2, 50)
+        surface.blit(text_surface, text_rect)
+
+        # add an end turn button
+        end_turn_button = Button("End Turn", self.game.config.get_width() // 2, 300, self.end_turn)
+        end_turn_button.draw(surface)
+
         # update the display
         pygame.display.flip()
+
+    def end_turn(self):
+        # end the player's turn
+        self.battle_manager.end_turn()
 
     def popup(self, text):
         popup = Popup(

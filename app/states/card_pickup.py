@@ -1,33 +1,28 @@
-import pygame, os
-from pygame.locals import *
-from app.logic.combat.deck.card import Card
-from app.states.components.button import Button
+import os
+import random
+
 from app.constants import *
+from app.states.components.button import Button
 from app.states.state import State
 
+
 class CardPickupScreen(State):
-    def __init__(self, game, player):
+    def __init__(self, game, player, enemies):
         super().__init__(game)
 
         self.game = game
         self.player = player
+        self.enemies = enemies
         path = os.path.dirname(os.path.abspath(__file__))
         self.font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursed_font.tff'), 24)
 
-        self.cards = [
-            Card(
-                name="Enemy Card 1",
-                card_type="attack",
-                power=50,
-                cost=1,
-            ),
-            Card(
-                name="Enemy Card 2",
-                card_type="attack",
-                power=75,
-                cost=2,
-            ),
-        ]
+        self.cards_to_show = []
+        all_enemy_cards = []
+        for enemy in enemies:
+            all_enemy_cards += enemy.deck.cards
+
+        cards_picked = random.sample(range(0, len(all_enemy_cards)), 2)
+        self.cards_to_show = list(map(all_enemy_cards.__getitem__, cards_picked))
 
         self.button = Button("Back to Main Menu", self.game.config.get_width() // 2, 300, self.back_to_main_menu)
 
@@ -42,7 +37,7 @@ class CardPickupScreen(State):
         self.button.draw(surface)
         
         # Draw cards
-        for i, card in enumerate(self.cards):
+        for i, card in enumerate(self.cards_to_show):
             card_x = 100 + (100 + 100) * i
             card_y = 100
             pygame.draw.rect(surface, (255, 255, 255), pygame.Rect(card_x, card_y, 100, 100))
@@ -58,7 +53,7 @@ class CardPickupScreen(State):
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-            for i, card in enumerate(self.cards):
+            for i, card in enumerate(self.cards_to_show):
                 card_x = 100 + (100 + 100) * i
                 card_y = 100
                 card_rect = pygame.Rect(card_x, card_y, 100, 100)

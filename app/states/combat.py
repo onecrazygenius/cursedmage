@@ -34,6 +34,10 @@ class Combat(State):
             pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50 + (150*i), enemy_bar_width, 100))
 
     def handle_event(self, event):
+        if event.type == ENEMY_TURN_EVENT:
+            turn_result = self.battle_manager.simulate_enemy_turn()
+            self.post_turn_actions(turn_result)
+
         # check if the player turn
         if self.battle_manager.current_turn == self.battle_manager.player:
             # check if the player clicked the mouse button

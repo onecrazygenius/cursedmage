@@ -41,6 +41,10 @@ class Character:
     def is_dead(self):
         return self.cur_health <= 0
 
+    def replenish(self):
+        self.cur_health = self.max_health
+        self.deck.shuffle_discard_to_deck()
+
     def starting_deck(self):
         path = os.path.dirname(os.path.abspath(__file__))
         json_file = (os.path.join(path + '/../../../assets/data/cards.json'))

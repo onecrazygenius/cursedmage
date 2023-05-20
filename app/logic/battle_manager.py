@@ -1,7 +1,8 @@
 # app/logic/battle_manager.py
-from app.constants import *
-from app.logic.combat.characters.enemy import Enemy
 import random
+
+from app.constants import *
+
 
 class BattleManager:
 
@@ -9,6 +10,9 @@ class BattleManager:
         self.current_turn = player
         self.player = player
         self.enemies = enemies
+
+        # Replenish the player as this is the start of a new fight
+        self.player.replenish()
 
     # apply damage to a character
     def apply_damage(self, card):
@@ -23,12 +27,12 @@ class BattleManager:
 
     # Cost handler
     def apply_cost(self, card):
-        # if the player doesn't have enough cost, they can't play the card
-        if (self.player.cost - card.cost) < 0:
+        # if the current turn character doesn't have enough cost, they can't play the card
+        if (self.current_turn.cost - card.cost) < 0:
             return False
-        # apply cost to player
-        self.player.cost -= card.cost
-        # if the player has enough cost, play the card
+        # apply cost to current turn character
+        self.current_turn.cost -= card.cost
+        # if the current turn character has enough cost, play the card
         return True
 
     # handle a card being played
@@ -60,29 +64,28 @@ class BattleManager:
     
     # simulate enemy turn
     def simulate_enemy_turn(self):
-        # check current turn is an enemy
-        if self.current_turn == self.player:
-            return
-        # get the enemy
-        enemy = self.current_turn
-        # choose a card to play
-        card = enemy.deck.hand[random.randint(0, len(enemy.deck.hand) - 1)]
-        # play the card
-        self.handle_turn(card)
-        print(f"{enemy.name} played {card.name}")
+        for i, enemy in enumerate(self.enemies):
+            # choose a card to play
+            card = enemy.deck.hand[random.randint(0, len(enemy.deck.hand) - 1)]
+            print(f"{enemy.name} played {card.name}")
+            # play the card
+            turn_result = self.handle_turn(card)
+            # Draw cards
+            enemy.deck.draw_card(3 - len(enemy.deck.hand))
+            self.current_turn = self.enemies[i+1] if i+1 < len(self.enemies) else None
+        self.end_turn()
+        return turn_result
+
     
     # handle end of turn
     def end_turn(self):
-        print("End of Turn")
-        # the player has done their turn,
-        # now we pause to let each enemy attack
-        # then we give the turn back to the player
-        for enemy in self.enemies:
-            self.current_turn = enemy
-            self.simulate_enemy_turn()
-        self.current_turn = self.player
-        self.player.cost = self.player.max_cost
-        self.player.deck.draw_card(3 - len(self.player.deck.hand))
+        if self.current_turn == self.player:
+            self.current_turn = self.enemies[0]
+            pygame.event.post(pygame.event.Event(ENEMY_TURN_EVENT))
+        else:
+            self.current_turn = self.player
+            self.player.cost = self.player.max_cost
+            self.player.deck.draw_card(3 - len(self.player.deck.hand))
 
     
     # handle logic of a turn

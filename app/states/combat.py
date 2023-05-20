@@ -20,6 +20,9 @@ class Combat(State):
         self.dragging_card_offset = (0, 0)
         self.end_turn_button = Button("End Turn", self.game.config.get_width() // 2, 300, self.end_turn)
 
+        # Before a fight replenish the player
+        player.replenish()
+
     def update_health_bars(self):
         player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
         player_bar_width = int(player_health_ratio * 100)

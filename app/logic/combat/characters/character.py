@@ -12,7 +12,7 @@ class Character:
     def __init__(self, 
                  name, 
                  cards=[],
-                 health=100, 
+                 health=10000,
                  attack=0, 
                  defense=0, 
                  shield=0,
@@ -41,9 +41,12 @@ class Character:
     def is_dead(self):
         return self.cur_health <= 0
 
+    # Used to replenish the players health, cost and put all their cards back into the deck
     def replenish(self):
         self.cur_health = self.max_health
         self.deck.shuffle_discard_to_deck()
+        self.deck.draw_card(3 - len(self.deck.hand))
+        self.cost = self.max_cost
 
     def starting_deck(self):
         path = os.path.dirname(os.path.abspath(__file__))

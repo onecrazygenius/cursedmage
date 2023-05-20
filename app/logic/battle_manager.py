@@ -11,9 +11,6 @@ class BattleManager:
         self.player = player
         self.enemies = enemies
 
-        # Replenish the player as this is the start of a new fight
-        self.player.replenish()
-
     # apply damage to a character
     def apply_damage(self, card):
         # check who the card is targeting

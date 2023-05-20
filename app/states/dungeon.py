@@ -67,7 +67,7 @@ class Dungeon(State):
 
         if room.enemy:
             self.game.save_game()
-            self.game.combat = Combat(self.game, self.game.character, [room.enemy])
+            self.game.combat = Combat(self.game, self.game.character, [room.enemy, room.enemy])
             self.game.push_state(self.game.combat)
         else:
             self.update_player_position()

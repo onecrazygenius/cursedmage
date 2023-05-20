@@ -70,9 +70,8 @@ class Combat(State):
 
                     turn_result = None
                     # check if the card was dropped on an enemy
-                    for enemy in self.battle_manager.enemies:
-                        enemy_sprite_pos = pygame.Rect((self.game.config.get_width() / 2),
-                                                        (self.game.config.get_height() / 2), 250, 250)
+                    for i, enemy in enumerate(self.battle_manager.enemies):
+                        enemy_sprite_pos = pygame.Rect((self.game.config.get_width() / 2 + (i * 200)), (self.game.config.get_height() / 2), 250, 250)
                         if enemy_sprite_pos.collidepoint(self.game.screen_to_canvas(event.pos)):
                             card.target = self.battle_manager.enemies[0] #TODO: Make this actually work for multiple enemies
                             turn_result = self.battle_manager.handle_turn(card)
@@ -118,8 +117,11 @@ class Combat(State):
         self.update_health_bars()
 
         # Visually draw an enemy and player respectively
-        #TODO: Support multiple enemies
-        pygame.draw.rect(surface, RED, pygame.Rect((self.game.config.get_width() / 2), (self.game.config.get_height() / 2), 250, 250))
+        # Multiple enmies will be offset from each other
+        for i, enemy in enumerate(self.battle_manager.enemies):
+            pygame.draw.rect(surface, RED, pygame.Rect((self.game.config.get_width() / 2 + (i * 200)), (self.game.config.get_height() / 2), 250, 250))
+
+        
         pygame.draw.rect(surface, GREEN, pygame.Rect((self.game.config.get_width() / 4), (self.game.config.get_height() / 2), 250, 250))
 
         # for each card in the player's hand, draw the card

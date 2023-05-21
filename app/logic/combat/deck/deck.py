@@ -27,7 +27,8 @@ class Deck:
         # Add the card played to the discard pile
         self.discard.append(card)
         # Discard card from hand
-        self.hand.remove(card)
+        if card in self.hand:
+            self.hand.remove(card)
 
     def shuffle_discard_to_deck(self):
         # Shuffle discard into deck

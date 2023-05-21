@@ -1,5 +1,5 @@
 # app/logic/battle_manager.py
-
+from collections import deque
 from app.constants import *
 from app.logic.combat.enemy_logic import EnemyLogic
 
@@ -7,7 +7,8 @@ from app.logic.combat.enemy_logic import EnemyLogic
 class BattleManager:
 
     def __init__(self, player, enemies):
-        self.current_turn = player
+        self.participants = deque([player] + enemies)
+        self.current_turn = self.participants[0]
         self.player = player
         self.enemies = enemies
 
@@ -79,12 +80,21 @@ class BattleManager:
     # handle end of turn
     def end_turn(self):
         self.current_turn.cost = self.current_turn.max_cost
-        if self.current_turn == self.player:
-            self.current_turn = self.enemies[0]
+        self.participants.rotate(-1)
+        self.current_turn = self.participants[0]
+        
+        # If player is dead, game is over
+        if self.player.is_dead():
+            pygame.event.post(pygame.event.Event(GAME_OVER_EVENT))
+            return
+
+        # If it's enemy's turn, post an event
+        if self.current_turn != self.player:
             pygame.event.post(pygame.event.Event(ENEMY_TURN_EVENT))
         else:
-            self.current_turn = self.player
-            self.player.deck.draw_card(3 - len(self.player.deck.hand))
+            self.current_turn.deck.draw_card(3 - len(self.current_turn.deck.hand))
+
+
 
     
     # handle logic of a turn

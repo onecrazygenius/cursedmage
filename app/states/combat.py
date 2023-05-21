@@ -9,14 +9,11 @@ from app.states.state import State
 class Combat(State):
     def __init__(self, game, player, enemies):
         super().__init__(game)
-
         self.game = game
         self.battle_manager = BattleManager(player, enemies)
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
         self.end_turn_button = Button("End Turn", self.game.config.get_width() // 2, 300, self.end_turn)
-
-        # Before a fight replenish the player
         player.replenish()
 
     def update_health_bars(self):
@@ -33,7 +30,12 @@ class Combat(State):
             pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50 + (150*i), enemy_bar_width, 100))
 
     def handle_event(self, event):
-        if event.type == ENEMY_TURN_EVENT:
+
+        if event.type == GAME_OVER_EVENT:
+            print("Game Over")
+            self.game.quit_game()
+
+        if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
             turn_result = self.battle_manager.simulate_all_enemy_turns()
             self.post_turn_actions(turn_result)
 

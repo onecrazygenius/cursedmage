@@ -2,6 +2,7 @@
 import random
 
 from app.constants import *
+from app.logic.combat.enemy_logic import EnemyLogic
 
 
 class BattleManager:
@@ -60,16 +61,18 @@ class BattleManager:
         return self.player.is_dead()
     
     # simulate enemy turn
-    def simulate_enemy_turn(self):
+    def simulate_all_enemy_turns(self):
         for i, enemy in enumerate(self.enemies):
-            # choose a card to play
-            card = enemy.deck.hand[random.randint(0, len(enemy.deck.hand) - 1)]
-            print(f"{enemy.name} played {card.name}")
-            # play the card
-            turn_result = self.handle_turn(card)
+            turn_result = CONTINUE
+            while turn_result == CONTINUE:
+                # choose a card to play
+                card = EnemyLogic.select_card(enemy, self.player)
+                print(f"Enemy No. {i} {enemy.name} played {card.name}")
+                # play the card
+                turn_result = self.handle_turn(card)
             # Draw cards
             enemy.deck.draw_card(3 - len(enemy.deck.hand))
-            self.current_turn = self.enemies[i+1] if i+1 < len(self.enemies) else self.enemies[0]
+            self.current_turn = self.enemies[i+1] if i+1 < len(self.enemies) else self.current_turn
         self.end_turn()
         return turn_result
 
@@ -98,7 +101,7 @@ class BattleManager:
             return FAILED
         # If player is alive and floor is not cleared, continue
         # Check if they have enough cost to play another card
-        if self.current_turn.cost < 1:
+        if self.current_turn.cost < 1 or len([card for card in self.current_turn.deck.hand if card.cost <= self.current_turn.cost]) == 0:
             return END_TURN
         return CONTINUE
     

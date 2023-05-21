@@ -1,14 +1,10 @@
-from app.states.card_pickup import CardPickupScreen
+from app.constants import *
 from app.logic.battle_manager import BattleManager
+from app.states.card_pickup import CardPickupScreen
 from app.states.components.button import Button
 from app.states.components.popup import Popup
 from app.states.state import State
-from pygame.locals import *
-from app.constants import *
-import pygame
 
-# Timers
-ENEMY_TURN_EVENT = pygame.USEREVENT + 1
 
 class Combat(State):
     def __init__(self, game, player, enemies):
@@ -38,7 +34,7 @@ class Combat(State):
 
     def handle_event(self, event):
         if event.type == ENEMY_TURN_EVENT:
-            turn_result = self.battle_manager.simulate_enemy_turn()
+            turn_result = self.battle_manager.simulate_all_enemy_turns()
             self.post_turn_actions(turn_result)
 
         # check if the player turn

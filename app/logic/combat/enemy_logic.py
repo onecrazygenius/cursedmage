@@ -11,24 +11,24 @@ class EnemyLogic:
     # card are in the possible plays array, you can increase the odds of a specific card being played.
     @staticmethod
     def select_card(enemy, player):
-
         cards_in_cost = [card for card in enemy.deck.hand if card.cost <= enemy.cost]
 
         possible_plays = []
-        possible_plays += cards_in_cost  # Add any card which can be played, this adds an element of 'Dumb AI'
+        possible_plays += cards_in_cost  # Add any card which can be played
 
         # The following methods add best play scenarios
         possible_plays += EnemyLogic.cards_that_kill(cards_in_cost, player)
-
-        cards_that_allow_to_survive = EnemyLogic.cards_allow_to_survive(cards_in_cost, enemy, player)
-        if cards_that_allow_to_survive is not None:
-            possible_plays += cards_that_allow_to_survive
+        possible_plays += EnemyLogic.cards_allow_to_survive(cards_in_cost, enemy, player)
 
         best_card_allows_another_to_be_played = EnemyLogic.best_card_that_allows_another_card_to_be_played(cards_in_cost, enemy)
         if best_card_allows_another_to_be_played is not None:
             possible_plays.append(best_card_allows_another_to_be_played)
 
+        if not possible_plays:
+            return None  # No possible plays, enemy should end their turn
+
         return random.choice(possible_plays)
+
 
     # Identifies any cards that would allow the enemy to kill the player
     @staticmethod

@@ -6,8 +6,8 @@ class Enemy(Character):
     Base class for all enemies in the game.
     '''
 
-    def __init__(self):
+    def __init__(self, name):
         super().__init__(
-            name="Goblin",
+            name,
             filename="enemies"
         )

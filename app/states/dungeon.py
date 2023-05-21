@@ -1,3 +1,7 @@
+import json
+import os
+import random
+
 import numpy
 
 from app.states.components.room import Room
@@ -67,6 +71,7 @@ class Dungeon(State):
     def create_enemies(self, room_position_x, room_position_y):
         # These factors control how much each variable contributes to the output.
         # Since DUNGEON_SIZE_Y should have a bigger impact, we could give it a higher weight
+        # TODO: Difficulty could alter these to increase the chance of multiple enemies
         base_factor_x = 0.3
         base_factor_y = 0.7
 
@@ -88,11 +93,24 @@ class Dungeon(State):
         scaled_position_within_bounds = max(min(scaled_position, 3), 1)
 
         number_of_enemies = round(scaled_position_within_bounds)
+        enemy_names = self.choose_enemy_names_from_difficulty(scaled_position_within_bounds, number_of_enemies)
+        print(str(scaled_position_within_bounds))
+        print(enemy_names)
         enemies = []
-        for i in range(number_of_enemies):
-            enemies.append(Enemy())
+        for name in enemy_names:
+            enemies.append(Enemy(name))
 
         return enemies
+
+    def choose_enemy_names_from_difficulty(self, difficulty_threshold, number_of_enemies):
+        path = os.path.dirname(os.path.abspath(__file__))
+        json_file = (os.path.join(path + '/../assets/data/enemies.json'))
+        with open(json_file, 'r') as file:
+            data = json.load(file)
+
+        # Get a list of names where the difficulty is less than or equal to the threshold
+        eligible_names = [enemy['name'] for enemy in data if enemy['difficulty'] <= difficulty_threshold]
+        return random.choices(eligible_names, k=number_of_enemies)
 
     def move_to_room(self, position):
         self.player_position = position

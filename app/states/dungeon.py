@@ -1,3 +1,5 @@
+import numpy
+
 from app.states.components.room import Room
 from app.states.combat import Combat
 from app.logic.combat.characters.enemy import Enemy
@@ -55,11 +57,42 @@ class Dungeon(State):
             self.rooms.append([])
             for y in range(DUNGEON_SIZE_Y):
                 position = (x, y)
-                # Make an enemy character
-                enemy = Enemy()
-                enemy2 = Enemy()
-                room = Room(self.game, position, [enemy, enemy2])
+                # Create the enemies for the room
+                enemies = self.create_enemies(x, y)
+                room = Room(self.game, position, enemies)
                 self.rooms[x].append(room)
+
+    # Based on the position of the room, between 1 and 3 enemies will be created where as you progress
+    # Through the dungeon, there is a higher chance of more enemies being in the room
+    def create_enemies(self, room_position_x, room_position_y):
+        # These factors control how much each variable contributes to the output.
+        # Since DUNGEON_SIZE_Y should have a bigger impact, we could give it a higher weight
+        base_factor_x = 0.3
+        base_factor_y = 0.7
+
+        # Calculate the room's relative position in the dungeon
+        relative_position_x = room_position_x / DUNGEON_SIZE_X
+        relative_position_y = room_position_y / DUNGEON_SIZE_Y
+
+        # Based on the room position and the base factor of the X and Y dimensions, create a weighted position value
+        relative_position_weighted = base_factor_x * relative_position_x + base_factor_y * relative_position_y
+
+        # Add some randomness to the calculation. This will add a random value between -0.2 and 0.2 to the result
+        randomness = numpy.random.uniform(-0.2, 0.2)
+
+        # Scale the relative position to the range of 1-3 and add randomness
+        # Use 1 + 2 to ensure the minimum value will be 1 before randomness instead of 0 if just 3 was used.
+        scaled_position = 1 + 2 * (relative_position_weighted + randomness)
+
+        # Make sure the result stays within the range of 1-3
+        scaled_position_within_bounds = max(min(scaled_position, 3), 1)
+
+        number_of_enemies = round(scaled_position_within_bounds)
+        enemies = []
+        for i in range(number_of_enemies):
+            enemies.append(Enemy())
+
+        return enemies
 
     def move_to_room(self, position):
         self.player_position = position

@@ -19,7 +19,10 @@ class EnemyLogic:
 
         # The following methods add best play scenarios
         possible_plays += EnemyLogic.cards_that_kill(cards_in_cost, player)
-        possible_plays += EnemyLogic.cards_allow_to_survive(cards_in_cost, enemy, player)
+
+        cards_that_allow_to_survive = EnemyLogic.cards_allow_to_survive(cards_in_cost, enemy, player)
+        if cards_that_allow_to_survive is not None:
+            possible_plays += cards_that_allow_to_survive
 
         best_card_allows_another_to_be_played = EnemyLogic.best_card_that_allows_another_card_to_be_played(cards_in_cost, enemy)
         if best_card_allows_another_to_be_played is not None:
@@ -43,7 +46,7 @@ class EnemyLogic:
                         if enemy.cur_health + enemy_card.power > player_card.power > enemy.cur_health:  # That by playing a shield card would allow the enemy to live
                             cards_that_allow_to_survive.append(enemy_card)
 
-            return cards_that_allow_to_survive
+        return cards_that_allow_to_survive
 
     # Identifies a single card that has the highest power and allows another card to be played
     @staticmethod

@@ -19,7 +19,7 @@
 		"name": "Earthquake",
 		"card_type": "attack",
 		"power": 50,
-		"cost": 1,
+		"cost": 3,
 		"cursed": false,
 		"image": "None"
 	},
@@ -27,7 +27,7 @@
 		"name": "Thunder",
 		"card_type": "attack",
 		"power": 40,
-		"cost": 1,
+		"cost": 2,
 		"cursed": false,
 		"image": "None"
 	}

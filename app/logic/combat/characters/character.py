@@ -9,27 +9,23 @@ class Character:
     '''
     Base class for all characters in the game.
     '''
-    def __init__(self, 
-                 name, 
-                 cards=[],
-                 health=10000,
-                 attack=0, 
-                 defense=0, 
+
+    def __init__(self,
+                 name,
                  shield=0,
-                 cost=3,
                  filename="characters"
-                ):
+                 ):
         # Set the filename where the data is stored
         self.filename = filename
 
         self.name = name
-        self.max_health = health
-        self.cur_health = health
-        self.attack = attack
-        self.defense = defense
+        self.max_health = self.get_stat_for_character("health")
+        self.cur_health = self.max_health
+        self.attack = self.get_stat_for_character("attack")
+        self.defense = self.get_stat_for_character("defence")
         self.shield = shield
-        self.cost = cost
-        self.max_cost = cost
+        self.cost = self.get_stat_for_character("cost")
+        self.max_cost = self.cost
         self.level = 1
         self.deck = Deck(
             cards=self.starting_deck(),
@@ -71,3 +67,14 @@ class Character:
 
         return None
 
+    def get_stat_for_character(self, stat_name):
+        path = os.path.dirname(os.path.abspath(__file__))
+        json_file = (os.path.join(path + '/../../../assets/data/' + self.filename + ".json"))
+        with open(json_file, 'r') as file:
+            data = json.load(file)
+
+        for character in data:
+            if character['name'] == self.name:
+                return character[stat_name]
+
+        return None

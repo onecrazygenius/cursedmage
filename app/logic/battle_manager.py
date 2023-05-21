@@ -99,18 +99,21 @@ class BattleManager:
     
     # handle logic of a turn
     def handle_turn(self, card):
+        # Play card
+        if not self.play_card(card):
+            return FAILED
+        
         # Check if player is dead
         if self.check_player_dead():
             return GAME_OVER
         # Check if floor is cleared
         if self.check_floor_cleared():
             return FLOOR_COMPLETE
-        # Play card
-        if not self.play_card(card):
-            return FAILED
+        
         # If player is alive and floor is not cleared, continue
         # Check if they have enough cost to play another card
         if self.current_turn.cost < 1 or len([card for card in self.current_turn.deck.hand if card.cost <= self.current_turn.cost]) == 0:
             return END_TURN
         return CONTINUE
+
     

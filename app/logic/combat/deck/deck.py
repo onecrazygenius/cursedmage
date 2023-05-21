@@ -36,6 +36,7 @@ class Deck:
         self.discard = []
 
     def add_card(self, card):
-        # Add card to deck
+        # Add card to the full deck list
         self.cards.append(card)
-        self.deck.append(card)
+        # Add card to the discard pile
+        self.discard.append(card)

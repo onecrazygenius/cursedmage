@@ -107,7 +107,10 @@ class Combat(State):
             self.game.quit_game()
             # TODO: Game over screen
         if turn_result == FLOOR_COMPLETE:
-            self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
+            if self.game.dungeon.is_last_room():
+                self.game.victory()
+            else:
+                self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
         if turn_result == CONTINUE:
             self.update_health_bars()
         self.dragging_card = None

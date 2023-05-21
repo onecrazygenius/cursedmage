@@ -9,7 +9,6 @@ from app.states.state import State
 class CardPickupScreen(State):
     def __init__(self, game, player, enemies):
         super().__init__(game)
-
         self.game = game
         self.player = player
         self.enemies = enemies

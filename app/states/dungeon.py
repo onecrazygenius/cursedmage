@@ -135,15 +135,15 @@ class Dungeon(State):
     def update_player_position(self):
         # move the player 1 room forward
         x, y = self.player_position
-        # check if the player is at the end of the dungeon
-        if x == DUNGEON_SIZE_X - 1 and y == DUNGEON_SIZE_Y - 1:
-            self.game.victory()
-        elif x == DUNGEON_SIZE_X - 1:
+        if x == DUNGEON_SIZE_X - 1:
             # update the player position to the next row
             self.player_position = (0, y + 1)
         else:
             # update the player position to the next column
             self.player_position = (x + 1, y)
+
+    def is_last_room(self):
+        return self.player_position == (DUNGEON_SIZE_X - 1, DUNGEON_SIZE_Y - 1)
 
     def handle_event(self, event):
         if event.type == MOUSEBUTTONUP:

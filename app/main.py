@@ -159,6 +159,7 @@ class Game:
 
     def victory(self):
         # Go to the victory screen by changing to the victory screen state
+        print("Victory!")
         self.change_state(VictoryScreen(self))
 
     def show_dungeon(self):

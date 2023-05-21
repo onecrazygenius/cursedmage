@@ -9,5 +9,5 @@
 9. Random map generation*                 |3-4hr  
 10. Enemy hitboxes/Enemy offset           |1hr
 11. ~~Card pickup show enemies cards        |1hr~~
-12. Rooms should generate between 1 - 3 enemies |0.5hr
+12. ~~Rooms should generate between 1 - 3 enemies |0.5hr~~
 13. ~~Characters are not using the stats from the files | 0.5hr~~

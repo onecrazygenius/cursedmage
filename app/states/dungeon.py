@@ -87,15 +87,13 @@ class Dungeon(State):
 
         # Scale the relative position to the range of 1-3 and add randomness
         # Use 1 + 2 to ensure the minimum value will be 1 before randomness instead of 0 if just 3 was used.
-        scaled_position = 1 + 2 * (relative_position_weighted + randomness)
+        scaled_enemy_number = 1 + 2 * (relative_position_weighted + randomness)
 
         # Make sure the result stays within the range of 1-3
-        scaled_position_within_bounds = max(min(scaled_position, 3), 1)
+        scaled_enemy_number_within_bounds = max(min(scaled_enemy_number, 3), 1)
 
-        number_of_enemies = round(scaled_position_within_bounds)
-        enemy_names = self.choose_enemy_names_from_difficulty(scaled_position_within_bounds, number_of_enemies)
-        print(str(scaled_position_within_bounds))
-        print(enemy_names)
+        number_of_enemies = round(scaled_enemy_number_within_bounds)
+        enemy_names = self.choose_enemy_names_from_difficulty(scaled_enemy_number_within_bounds, number_of_enemies)
         enemies = []
         for name in enemy_names:
             enemies.append(Enemy(name))

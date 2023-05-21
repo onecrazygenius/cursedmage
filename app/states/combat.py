@@ -42,11 +42,6 @@ class Combat(State):
             # check if the player clicked the mouse button
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
-                # Was the end turn button clicked?
-                if self.end_turn_button.rect.collidepoint(event.pos):
-                    self.battle_manager.end_turn()
-                    return
-
                 for i, card in enumerate(self.battle_manager.player.deck.hand):
                     if card.cursed:
                         continue
@@ -65,6 +60,10 @@ class Combat(State):
 
             # check if the player released the mouse button
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                 # Was the end turn button clicked?
+                if self.end_turn_button.rect.collidepoint(event.pos):
+                    self.battle_manager.end_turn()
+                    return
                 # check if the player was dragging a card
                 if self.dragging_card is not None:
                     # get the card that was being dragged

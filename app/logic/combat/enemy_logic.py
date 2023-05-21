@@ -49,15 +49,10 @@ class EnemyLogic:
     @staticmethod
     def best_card_that_allows_another_card_to_be_played(playable_cards, enemy):
         # Sort cards by power in descending order.
-        cards = sorted(playable_cards, key=lambda x: x.power, reverse=True)
-
+        cards = sorted(playable_cards, key=lambda enemy_card: enemy_card.power, reverse=True)
         for card in cards:
             # Check if there's at least one more card that could be played after this one
             if any(card.cost <= (enemy.cost - other_cards.cost) for other_cards in cards if other_cards != card):
                 return card
             # If no card fulfills the criteria, return None
             return None
-
-
-
-

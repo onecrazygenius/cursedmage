@@ -77,6 +77,8 @@ class BattleManager:
                 turn_result = self.handle_turn(card)
 
             enemy.deck.draw_card(3 - len(enemy.deck.hand))
+
+        self.player.deck.draw_card(3 - len(self.player.deck.hand)) 
         self.current_turn = self.player
         return turn_result
 

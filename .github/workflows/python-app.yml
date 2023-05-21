@@ -11,31 +11,28 @@ on:
 permissions:
   contents: read
 
+# install dependencies, run tests, and if successful build and publish
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.11"
-    - name: Install dependencies
-      run: |
-        pip install --upgrade pip
-        python -m venv env
-        source env/bin/activate
-        pip install -e .
-        deactivate
-    - name: Test with pytest
-      run: |
-        source env/bin/activate
-        pytest
-        deactivate
-    - name: Build executable
-      run: |
-        source env/bin/activate
-        pyinstaller build.spec
-        deactivate
+      - uses: actions/checkout@v2
+      - name: set up Python 3.11
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+      - name: install Poetry
+        run: |
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - name: install dependencies
+        run: poetry install
+      - name: Run tests
+        run: poetry run pytest
+      - name: build with pyinstaller
+        run: poetry run pyinstaller build.spec
+      - name: publish to github releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist/*"
+          token: ${{ secrets.GITHUB_TOKEN }}

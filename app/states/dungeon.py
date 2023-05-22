@@ -93,21 +93,21 @@ class Dungeon(State):
         scaled_enemy_number_within_bounds = max(min(scaled_enemy_number, 3), 1)
 
         number_of_enemies = round(scaled_enemy_number_within_bounds)
-        enemy_names = self.choose_enemy_names_from_difficulty(scaled_enemy_number_within_bounds, number_of_enemies)
+        chosen_enemies = self.choose_enemy_from_difficulty(scaled_enemy_number_within_bounds, number_of_enemies)
         enemies = []
-        for name in enemy_names:
-            enemies.append(Enemy(name))
+        for enemy in chosen_enemies:
+            enemies.append(Enemy(enemy['name'], enemy['sprite']))
 
         return enemies
 
-    def choose_enemy_names_from_difficulty(self, difficulty_threshold, number_of_enemies):
+    def choose_enemy_from_difficulty(self, difficulty_threshold, number_of_enemies):
         path = os.path.dirname(os.path.abspath(__file__))
         json_file = (os.path.join(path + '/../assets/data/enemies.json'))
         with open(json_file, 'r') as file:
             data = json.load(file)
 
         # Get a list of names where the difficulty is less than or equal to the threshold
-        eligible_names = [enemy['name'] for enemy in data if enemy['difficulty'] <= difficulty_threshold]
+        eligible_names = [enemy for enemy in data if enemy['difficulty'] <= difficulty_threshold]
         return random.choices(eligible_names, k=number_of_enemies)
 
     def move_to_room(self, position):

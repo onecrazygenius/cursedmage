@@ -16,8 +16,9 @@ class MainMenu(State):
         ]
         
         # Music
+        path = os.path.dirname(os.path.abspath(__file__))
         pygame.mixer.init()
-        pygame.mixer.music.load(resource_path("app/assets/music/deku.mp3"))
+        pygame.mixer.music.load(os.path.join(path, "../assets/music/deku.mp3"))
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(self.game.config.get_master_volume())
 

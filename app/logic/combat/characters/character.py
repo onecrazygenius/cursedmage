@@ -27,6 +27,11 @@ class Character:
         self.cost = self.get_stat_for_character("cost")
         self.max_cost = self.cost
         self.level = 1
+        # TODO: Long term this won't be necessary
+        sprite = self.get_stat_for_character("sprite")
+        if sprite is None or sprite == "None":
+            sprite = "mage"
+        self.sprite = "app/assets/images/sprites/" + sprite + ".png"
         self.deck = Deck(
             cards=self.starting_deck(),
         )

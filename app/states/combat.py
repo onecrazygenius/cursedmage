@@ -13,21 +13,20 @@ class Combat(State):
         self.battle_manager = BattleManager(player, enemies)
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
-        self.end_turn_button = Button("End Turn", self.game.config.get_width() // 2, 300, self.end_turn)
+        self.end_turn_button = Button("End Turn", 150, self.game.config.get_height() // 2, self.end_turn)
         player.replenish()
 
     def update_health_bars(self):
         player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
-        player_bar_width = int(player_health_ratio * 100)
-
-        self.surface.fill(BLACK)
-        pygame.draw.rect(self.surface, GREEN, (50, 50, player_bar_width, 100))
+        player_bar_width = int(player_health_ratio * 200)
+        
+        pygame.draw.rect(self.surface, GREEN, (50, 50, player_bar_width, 20))
         
         # draw the enemies health bars
         for i, enemy in enumerate(self.battle_manager.enemies):
             enemy_health_ratio = enemy.cur_health / enemy.max_health
-            enemy_bar_width = int(enemy_health_ratio * 100)
-            pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50 + (150*i), enemy_bar_width, 100))
+            enemy_bar_width = int(enemy_health_ratio * 200)
+            pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50 + (40*i), enemy_bar_width, 20))
 
     def handle_event(self, event):
 
@@ -48,8 +47,8 @@ class Combat(State):
                     if card.cursed:
                         continue
                     card_x = 100 + (100 + 100) * i
-                    card_y = 100
-                    card_rect = pygame.Rect(card_x, card_y, 100, 100)
+                    card_y = 800
+                    card_rect = pygame.Rect(card_x, card_y, 150, 225)
                     if card_rect.collidepoint(event.pos):
                         self.dragging_card = i
                         self.dragging_card_offset = (event.pos[0] - card_x, event.pos[1] - card_y)
@@ -117,6 +116,11 @@ class Combat(State):
         pygame.display.flip()
 
     def draw(self, surface):
+        # Set background as background image 
+        background = pygame.image.load(resource_path("app/assets/images/backgrounds/dungeon.png"))
+        # scale background image to fit screen
+        background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        surface.blit(background, (0, 0))
         # draw health bars
         self.update_health_bars()
         # Visually draw an enemy and player respectively
@@ -124,19 +128,26 @@ class Combat(State):
         for i, enemy in enumerate(self.battle_manager.enemies):
             if enemy.is_dead():
                 continue
-            pygame.draw.rect(surface, RED, pygame.Rect((self.game.config.get_width() / 2 + (i * 300)), (self.game.config.get_height() / 2), 250, 250))
+            # draw the enemy from their sprite
+            enemy_sprite = pygame.image.load(resource_path(enemy.sprite))
+            enemy_sprite = pygame.transform.scale(enemy_sprite, (250, 250))
+            surface.blit(enemy_sprite, (self.game.config.get_width() / 2 + (i * 300), self.game.config.get_height() / 2 - 100))
 
         
-        pygame.draw.rect(surface, GREEN, pygame.Rect((self.game.config.get_width() / 4), (self.game.config.get_height() / 2), 250, 250))
+        # draw the player from their sprite
+        player_sprite = pygame.image.load(resource_path(self.battle_manager.player.sprite))
+        player_sprite = pygame.transform.scale(player_sprite, (250, 250))
+        surface.blit(player_sprite, (self.game.config.get_width() / 4, self.game.config.get_height() / 2 - 100))
+        
 
         # for each card in the player's hand, draw the card
         for i, card in enumerate(self.battle_manager.player.deck.hand):
             # if the card is being dragged, don't draw it here
             if i == self.dragging_card:
                 continue
-            # offset the x position of the card based on the index
+            # center the cards in the middle of the screen
             card_x = 100 + (100 + 100) * i
-            card_y = 100
+            card_y = 800
             # draw the card
             card.draw(surface, (card_x, card_y))
 
@@ -147,10 +158,10 @@ class Combat(State):
             card.draw(surface, (card_x, card_y))
 
         # Show the player's cost
-        font = pygame.font.Font(None, 24)
-        text_surface = font.render("Cost: " + str(self.battle_manager.player.cost), True, WHITE)
+        font = pygame.font.Font(resource_path("app/assets/fonts/cursed_font.tff"), 40)
+        text_surface = font.render("Cost: " + str(self.battle_manager.player.cost), True, BLUE)
         text_rect = text_surface.get_rect()
-        text_rect.center = (self.game.config.get_width() // 2, 50)
+        text_rect.center = (150, self.game.config.get_height() // 2 - 50)
         surface.blit(text_surface, text_rect)
 
         # add an end turn button

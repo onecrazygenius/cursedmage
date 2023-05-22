@@ -70,13 +70,8 @@ class Combat(State):
                     # get the card that was being dragged
                     card = self.battle_manager.player.deck.hand[self.dragging_card]
                     card_x, card_y = card.position
+
                     turn_result = None
-                    # check the card wasnt dropped on the player sprite
-                    player_sprite_pos = pygame.Rect((self.game.config.get_width() / 4), (self.game.config.get_height() / 2), 250, 250)
-                    if player_sprite_pos.collidepoint(self.game.screen_to_canvas(event.pos)):
-                        card.target = self.battle_manager.player
-                        turn_result = self.battle_manager.handle_turn(card)
-                        self.post_turn_actions(turn_result)
                     # check if the card was dropped on an enemy
                     for i, enemy in enumerate(self.battle_manager.enemies):
                         if enemy.is_dead():
@@ -97,7 +92,7 @@ class Combat(State):
                     # If the card wasn't on a character put it back into the hand
                     # If turn result isn't defined then the card wasn't dropped on a target
                     if turn_result is None:
-                        card.position = (100 + (100 + 100) * self.dragging_card, 800)
+                        card.position = (100 + (100 + 100) * self.dragging_card, 100)
                         self.dragging_card = None
 
     def post_turn_actions(self, turn_result):

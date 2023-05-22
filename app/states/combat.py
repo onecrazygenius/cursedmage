@@ -36,8 +36,10 @@ class Combat(State):
             self.game.quit_game()
 
         if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
-            turn_result = self.battle_manager.simulate_all_enemy_turns()
-            self.post_turn_actions(turn_result)
+            turn_result = CONTINUE
+            while turn_result == CONTINUE:
+                turn_result = self.battle_manager.simulate_enemy_turn(self.battle_manager.current_turn)
+                self.post_turn_actions(turn_result)
 
         # check if the player turn
         if self.battle_manager.current_turn == self.battle_manager.player:

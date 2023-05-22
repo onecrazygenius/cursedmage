@@ -1,4 +1,5 @@
 import pygame, os
+from app.constants import *
 
 class Card:
 
@@ -11,18 +12,21 @@ class Card:
                  power=1,
                  cost=1, 
                  target=None, 
-                 image="", 
                  cursed=False,
-                 position=(0,0)
+                 position=(0,0),
+                 image="back"    
             ):
         self.name = name
         self.card_type = card_type
         self.power = power
         self.cost = cost
         self.target = target
-        self.image = image
         self.cursed = cursed
         self.position = position
+
+        if not image:
+            image = "back"
+        self.image = "app/assets/images/cards/" + image + ".png"
 
     def draw(self, screen, position=None):
         # Position set to default if not specified
@@ -30,12 +34,14 @@ class Card:
             position = self.position
         self.position = position
         
-        # Draw the card on the screen
-        pygame.draw.rect(screen, (255, 255, 255), (position[0], position[1], 100, 150))
+        # Draw the card on the screen using the image
+        image = pygame.image.load(self.image)
+        # Scale the image to fit the card
+        image = pygame.transform.scale(image, (150, 225))
+        screen.blit(image, position)
         
         # Load the font
-        path = os.path.dirname(os.path.abspath(__file__))
-        font = pygame.font.Font(os.path.join(path + '/../../../assets/fonts/cursed_font.tff'), 20)
+        font = pygame.font.Font(resource_path('app/assets/fonts/cursed_font.tff'), 24)
         # Render text
         text = font.render(self.name, True, (0, 0, 0))
 

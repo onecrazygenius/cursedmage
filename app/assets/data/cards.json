@@ -5,7 +5,7 @@
 		"power": 20,
 		"cost": 1,
 		"cursed": false,
-		"image": "None"
+		"image": "back"
 	},
 	{
 		"name": "Meteor",
@@ -13,7 +13,7 @@
 		"power": 25,
 		"cost": 1,
 		"cursed": false,
-		"image": "None"
+		"image": ""
 	},
 	{
 		"name": "Earthquake",
@@ -21,7 +21,7 @@
 		"power": 50,
 		"cost": 3,
 		"cursed": false,
-		"image": "None"
+		"image": ""
 	},
 	{
 		"name": "Thunder",

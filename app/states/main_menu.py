@@ -9,10 +9,10 @@ class MainMenu(State):
         super().__init__(game)
         
         self.buttons = [
-            Button("New Game", SCREEN_WIDTH // 2, 200, self.game.new_game),
-            Button("Load Game", SCREEN_WIDTH // 2, 300, self.game.load_game),
-            Button("Settings", SCREEN_WIDTH // 2, 400, self.game.show_settings),
-            Button("Quit", SCREEN_WIDTH // 2, 500, self.game.quit_game)
+            Button("New Game", SCREEN_WIDTH // 2, 500, self.game.new_game),
+            Button("Load Game", SCREEN_WIDTH // 2, 600, self.game.load_game),
+            Button("Settings", SCREEN_WIDTH // 2, 700, self.game.show_settings),
+            Button("Quit", SCREEN_WIDTH // 2, 800, self.game.quit_game)
         ]
         
         # Music
@@ -24,14 +24,17 @@ class MainMenu(State):
 
 
     def draw(self, surface):
-        # Set white background
-        surface.fill(self.const.WHITE)
+        # Set background as background image 
+        background = pygame.image.load(resource_path("app/assets/images/backgrounds/dungeon.png"))
+        # scale background image to fit screen
+        background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        surface.blit(background, (0, 0))
         # Title
-        title_font = pygame.font.Font(None, 48)
+        title_font = pygame.font.Font(resource_path("app/assets/fonts/cursed_font.tff"), 200)
         title_text = "Cursed Mage"
-        title_surface = title_font.render(title_text, True, self.const.BLACK)
+        title_surface = title_font.render(title_text, True, self.const.WHITE)
         title_rect = title_surface.get_rect()
-        title_rect.center = (SCREEN_WIDTH // 2, 100)
+        title_rect.center = (SCREEN_WIDTH // 2, 200)
         surface.blit(title_surface, title_rect)
 
         for button in self.buttons:

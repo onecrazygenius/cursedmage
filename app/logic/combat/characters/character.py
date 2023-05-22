@@ -13,7 +13,8 @@ class Character:
     def __init__(self,
                  name,
                  shield=0,
-                 filename="characters"
+                 filename="characters",
+                 sprite="mage"
                  ):
         # Set the filename where the data is stored
         self.filename = filename
@@ -27,6 +28,7 @@ class Character:
         self.cost = self.get_stat_for_character("cost")
         self.max_cost = self.cost
         self.level = 1
+        self.sprite = "app/assets/images/sprites/" + sprite + ".png"
         self.deck = Deck(
             cards=self.starting_deck(),
         )

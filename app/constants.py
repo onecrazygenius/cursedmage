@@ -1,4 +1,4 @@
-import pygame
+import pygame, os, sys
 
 # Screen size
 SCREEN_WIDTH = 1920
@@ -9,6 +9,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 # TEMP Dungeon size
 DUNGEON_SIZE_X = 5
@@ -24,3 +25,13 @@ GAME_OVER = "game_over"
 FLOOR_COMPLETE = "floor_complete"
 FAILED = "failed"
 END_TURN = "end_turn"
+
+# resource path for pyinstaller
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)

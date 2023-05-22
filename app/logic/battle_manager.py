@@ -106,6 +106,9 @@ class BattleManager:
     
     # handle logic of a turn
     def handle_turn(self, card):
+        # check hasnt played against self
+        if card.target == self.current_turn:
+            return FAILED
         # Play card
         if not self.play_card(card):
             return FAILED

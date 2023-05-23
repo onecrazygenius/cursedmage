@@ -14,7 +14,7 @@ class Card:
                  target=None, 
                  cursed=False,
                  position=(0,0),
-                 image="back"    
+                 image="blank"    
             ):
         self.name = name
         self.card_type = card_type
@@ -25,7 +25,7 @@ class Card:
         self.position = position
 
         if not image:
-            image = "back"
+            image = "blank"
         self.image = "app/assets/images/cards/" + image + ".png"
 
     def draw(self, screen, position=None):

@@ -13,7 +13,7 @@ class Combat(State):
         self.battle_manager = BattleManager(player, enemies)
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
-        self.end_turn_button = Button("End Turn", 150, self.game.config.get_height() // 2, self.end_turn)
+        self.end_turn_button = Button("End Turn", 150, SCREEN_HEIGHT // 2, self.end_turn)
         player.replenish()
 
     def update_health_bars(self):
@@ -26,7 +26,7 @@ class Combat(State):
         for i, enemy in enumerate(self.battle_manager.enemies):
             enemy_health_ratio = enemy.cur_health / enemy.max_health
             enemy_bar_width = int(enemy_health_ratio * 200)
-            pygame.draw.rect(self.surface, RED, (self.game.config.get_width() - 50 - enemy_bar_width, 50 + (40*i), enemy_bar_width, 20))
+            pygame.draw.rect(self.surface, RED, (SCREEN_WIDTH - 50 - enemy_bar_width, 50 + (40*i), enemy_bar_width, 20))
 
     def handle_event(self, event):
 
@@ -51,7 +51,7 @@ class Combat(State):
                     card_x = 100 + (100 + 100) * i
                     card_y = 800
                     card_rect = pygame.Rect(card_x, card_y, 150, 225)
-                    if card_rect.collidepoint(event.pos):
+                    if card_rect.collidepoint(self.game.screen_to_surface(event.pos)):
                         self.dragging_card = i
                         self.dragging_card_offset = (event.pos[0] - card_x, event.pos[1] - card_y)
 
@@ -64,7 +64,7 @@ class Combat(State):
             # check if the player released the mouse button
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                  # Was the end turn button clicked?
-                if self.end_turn_button.rect.collidepoint(event.pos):
+                if self.end_turn_button.rect.collidepoint(self.game.screen_to_surface(event.pos)):
                     self.battle_manager.end_turn()
                     return
                 # check if the player was dragging a card
@@ -78,15 +78,15 @@ class Combat(State):
                     for i, enemy in enumerate(self.battle_manager.enemies):
                         if enemy.is_dead():
                             continue
-                        enemy_sprite_pos = pygame.Rect((self.game.config.get_width() / 2 + (i * 300)), (self.game.config.get_height() / 2 - 100), 250, 250)
-                        if enemy_sprite_pos.collidepoint(self.game.screen_to_canvas(event.pos)):
+                        enemy_sprite_pos = pygame.Rect((SCREEN_WIDTH / 2 + (i * 300)), (SCREEN_HEIGHT / 2 - 100), 250, 250)
+                        if enemy_sprite_pos.collidepoint(self.game.screen_to_surface(event.pos)):
                             card.target = enemy
                             turn_result = self.battle_manager.handle_turn(card)
                             self.post_turn_actions(turn_result)
 
                     # check if the card was dropped on a player
-                    player_sprite_pos = pygame.Rect((self.game.config.get_width() / 4), (self.game.config.get_height() / 2), 250, 250)
-                    if player_sprite_pos.collidepoint(self.game.screen_to_canvas(event.pos)):
+                    player_sprite_pos = pygame.Rect((SCREEN_WIDTH / 4), (SCREEN_HEIGHT / 2), 250, 250)
+                    if player_sprite_pos.collidepoint(self.game.screen_to_surface(event.pos)):
                         card.target = self.battle_manager.player
                         turn_result = self.battle_manager.handle_turn(card)
                         self.post_turn_actions(turn_result)
@@ -133,13 +133,13 @@ class Combat(State):
             # draw the enemy from their sprite
             enemy_sprite = pygame.image.load(resource_path(enemy.sprite))
             enemy_sprite = pygame.transform.scale(enemy_sprite, (250, 250))
-            surface.blit(enemy_sprite, (self.game.config.get_width() / 2 + (i * 300), self.game.config.get_height() / 2 - 100))
+            surface.blit(enemy_sprite, (SCREEN_WIDTH / 2 + (i * 300), SCREEN_HEIGHT / 2 - 100))
 
         
         # draw the player from their sprite
         player_sprite = pygame.image.load(resource_path(self.battle_manager.player.sprite))
         player_sprite = pygame.transform.scale(player_sprite, (250, 250))
-        surface.blit(player_sprite, (self.game.config.get_width() / 4, self.game.config.get_height() / 2 - 100))
+        surface.blit(player_sprite, (SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2 - 100))
         
 
         # for each card in the player's hand, draw the card
@@ -163,7 +163,7 @@ class Combat(State):
         font = pygame.font.Font(resource_path("app/assets/fonts/cursed_font.tff"), 40)
         text_surface = font.render("Cost: " + str(self.battle_manager.player.cost), True, BLUE)
         text_rect = text_surface.get_rect()
-        text_rect.center = (150, self.game.config.get_height() // 2 - 50)
+        text_rect.center = (150, SCREEN_HEIGHT // 2 - 50)
         surface.blit(text_surface, text_rect)
 
         # add an end turn button
@@ -178,8 +178,8 @@ class Combat(State):
 
     def popup(self, text):
         popup = Popup(
-            self.game.config.get_width() // 2, 
-            self.game.config.get_height() // 2, 
+            SCREEN_WIDTH // 2, 
+            SCREEN_HEIGHT // 2, 
             text,
             width=300,
             height=100

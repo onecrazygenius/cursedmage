@@ -23,7 +23,7 @@ class CardPickupScreen(State):
         cards_picked = random.sample(range(0, len(all_enemy_cards)), 2)
         self.cards_to_show = list(map(all_enemy_cards.__getitem__, cards_picked))
 
-        self.button = Button("Back to Main Menu", self.game.config.get_width() // 2, 300, self.back_to_main_menu)
+        self.button = Button("Back to Main Menu", SCREEN_WIDTH // 2, 300, self.back_to_main_menu)
 
     def draw(self, surface):
         # Green background for victory screen
@@ -31,7 +31,7 @@ class CardPickupScreen(State):
 
         # Draw text
         text_surface = self.font.render("Victory!", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(self.game.config.get_width() // 2, 200))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 200))
         surface.blit(text_surface, text_rect)
         self.button.draw(surface)
         
@@ -56,10 +56,10 @@ class CardPickupScreen(State):
                 card_x = 100 + (100 + 100) * i
                 card_y = 100
                 card_rect = pygame.Rect(card_x, card_y, 100, 100)
-                if card_rect.collidepoint(self.game.screen_to_canvas(event.pos)):
+                if card_rect.collidepoint(self.game.screen_to_surface(event.pos)):
                     print("Picked up card")
                     self.pickup_card(card)
-            if self.button.rect.collidepoint(self.game.screen_to_canvas(event.pos)):
+            if self.button.rect.collidepoint(self.game.screen_to_surface(event.pos)):
                 self.back_to_main_menu()
 
     def pickup_card(self, card):

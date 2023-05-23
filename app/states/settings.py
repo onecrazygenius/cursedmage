@@ -48,6 +48,9 @@ class SettingsMenu(State):
             # Update the button text
             self.buttons[0].text = "Screen Size: 1920x1080"
 
+        # redraw the screen
+        pygame.display.flip()
+
     def return_to_main_menu(self):
         self.game.hide_settings()
 

@@ -7,7 +7,7 @@ from app.states.state import State
 class VictoryScreen(State):
     def __init__(self, game):
         super().__init__(game)
-        self.button = Button("Back to Main Menu", self.game.config.get_width() // 2, 300, self.back_to_main_menu)
+        self.button = Button("Back to Main Menu", SCREEN_WIDTH // 2, 300, self.back_to_main_menu)
 
     def back_to_main_menu(self):
         self.game.show_main_menu()
@@ -24,7 +24,7 @@ class VictoryScreen(State):
         font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursed_font.tff'), 24)
         
         text_surface = font.render("Victory!", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(self.game.config.get_width() // 2, 200))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 200))
         surface.blit(text_surface, text_rect)
         self.button.draw(surface)
         pygame.display.flip()

@@ -87,10 +87,12 @@ class Game:
         self.push_state(state)
         self.just_switched = True
 
-    def screen_to_canvas(self, pos):
+    def screen_to_surface(self, pos):
         # Convert screen coordinates to canvas coordinates
-        return pos[0] - (self.config.get_width() - SCREEN_WIDTH) // 2, pos[1] - (self.config.get_height() - SCREEN_HEIGHT) // 2
-
+        return (
+            pos[0] * SCREEN_WIDTH / self.screen.get_width(),
+            pos[1] * SCREEN_HEIGHT / self.screen.get_height()
+        )
     # Game data management functions
 
     def save_game(self):

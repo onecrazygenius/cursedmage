@@ -143,11 +143,13 @@ class Game:
     def toggle_fullscreen(self):
         # Toggle fullscreen mode and save the change in config
         flags = self.screen.get_flags()
+        # if not 1920x1080, then set to 1920x1080
+        self.resize_screen(1920, 1080)
         if flags & pygame.FULLSCREEN:
-            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.RESIZABLE)
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()))
             self.config.update("graphics", "fullscreen", "False")
         else:
-            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.FULLSCREEN | pygame.HWSURFACE)
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.FULLSCREEN)
             self.config.update("graphics", "fullscreen", "True")
 
     # Scene change functions

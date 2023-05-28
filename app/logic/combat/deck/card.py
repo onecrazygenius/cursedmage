@@ -1,6 +1,5 @@
 import json
 
-import pygame, os
 from app.constants import *
 
 

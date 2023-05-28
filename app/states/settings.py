@@ -13,7 +13,7 @@ class SettingsMenu(State):
 
         self.game = game
 
-        current_screen_size = SCREEN_WIDTH, SCREEN_HEIGHT
+        current_screen_size = self.game.config.get_width(), self.game.config.get_height()
         text = "Screen Size: {}x{}".format(current_screen_size[0], current_screen_size[1])
         self.buttons = [
             Button(text, 200, 250, self.change_screen_size),
@@ -31,9 +31,9 @@ class SettingsMenu(State):
         ]
 
     def change_screen_size(self):
-        # Switch to windowed mode if fullscreen
+        # If full screen disable button
         if self.game.screen.get_flags() & pygame.FULLSCREEN:
-            self.game.toggle_fullscreen()
+            return
         
         # Change screen size
         # Default: 1920x1080
@@ -47,6 +47,9 @@ class SettingsMenu(State):
             self.game.resize_screen(1920, 1080)
             # Update the button text
             self.buttons[0].text = "Screen Size: 1920x1080"
+
+        # redraw the screen
+        pygame.display.flip()
 
     def return_to_main_menu(self):
         self.game.hide_settings()

@@ -87,10 +87,12 @@ class Game:
         self.push_state(state)
         self.just_switched = True
 
-    def screen_to_canvas(self, pos):
+    def screen_to_surface(self, pos):
         # Convert screen coordinates to canvas coordinates
-        return pos[0] - (self.config.get_width() - SCREEN_WIDTH) // 2, pos[1] - (self.config.get_height() - SCREEN_HEIGHT) // 2
-
+        return (
+            pos[0] * SCREEN_WIDTH / self.screen.get_width(),
+            pos[1] * SCREEN_HEIGHT / self.screen.get_height()
+        )
     # Game data management functions
 
     def save_game(self):
@@ -140,11 +142,14 @@ class Game:
 
     def toggle_fullscreen(self):
         # Toggle fullscreen mode and save the change in config
-        if self.screen.get_flags() & pygame.FULLSCREEN:
-            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.RESIZABLE)
+        flags = self.screen.get_flags()
+        # if not 1920x1080, then set to 1920x1080
+        self.resize_screen(1920, 1080)
+        if flags & pygame.FULLSCREEN:
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()))
             self.config.update("graphics", "fullscreen", "False")
         else:
-            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.FULLSCREEN | pygame.RESIZABLE)
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.FULLSCREEN)
             self.config.update("graphics", "fullscreen", "True")
 
     # Scene change functions

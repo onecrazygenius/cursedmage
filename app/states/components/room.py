@@ -30,7 +30,8 @@ class Room:
         x, y = self.position
         rect = pygame.Rect(x * 100 + 50, y * 100 + 50, 50, 50)
         if event.type == MOUSEBUTTONUP and event.button == 1:
-            if rect.collidepoint(event.pos) and not self.completed:
+            if rect.collidepoint(self.game.screen_to_surface(event.pos)) and not self.completed:
+                print("Clicked on room at position", self.position)
                 # Check if the room is the next available room starting with 0,0
                 if self.position == self.game.dungeon.player_position:
                     self.game.dungeon.move_to_room(self.position)

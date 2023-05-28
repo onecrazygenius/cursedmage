@@ -40,6 +40,7 @@ class ConfigManager:
             self.config.write(f)
 
     def get(self, section, option):
+        # read a value from the config file
         return self.config.get(section, option)
     
     def update(self, section, option, value):

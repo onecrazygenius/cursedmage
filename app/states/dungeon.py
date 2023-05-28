@@ -41,21 +41,6 @@ class Dungeon(State):
         # Update the display
         pygame.display.flip()
 
-    def handle_event(self, event):
-        if event.type == KEYDOWN:
-            new_x, new_y = self.player_position
-            if event.key == K_LEFT:
-                new_x -= 1
-            elif event.key == K_RIGHT:
-                new_x += 1
-            elif event.key == K_UP:
-                new_y -= 1
-            elif event.key == K_DOWN:
-                new_y += 1
-
-            if 0 <= new_x < DUNGEON_SIZE_X and 0 <= new_y < DUNGEON_SIZE_Y:
-                self.move_to_room((new_x, new_y))
-
     def generate_rooms(self):
         for x in range(DUNGEON_SIZE_X):
             self.rooms.append([])

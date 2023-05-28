@@ -13,7 +13,7 @@
 		"power": 20,
 		"cost": 1,
 		"cursed": false,
-		"image": "back"
+		"image": "blank"
 	},
 	{
 		"name": "Meteor",

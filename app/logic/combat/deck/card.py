@@ -12,6 +12,7 @@ class Card:
     def __init__(self,
                  name,
                  ):
+    
         self.name = name
         self.card_type = self.get_stat_for_card("card_type")
         self.power = self.get_stat_for_card("power")
@@ -36,7 +37,7 @@ class Card:
     def get_card_image(self):
         image_name = self.get_stat_for_card("image")
         if image_name is None or image_name == "":
-            image_name = "back"
+            image_name = "blank"
         return "app/assets/images/cards/" + image_name + ".png"
 
     def draw(self, screen, position=None):

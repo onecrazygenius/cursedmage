@@ -36,7 +36,7 @@ class CursedCardPickupScreen(State):
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             # Check if the button was clicked
-            if self.button.rect.collidepoint(self.game.screen_to_canvas(event.pos)):
+            if self.button.rect.collidepoint(self.game.screen_to_surface(event.pos)):
                 self.return_to_combat()
 
     def pickup_card(self):

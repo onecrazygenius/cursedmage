@@ -1,5 +1,13 @@
 [
-  {
+	{
+		"name": "Cursed Card",
+		"card_type": "cursed",
+		"power": 0,
+		"cost": 999,
+		"cursed": true,
+		"image": "back"
+	},
+    {
 		"name": "Fireball",
 		"card_type": "attack",
 		"power": 20,

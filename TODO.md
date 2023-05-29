@@ -1,6 +1,4 @@
 # For MVP
-1. Fix Resource Files Loading | James
-2. Compile to exe | James
 3. Spacing for screens | Charlie 
 4. Deal with drawing 3 cursed cards | James 
 5. Game over screen | Charlie

@@ -23,7 +23,7 @@ class Card:
 
     def get_stat_for_card(self, stat_name):
         path = os.path.dirname(os.path.abspath(__file__))
-        json_file = (os.path.join(path + '/../../../assets/data/cards.json'))
+        json_file = (resource_path(path + '/../../../assets/data/cards.json'))
         with open(json_file, 'r') as file:
             data = json.load(file)
 
@@ -46,7 +46,7 @@ class Card:
         self.position = position
 
         # Draw the card on the screen using the image
-        image = pygame.image.load(self.image)
+        image = pygame.image.load(resource_path(self.image))
         # Scale the image to fit the card
         image = pygame.transform.scale(image, (150, 225))
         screen.blit(image, position)

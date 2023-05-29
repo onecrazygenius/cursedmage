@@ -1,6 +1,7 @@
 import json
 import os
 
+from app.constants import resource_path
 from app.logic.combat.deck.card import Card
 from app.logic.combat.deck.deck import Deck
 
@@ -51,7 +52,7 @@ class Character:
 
     def starting_deck(self):
         path = os.path.dirname(os.path.abspath(__file__))
-        json_file = (os.path.join(path + '/../../../assets/data/cards.json'))
+        json_file = (resource_path(path + '/../../../assets/data/cards.json'))
         with open(json_file, 'r') as file:
             data = json.load(file)
 
@@ -62,7 +63,7 @@ class Character:
 
     def get_card_indexes_for_character(self):
         path = os.path.dirname(os.path.abspath(__file__))
-        json_file = (os.path.join(path + '/../../../assets/data/' + self.filename + ".json"))
+        json_file = (resource_path(path + '/../../../assets/data/' + self.filename + ".json"))
         with open(json_file, 'r') as file:
             data = json.load(file)
 
@@ -74,7 +75,7 @@ class Character:
 
     def get_stat_for_character(self, stat_name):
         path = os.path.dirname(os.path.abspath(__file__))
-        json_file = (os.path.join(path + '/../../../assets/data/' + self.filename + ".json"))
+        json_file = (resource_path(path + '/../../../assets/data/' + self.filename + ".json"))
         with open(json_file, 'r') as file:
             data = json.load(file)
 

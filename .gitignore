@@ -4,7 +4,7 @@ __pycache__
 
 venv
 /build
-/dist/assets
+/dist
 
 *.pkl
 */.env

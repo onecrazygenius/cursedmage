@@ -1,6 +1,8 @@
 import pygame, os
 import app.constants as constants
 
+from app.constants import resource_path
+
 class State:
     '''
     State class for the game. All states inherit from this class.
@@ -11,7 +13,7 @@ class State:
         self.const = constants
 
         path = os.path.dirname(os.path.abspath(__file__))
-        self.font = pygame.font.Font(os.path.join(path + '/../assets/fonts/cursed_font.tff'), 24)
+        self.font = pygame.font.Font(resource_path(path + '/../assets/fonts/cursed_font.tff'), 24)
 
     def handle_event(self):
         pass

@@ -23,7 +23,7 @@ class Card:
 
     def get_stat_for_card(self, stat_name):
         path = os.path.dirname(os.path.abspath(__file__))
-        json_file = (os.path.join(path + '/../../../assets/data/cards.json'))
+        json_file = (resource_path(path + '/../../../assets/data/cards.json'))
         with open(json_file, 'r') as file:
             data = json.load(file)
 

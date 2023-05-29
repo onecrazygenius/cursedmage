@@ -87,7 +87,7 @@ class Dungeon(State):
 
     def choose_enemy_names_from_difficulty(self, difficulty_threshold, number_of_enemies):
         path = os.path.dirname(os.path.abspath(__file__))
-        json_file = (os.path.join(path + '/../assets/data/enemies.json'))
+        json_file = (resource_path(path + '/../assets/data/enemies.json'))
         with open(json_file, 'r') as file:
             data = json.load(file)
 

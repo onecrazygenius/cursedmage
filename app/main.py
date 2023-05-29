@@ -1,4 +1,3 @@
-# app/main.py
 from app.logic.config_manager import ConfigManager
 from app.logic.save_manager import SaveManager
 from app.constants import *
@@ -53,7 +52,7 @@ class Game:
         path = os.path.dirname(os.path.abspath(__file__))
 
         # Load game icon and set window caption
-        icon = pygame.image.load(os.path.join(path, "assets/images/team_logo.png"))
+        icon = pygame.image.load(resource_path(path + "assets/images/team_logo.png"))
         pygame.display.set_caption("Cursed Mage")
         pygame.display.set_icon(icon)
 

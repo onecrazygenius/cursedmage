@@ -1,17 +1,20 @@
 import os, configparser
 
+from app.constants import resource_path
+
+
 # Create a config manager class to handle saving and loading
 class ConfigManager:
 
     def __init__(self):
         # save in the user's home directory, under a folder called cursed_mage
         # if the folder doesn't exist, create it
-        self.config_dir = os.path.join(os.path.expanduser("~"), ".cursed_mage")
+        self.config_dir = resource_path(os.path.expanduser("~") + ".cursed_mage")
         if not os.path.exists(self.config_dir):
             os.makedirs(self.config_dir)
         
         # save in a file called config.ini
-        self.config_file = os.path.join(self.config_dir, "config.ini")
+        self.config_file = resource_path(self.config_dir + "config.ini")
         self.config = configparser.ConfigParser()
         self.config.read(self.config_file)
 

@@ -3,6 +3,8 @@ import unittest
 import tempfile
 import shutil
 import pickle
+
+from app.constants import resource_path
 from app.logic.save_manager import SaveManager
 
 
@@ -13,7 +15,7 @@ class TestSaveManager(unittest.TestCase):
         self.save_manager = SaveManager()
         # Set the save directory and file to the temporary directory
         self.save_manager.save_dir = self.test_dir
-        self.save_manager.save_file = os.path.join(self.test_dir, "data.pkl")
+        self.save_manager.save_file = resource_path(self.test_dir + "data.pkl")
 
     def tearDown(self):
         # Remove the temporary directory and its contents

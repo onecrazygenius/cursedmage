@@ -1,6 +1,8 @@
 import pygame, os
 import app.constants as constants
 
+from app.constants import resource_path
+
 class State:
     '''
     State class for the game. All states inherit from this class.

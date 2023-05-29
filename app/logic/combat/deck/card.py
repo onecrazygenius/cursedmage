@@ -46,7 +46,7 @@ class Card:
         self.position = position
 
         # Draw the card on the screen using the image
-        image = pygame.image.load(self.image)
+        image = pygame.image.load(resource_path(self.image))
         # Scale the image to fit the card
         image = pygame.transform.scale(image, (150, 225))
         screen.blit(image, position)

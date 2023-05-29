@@ -5,7 +5,7 @@
     "attack": 3,
     "defence": 4,
     "cost": 3,
-    "card_indexes": [0,1,3],
+    "card_indexes": [1,2,4],
     "difficulty": 1,
     "sprite": "goblin"
   },
@@ -15,7 +15,7 @@
     "attack": 4,
     "defence": 2,
     "cost": 5,
-    "card_indexes": [1,2,3],
+    "card_indexes": [2,3,4],
     "difficulty": 1.3,
     "sprite": "brute"
   },
@@ -25,7 +25,7 @@
     "attack": 4,
     "defence": 3,
     "cost": 4,
-    "card_indexes": [0,1,2],
+    "card_indexes": [1,2,4],
     "difficulty": 1.8,
     "sprite": "None"
   }

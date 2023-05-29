@@ -1,8 +1,11 @@
+import random
+
 from app.constants import *
 from app.logic.battle_manager import BattleManager
 from app.states.card_pickup import CardPickupScreen
 from app.states.components.button import Button
 from app.states.components.popup import Popup
+from app.states.cursed_card_pickup import CursedCardPickupScreen
 from app.states.state import State
 
 
@@ -104,6 +107,14 @@ class Combat(State):
         if turn_result == FAILED:
             # Not enough cost
             self.popup("Not enough cost")
+        # Check for results which would end the combat phase
+        self.post_combat_actions(turn_result)
+        if turn_result == CONTINUE:
+            self.update_health_bars()
+        self.dragging_card = None
+        pygame.display.flip()
+
+    def post_combat_actions(self, turn_result):
         if turn_result == GAME_OVER:
             self.game.quit_game()
             # TODO: Game over screen
@@ -112,10 +123,12 @@ class Combat(State):
                 self.game.victory()
             else:
                 self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
-        if turn_result == CONTINUE:
-            self.update_health_bars()
-        self.dragging_card = None
-        pygame.display.flip()
+                # After completing a floor, you have a chance to pickup a cursed card
+                if random.randint(1,4) == 4:
+                    # Use push_state instead of change_state because this state is informational
+                    # and afterwards we want to return to the card pickup screen without coming back
+                    # to the combat class
+                    self.game.push_state(CursedCardPickupScreen(self.game, self.battle_manager.player))
 
     def draw(self, surface):
         # Set background as background image 

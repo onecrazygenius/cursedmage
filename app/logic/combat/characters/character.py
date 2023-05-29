@@ -56,9 +56,9 @@ class Character:
             data = json.load(file)
 
         starting_card_index = self.get_card_indexes_for_character()
-        starting_card_data = [data[i] for i in starting_card_index]
+        starting_card_names = [card['name'] for card in [data[i] for i in starting_card_index]]
 
-        return [Card(**card) for card in starting_card_data]
+        return [Card(card_name) for card_name in starting_card_names]
 
     def get_card_indexes_for_character(self):
         path = os.path.dirname(os.path.abspath(__file__))

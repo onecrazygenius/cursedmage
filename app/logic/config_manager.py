@@ -10,7 +10,7 @@ class ConfigManager:
     def __init__(self):
         # save in the user's home directory, under a folder called cursed_mage
         # if the folder doesn't exist, create it
-        self.config_dir = resource_path(os.path.expanduser("~") + "\\.cursed_mage")
+        self.config_dir = resource_path(os.path.join(os.path.expanduser("~"), ".cursed_mage"))
         if not os.path.exists(self.config_dir):
             os.makedirs(self.config_dir)
         

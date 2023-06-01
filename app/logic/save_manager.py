@@ -14,7 +14,7 @@ class SaveManager:
             os.makedirs(self.save_dir)
         
         # save in a file called data.pkl
-        self.save_file = resource_path(self.save_dir + "data.pkl")
+        self.save_file = resource_path(self.save_dir + "/data.pkl")
 
     def save(self, data):
         # Save the game state to a file
@@ -28,3 +28,10 @@ class SaveManager:
         with open(self.save_file, "rb") as f:
             data = pickle.load(f)
         return data
+    
+    def nuke_save_file(self):
+        # Try to delete the save file
+        try:
+            os.remove(self.save_file)
+        except FileNotFoundError:
+            pass

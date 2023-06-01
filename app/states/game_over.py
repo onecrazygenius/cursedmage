@@ -28,4 +28,8 @@ class GameOverScreen(State):
         text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 400))
         surface.blit(text_surface, text_rect)
         self.button.draw(surface)
+
+        # nuke save file
+        self.game.save_manager.nuke_save_file()
+
         pygame.display.flip()

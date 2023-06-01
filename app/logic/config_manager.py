@@ -15,7 +15,7 @@ class ConfigManager:
             os.makedirs(self.config_dir)
         
         # save in a file called config.ini
-        self.config_file = resource_path(self.config_dir + "config.ini")
+        self.config_file = resource_path(self.config_dir + "/config.ini")
         self.config = configparser.ConfigParser()
         self.config.read(self.config_file)
 

@@ -31,8 +31,8 @@ class Dungeon(State):
             self.rooms[0][0].next = True
 
     def draw(self, surface):
-        # Set white background
-        surface.fill(WHITE)
+        # Set black background
+        surface.fill(BLACK)
         # Generate map
         for x in range(DUNGEON_SIZE_X):
             for y in range(DUNGEON_SIZE_Y):

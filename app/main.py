@@ -3,6 +3,7 @@ from app.logic.save_manager import SaveManager
 from app.constants import *
 from app.states.character_selection import CharacterSelection
 from app.states.victory_screen import VictoryScreen
+from app.states.game_over import GameOverScreen
 from app.states.settings import SettingsMenu
 from app.states.main_menu import MainMenu
 from app.states.dungeon import Dungeon
@@ -52,7 +53,7 @@ class Game:
         path = os.path.dirname(os.path.abspath(__file__))
 
         # Load game icon and set window caption
-        icon = pygame.image.load(resource_path(path + "/app/assets/images/team_logo.png"))
+        icon = pygame.image.load(resource_path(path + "/assets/images/team_logo.png"))
         pygame.display.set_caption("Cursed Mage")
         pygame.display.set_icon(icon)
 
@@ -165,6 +166,9 @@ class Game:
         # Go to the victory screen by changing to the victory screen state
         print("Victory!")
         self.change_state(VictoryScreen(self))
+
+    def game_over(self):
+        self.change_state(GameOverScreen(self))
 
     def show_dungeon(self):
         # Show the dungeon by changing to the dungeon state

@@ -116,7 +116,7 @@ class Combat(State):
 
     def post_combat_actions(self, turn_result):
         if turn_result == GAME_OVER:
-            self.game.quit_game()
+            self.game.game_over()
             # TODO: Game over screen
         if turn_result == FLOOR_COMPLETE:
             if self.game.dungeon.is_last_room():

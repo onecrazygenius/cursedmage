@@ -14,8 +14,20 @@ class Room:
 
     def draw(self, screen):
         x, y = self.position
+
+        door_type = "locked"
+        # if the room is complete make the door open
+        if self.completed:
+            door_type = "open"
+        elif self.visited:
+            door_type = "open"
+        # if the room is the next room the player should go to make the door unlocked
+        elif self.next:
+            door_type = "unlocked"
+
+
         # draw the room image
-        room_sprite = pygame.image.load(resource_path("app/assets/images/backgrounds/doors/standard.png"))
+        room_sprite = pygame.image.load(resource_path("app/assets/images/backgrounds/doors/{}.png".format(door_type)))
         room_sprite = pygame.transform.scale(room_sprite, (100, 140))
         # calculate offset
         screen_width = screen.get_width()

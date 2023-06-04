@@ -45,9 +45,9 @@ class Character:
 
     # Used to replenish the players health, cost and put all their cards back into the deck
     def replenish(self):
-        self.cur_health = self.max_health
-        self.deck.shuffle_discard_to_deck()
+        self.deck.ready_deck_for_combat()
         self.deck.draw_card(3 - len(self.deck.hand))
+        self.cur_health = self.max_health
         self.cost = self.max_cost
 
     def starting_deck(self):

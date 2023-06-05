@@ -9,12 +9,12 @@ class SaveManager:
     def __init__(self):
         # save in the user's home directory, under a folder called cursed_mage
         # if the folder doesn't exist, create it
-        self.save_dir = resource_path(os.path.expanduser("~") + "\\.cursed_mage")
+        self.save_dir = resource_path(os.path.join(os.path.expanduser("~"), ".cursed_mage"))
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)
         
         # save in a file called data.pkl
-        self.save_file = resource_path(self.save_dir + "data.pkl")
+        self.save_file = resource_path(self.save_dir + "/data.pkl")
 
     def save(self, data):
         # Save the game state to a file
@@ -28,3 +28,10 @@ class SaveManager:
         with open(self.save_file, "rb") as f:
             data = pickle.load(f)
         return data
+    
+    def nuke_save_file(self):
+        # Try to delete the save file
+        try:
+            os.remove(self.save_file)
+        except FileNotFoundError:
+            pass

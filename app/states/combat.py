@@ -24,12 +24,16 @@ class Combat(State):
         player_bar_width = int(player_health_ratio * 200)
         
         pygame.draw.rect(self.surface, GREEN, (50, 50, player_bar_width, 20))
+        # add a border to the health bar
+        pygame.draw.rect(self.surface, WHITE, (50, 50, 200, 20), 2)
         
         # draw the enemies health bars
         for i, enemy in enumerate(self.battle_manager.enemies):
             enemy_health_ratio = enemy.cur_health / enemy.max_health
             enemy_bar_width = int(enemy_health_ratio * 200)
             pygame.draw.rect(self.surface, RED, (SCREEN_WIDTH - 50 - enemy_bar_width, 50 + (40*i), enemy_bar_width, 20))
+            # add a border to the health bar
+            pygame.draw.rect(self.surface, WHITE, (SCREEN_WIDTH - 50 - 200, 50 + (40*i), 200, 20), 2)
 
     def handle_event(self, event):
 
@@ -116,7 +120,7 @@ class Combat(State):
 
     def post_combat_actions(self, turn_result):
         if turn_result == GAME_OVER:
-            self.game.quit_game()
+            self.game.game_over()
             # TODO: Game over screen
         if turn_result == FLOOR_COMPLETE:
             if self.game.dungeon.is_last_room():
@@ -173,8 +177,8 @@ class Combat(State):
             card.draw(surface, (card_x, card_y))
 
         # Show the player's cost
-        font = pygame.font.Font(resource_path("app/assets/fonts/cursed_font.tff"), 40)
-        text_surface = font.render("Cost: " + str(self.battle_manager.player.cost), True, BLUE)
+        font = pygame.font.Font(resource_path("app/assets/fonts/pixel_font.ttf"), 30)
+        text_surface = font.render("Mana: " + str(self.battle_manager.player.cost), True, BLUE)
         text_rect = text_surface.get_rect()
         text_rect.center = (150, SCREEN_HEIGHT // 2 - 50)
         surface.blit(text_surface, text_rect)

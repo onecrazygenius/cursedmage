@@ -52,7 +52,7 @@ class SettingsMenu(State):
         pygame.display.flip()
 
     def return_to_main_menu(self):
-        self.game.hide_settings()
+        self.game.show_main_menu()
 
     def exit_game(self):
         self.game.quit_game()

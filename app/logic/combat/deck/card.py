@@ -49,12 +49,22 @@ class Card:
         image = pygame.image.load(resource_path(self.image))
         # Scale the image to fit the card
         image = pygame.transform.scale(image, (150, 225))
+        # Blit the image to the screen
         screen.blit(image, position)
 
         # Load the font
-        font = pygame.font.Font(resource_path('app/assets/fonts/cursed_font.tff'), 24)
-        # Render text
-        text = font.render(self.name, True, (0, 0, 0))
+        font = pygame.font.Font(resource_path('app/assets/fonts/cursed_font.tff'), 30)
+        # Make the text white and bold
+        text = font.render(self.name, True, WHITE)
+        # Blit the text to the middle of the card
+        screen.blit(text, (position[0] + 75 - text.get_width() // 2, position[1] + 88 - text.get_height() // 2))
 
-        # Blit the text to the screen
-        screen.blit(text, (position[0] + 10, position[1] + 10))
+        # Mana cost
+        text = font.render(str(self.cost), True, BLUE)
+        # Blit the text to the top left of the card
+        screen.blit(text, (position[0] + 28 - text.get_width() // 2, position[1] + 30 - text.get_height() // 2))
+
+        # Power
+        text = font.render(str(self.power), True, RED)
+        # Blit the text to the top right of the card
+        screen.blit(text, (position[0] + 122 - text.get_width() // 2, position[1] + 30 - text.get_height() // 2))

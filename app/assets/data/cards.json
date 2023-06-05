@@ -13,7 +13,7 @@
 		"power": 20,
 		"cost": 1,
 		"cursed": false,
-		"image": "blank"
+		"image": "fireball"
 	},
 	{
 		"name": "Meteor",
@@ -37,6 +37,6 @@
 		"power": 40,
 		"cost": 2,
 		"cursed": false,
-		"image": "back"
+		"image": "thunder"
 	}
 ]

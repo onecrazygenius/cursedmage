@@ -1,9 +1,6 @@
 # For MVP
-1. Fix Resource Files Loading | James
-2. Compile to exe | James
-3. Spacing for screens | Charlie 
+3. ~~Spacing for screens~~ in progress | Charlie 
 4. Deal with drawing 3 cursed cards | James 
-5. Game over screen | Charlie
 6. Implement Heal Cards | Charlie
 7. Seed the game | James
    1. Save the seed in the save file

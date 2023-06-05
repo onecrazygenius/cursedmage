@@ -40,9 +40,17 @@
 		"image": "thunder"
 	},
 	{
+		"name": "Wind",
+		"card_type": "attack",
+		"power": 10,
+		"cost": 1,
+		"cursed": false,
+		"image": "wind"
+	},
+	{
 		"name": "Heal",
 		"card_type": "heal",
-		"power": 40,
+		"power": 50,
 		"cost": 2,
 		"cursed": false,
 		"image": "heal"

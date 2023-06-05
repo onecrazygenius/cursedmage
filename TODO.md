@@ -1,5 +1,6 @@
 # For MVP
 3. ~~Spacing for screens~~ in progress | Charlie
+4. Show the card you're picking up
 8. Balance test the game | Charlie
 
 # For Final

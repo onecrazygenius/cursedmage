@@ -35,14 +35,13 @@ class CardPickupScreen(State):
         surface.blit(text_surface, text_rect)
         self.button.draw(surface)
         
-        # Draw cards
+        # For each card available, draw it
         for i, card in enumerate(self.cards_to_show):
+            # center the cards in the middle of the screen
             card_x = 100 + (100 + 100) * i
-            card_y = 100
-            pygame.draw.rect(surface, (255, 255, 255), pygame.Rect(card_x, card_y, 100, 100))
-            text_surface = self.font.render(card.name, True, (0, 0, 0))
-            text_rect = text_surface.get_rect(center=(card_x + 100 // 2, card_y + 100 // 2))
-            surface.blit(text_surface, text_rect)
+            card_y = 800
+            # draw the card
+            card.draw(surface, (card_x, card_y))
 
         # Update the display
         pygame.display.flip()
@@ -54,10 +53,9 @@ class CardPickupScreen(State):
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             for i, card in enumerate(self.cards_to_show):
                 card_x = 100 + (100 + 100) * i
-                card_y = 100
-                card_rect = pygame.Rect(card_x, card_y, 100, 100)
+                card_y = 800
+                card_rect = pygame.Rect(card_x, card_y, 150, 225)
                 if card_rect.collidepoint(self.game.screen_to_surface(event.pos)):
-                    print("Picked up card")
                     self.pickup_card(card)
             if self.button.rect.collidepoint(self.game.screen_to_surface(event.pos)):
                 self.back_to_main_menu()

@@ -32,6 +32,9 @@ class Card:
                 return card[stat_name]
 
         return None
+    
+    def is_cursed(self):
+        return self.cursed
 
     def get_card_image(self):
         image_name = self.get_stat_for_card("image")

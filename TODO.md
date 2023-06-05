@@ -1,7 +1,5 @@
 # For MVP
-3. ~~Spacing for screens~~ in progress | Charlie 
-7. Seed the game | James
-   1. Save the seed in the save file
+3. ~~Spacing for screens~~ in progress | Charlie
 8. Balance test the game | Charlie
 
 # For Final

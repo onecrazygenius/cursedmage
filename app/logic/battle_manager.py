@@ -25,25 +25,47 @@ class BattleManager:
 
     # Cost handler
     def apply_cost(self, card):
+        # apply cost to current turn character
+        self.current_turn.cost -= card.cost
+    
+    def check_cost(self, card):
         # if the current turn character doesn't have enough cost, they can't play the card
         if (self.current_turn.cost - card.cost) < 0:
             return False
-        # apply cost to current turn character
-        self.current_turn.cost -= card.cost
-        # if the current turn character has enough cost, play the card
         return True
 
     # handle a card being played
     def play_card(self, card):
-        # Apply cost to player
-        if not self.apply_cost(card):
+        # Check if the card can be played
+        if not self.check_cost(card):
             return False
-        # Apply damage to enemy
-        self.apply_damage(card)
+        # check if playing heal
+        if card.is_heal():
+            # check who the card is targeting
+            if not self.apply_heal(card):
+                return False
+        else:
+            # Apply damage to enemy
+            self.apply_damage(card)
+
+        # apply cost to player
+        self.apply_cost(card)
+
         # Discard card from who currently playing
         self.current_turn.deck.discard_card(card)
-        
         return True
+    
+    # Handle heal cards
+    def apply_heal(self, card):
+        # check if the card is targeting the player
+        if card.target == self.player:
+            # apply heal to self.player, can't go over max health
+            if self.player.cur_health + card.power < self.player.max_health:
+                self.player.cur_health += card.power
+            else:
+                self.player.cur_health = self.player.max_health
+            return True
+        return False
 
     # win condition check
     def check_floor_cleared(self):

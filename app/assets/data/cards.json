@@ -16,20 +16,20 @@
 		"image": "fireball"
 	},
 	{
-		"name": "Meteor",
+		"name": "Cleve",
 		"card_type": "attack",
 		"power": 25,
 		"cost": 1,
 		"cursed": false,
-		"image": "back"
+		"image": "bleed"
 	},
 	{
-		"name": "Earthquake",
+		"name": "Ice",
 		"card_type": "attack",
 		"power": 50,
 		"cost": 3,
 		"cursed": false,
-		"image": "back"
+		"image": "ice"
 	},
 	{
 		"name": "Thunder",
@@ -38,5 +38,13 @@
 		"cost": 2,
 		"cursed": false,
 		"image": "thunder"
+	},
+	{
+		"name": "Heal",
+		"card_type": "heal",
+		"power": 40,
+		"cost": 2,
+		"cursed": false,
+		"image": "heal"
 	}
 ]

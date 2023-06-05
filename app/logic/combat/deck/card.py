@@ -35,6 +35,9 @@ class Card:
     
     def is_cursed(self):
         return self.cursed
+    
+    def is_heal(self):
+        return self.card_type == "heal"
 
     def get_card_image(self):
         image_name = self.get_stat_for_card("image")

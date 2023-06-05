@@ -58,6 +58,8 @@ class Card:
         # Blit the image to the screen
         screen.blit(image, position)
 
+        if self.is_cursed():
+            return
         # Load the font
         font = pygame.font.Font(resource_path('app/assets/fonts/cursed_font.tff'), 30)
         # Make the text white and bold

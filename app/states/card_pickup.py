@@ -12,8 +12,7 @@ class CardPickupScreen(State):
         self.game = game
         self.player = player
         self.enemies = enemies
-        path = os.path.dirname(os.path.abspath(__file__))
-        self.font = pygame.font.Font(resource_path(path + '/../assets/fonts/cursed_font.tff'), 24)
+        self.font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 24)
 
         self.cards_to_show = []
         all_enemy_cards = []

@@ -22,8 +22,7 @@ class Card:
         self.position = (0, 0)
 
     def get_stat_for_card(self, stat_name):
-        path = os.path.dirname(os.path.abspath(__file__))
-        json_file = (resource_path(path + '/../../../assets/data/cards.json'))
+        json_file = (relative_resource_path('app/assets/data/cards.json'))
         with open(json_file, 'r') as file:
             data = json.load(file)
 
@@ -52,7 +51,7 @@ class Card:
         self.position = position
 
         # Draw the card on the screen using the image
-        image = pygame.image.load(resource_path(self.image))
+        image = pygame.image.load(relative_resource_path(self.image))
         # Scale the image to fit the card
         image = pygame.transform.scale(image, (150, 225))
         # Blit the image to the screen
@@ -61,7 +60,7 @@ class Card:
         if self.is_cursed():
             return
         # Load the font
-        font = pygame.font.Font(resource_path('app/assets/fonts/cursed_font.tff'), 30)
+        font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 30)
         # Make the text white and bold
         text = font.render(self.name, True, WHITE)
         # Blit the text to the middle of the card

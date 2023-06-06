@@ -10,7 +10,7 @@ class CursedCardPickupScreen(State):
         self.game = game
         self.player = player
         path = os.path.dirname(os.path.abspath(__file__))
-        self.font = pygame.font.Font(resource_path("app/assets/fonts/cursed_font.tff"), 24)
+        self.font = pygame.font.Font(relative_resource_path("app/assets/fonts/cursed_font.tff"), 24)
 
         self.button = Button("OK", self.game.config.get_width() // 2, 300, self.return_to_combat)
 

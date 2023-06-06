@@ -17,19 +17,19 @@ class MainMenu(State):
         
         # Music
         pygame.mixer.init()
-        pygame.mixer.music.load(resource_path("app/assets/music/deku.mp3"))
+        pygame.mixer.music.load(relative_resource_path("app/assets/music/deku.mp3"))
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(self.game.config.get_master_volume())
 
 
     def draw(self, surface):
         # Set background as background image 
-        background = pygame.image.load(resource_path("app/assets/images/backgrounds/dungeon.png"))
+        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/dungeon.png"))
         # scale background image to fit screen
         background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(background, (0, 0))
         # Title
-        title_font = pygame.font.Font(resource_path("app/assets/fonts/cursed_font.tff"), 200)
+        title_font = pygame.font.Font(relative_resource_path("app/assets/fonts/cursed_font.tff"), 200)
         title_text = "Cursed Mage"
         title_surface = title_font.render(title_text, True, self.const.WHITE)
         title_rect = title_surface.get_rect()

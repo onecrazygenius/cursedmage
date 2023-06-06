@@ -143,7 +143,7 @@ class Combat(State):
 
     def draw(self, surface):
         # Set background as background image 
-        background = pygame.image.load(resource_path("app/assets/images/backgrounds/dungeon.png"))
+        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/dungeon.png"))
         # scale background image to fit screen
         background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(background, (0, 0))
@@ -155,13 +155,13 @@ class Combat(State):
             if enemy.is_dead():
                 continue
             # draw the enemy from their sprite
-            enemy_sprite = pygame.image.load(resource_path(enemy.sprite))
+            enemy_sprite = pygame.image.load(relative_resource_path(enemy.sprite))
             enemy_sprite = pygame.transform.scale(enemy_sprite, (250, 250))
             surface.blit(enemy_sprite, (SCREEN_WIDTH / 2 + (i * 300), SCREEN_HEIGHT / 2 - 100))
 
         
         # draw the player from their sprite
-        player_sprite = pygame.image.load(resource_path(self.battle_manager.player.sprite))
+        player_sprite = pygame.image.load(relative_resource_path(self.battle_manager.player.sprite))
         player_sprite = pygame.transform.scale(player_sprite, (250, 250))
         surface.blit(player_sprite, (SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2 - 100))
         
@@ -184,7 +184,7 @@ class Combat(State):
             card.draw(surface, (card_x, card_y))
 
         # Show the player's cost
-        font = pygame.font.Font(resource_path("app/assets/fonts/pixel_font.ttf"), 30)
+        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 30)
         text_surface = font.render("Mana: " + str(self.battle_manager.player.cost), True, BLUE)
         text_rect = text_surface.get_rect()
         text_rect.center = (150, SCREEN_HEIGHT // 2 - 50)

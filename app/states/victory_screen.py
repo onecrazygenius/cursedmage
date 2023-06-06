@@ -20,8 +20,7 @@ class VictoryScreen(State):
     def draw(self, surface):
         surface.fill((0, 255, 0))  # Green background for victory screen
 
-        path = os.path.dirname(os.path.abspath(__file__))
-        font = pygame.font.Font(resource_path(path + '/../assets/fonts/cursed_font.tff'), 24)
+        font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 24)
         
         text_surface = font.render("Victory!", True, (255, 255, 255))  # White text
         text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 200))

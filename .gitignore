@@ -12,10 +12,7 @@ venv
 
 poetry.lock
 yarn.lock
-<<<<<<< HEAD
 client/package-lock.json
-=======
->>>>>>> 6bb7b0d (initial website commit)
 
 # Logs
 logs

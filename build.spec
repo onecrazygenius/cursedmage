@@ -16,5 +16,6 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           console=False,
+          uac_admin=True,
           name='CursedMage',
           icon='app/assets/images/team_logo.ico')

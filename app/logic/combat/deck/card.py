@@ -32,6 +32,12 @@ class Card:
                 return card[stat_name]
 
         return None
+    
+    def is_cursed(self):
+        return self.cursed
+    
+    def is_heal(self):
+        return self.card_type == "heal"
 
     def get_card_image(self):
         image_name = self.get_stat_for_card("image")
@@ -52,6 +58,8 @@ class Card:
         # Blit the image to the screen
         screen.blit(image, position)
 
+        if self.is_cursed():
+            return
         # Load the font
         font = pygame.font.Font(resource_path('app/assets/fonts/cursed_font.tff'), 30)
         # Make the text white and bold

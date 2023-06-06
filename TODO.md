@@ -1,9 +1,8 @@
 # For MVP
-3. ~~Spacing for screens~~ in progress | Charlie 
-4. Deal with drawing 3 cursed cards | James 
-6. Implement Heal Cards | Charlie
-7. Seed the game | James
-   1. Save the seed in the save file
+3. ~~Spacing for screens~~ in progress | Charlie
+4. Enemy turn bug where you queue mouse events is back
+2. Make the time for enemy turn random within a range
+3. Add a turn indicator
 8. Balance test the game | Charlie
 
 # For Final

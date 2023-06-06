@@ -18,6 +18,10 @@ DUNGEON_SIZE_Y = 5
 # Events
 ENEMY_TURN_EVENT = pygame.USEREVENT + 1
 GAME_OVER_EVENT = pygame.USEREVENT + 2
+PAUSE = pygame.USEREVENT + 3
+
+PAUSE_TIME_MS = 1000
+PAUSE_TIME_S = 1
 
 # Turn Results
 CONTINUE = "continue"

@@ -1,4 +1,5 @@
 import random
+import time
 
 from app.constants import *
 from app.logic.battle_manager import BattleManager
@@ -36,6 +37,8 @@ class Combat(State):
             pygame.draw.rect(self.surface, WHITE, (SCREEN_WIDTH - 50 - 200, 50 + (40*i), 200, 20), 2)
 
     def handle_event(self, event):
+        if event.type == PAUSE:
+            pygame.time.wait(PAUSE_TIME_MS)
 
         if event.type == GAME_OVER_EVENT:
             print("Game Over")
@@ -43,6 +46,7 @@ class Combat(State):
 
         if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
             turn_result = CONTINUE
+            time.sleep(PAUSE_TIME_S)  # Makes it look like the enemy is thinking about what to play. Pause the entire game
             while turn_result == CONTINUE:
                 turn_result = self.battle_manager.simulate_enemy_turn(self.battle_manager.current_turn)
                 self.post_turn_actions(turn_result)
@@ -105,6 +109,9 @@ class Combat(State):
                         self.dragging_card = None
 
     def post_turn_actions(self, turn_result):
+        # Pause pygame events so the player can't try and play cards to click buttons
+        pygame.event.post(pygame.event.Event(PAUSE))
+
         # Check Turn Result and perform the appropriate actions
         if turn_result == END_TURN:
             self.battle_manager.end_turn()

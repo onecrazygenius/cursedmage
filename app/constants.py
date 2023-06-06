@@ -30,12 +30,14 @@ FLOOR_COMPLETE = "floor_complete"
 FAILED = "failed"
 END_TURN = "end_turn"
 
-# resource path for pyinstaller
-def resource_path(relative_path):
+# resource path for pyinstaller.
+# ONLY USE FOR RELATIVE FILE PATHS.
+# For absolute paths (eg. the save files) this should not be used.
+def relative_resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     # PyInstaller creates a temp folder and stores path in _MEIPASS
     try:
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
+    return os.path.join(base_path, relative_path.lstrip('/'))

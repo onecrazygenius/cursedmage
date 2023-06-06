@@ -27,7 +27,7 @@ class Room:
 
 
         # draw the room image
-        room_sprite = pygame.image.load(resource_path("app/assets/images/backgrounds/doors/{}.png".format(door_type)))
+        room_sprite = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/{}.png".format(door_type)))
         room_sprite = pygame.transform.scale(room_sprite, (100, 140))
         # calculate offset
         screen_width = screen.get_width()

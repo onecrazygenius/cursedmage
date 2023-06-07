@@ -25,7 +25,7 @@ function App() {
         <div className="parallax-wrapper">
             <div className="logo">
                 <img src="images/cursedmage.svg" />
-                <a className="button" href="dist/installer.exe" target="_blank" download>Play the Demo Now</a>
+                <a className="button" href="/dist/CursedMage.exe" target="_blank" download>Play the Demo Now</a>
             </div>
             <div className="parallax" id="level0"></div>
             <div className="parallax" id="level1"></div>

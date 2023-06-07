@@ -27,7 +27,11 @@ class CharacterSelection(State):
         self.difficulty_right_arrow = Button(">", 2 * SCREEN_WIDTH // 3, 200, self.select_next_difficulty)
 
     def draw(self, surface):
-        surface.fill(WHITE)
+        # Set background as background image 
+        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/main_menu.png"))
+        # scale background image to fit screen
+        background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        surface.blit(background, (0, 0))
 
         character_font = pygame.font.Font(None, 36)
         character_text = self.characters[self.selected_character].name

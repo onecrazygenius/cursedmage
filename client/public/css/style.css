@@ -1,0 +1,348 @@
+/*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */html,body,p,ol,ul,li,dl,dt,dd,blockquote,characterfigure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*::before,*::after{box-sizing:inherit}img,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0}td:not([align]),th:not([align]){text-align:left}
+
+:root {
+    --red: #f73a21;
+    --red-offset: #1c050f;
+
+    --white: #ffffff;
+    --grey: #7a7a7a;
+}
+
+@font-face {
+    font-family: "thaleahfat";
+    src: url("../fonts/thaleahfat-webfont.woff2") format("woff2"),
+        url("../fonts/thaleahfat-webfont.ttf") format("truetype");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "Dungeon";
+    src: url("../fonts/dungeon.ttf") format("truetype");
+    font-weight: 400;
+}
+
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+    width: 100%;
+    background:var(--red-offset);
+    color:var(--white);
+    font-family:"thaleahfat", helvetica;
+    background:var(--red-offset);
+}
+
+body {
+    overflow-x: hidden; 
+    font-size:16px;
+}
+p {
+	font-size:1.7em;
+	margin-bottom:1rem;
+}
+.container {
+    height: 100vh;
+    position: relative;
+    min-width:320px;
+    z-index:2;
+}
+
+.logo {
+	display:block;
+	text-align:center; 
+	z-index:9999;
+	position:relative;
+ }
+
+
+.logo img{
+	display:block; 
+	margin:auto; 
+	width:42vw; 
+}
+
+.socials {
+position:absolute;
+z-index:5;
+top:10px;
+text-align:center;
+width:100%;
+}
+
+.parallax-wrapper {
+  overflow-y: hidden;
+    height:80%; 
+    min-width:320px;
+     display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.parallax {
+  background-size: 100%;
+  background-position: left bottom;
+  height:80%;
+  background-repeat:no-repeat;
+  position: absolute;
+  top:0;
+  width:100%;
+  min-width:320px;
+}
+
+#level0 {
+  background-image: url('../images/background-1.png');
+    background-size: cover;
+  background-position: left top;
+  z-index:0;
+}
+#level1 {
+  background-image: url('../images/level-1.gif');
+  z-index:1;
+}
+#level2 {
+  background-image: url('../images/level-2.gif');
+  z-index:2;
+}
+#level3 {
+  background-image: url('../images/level-3.gif');
+  z-index:3;
+}
+
+.content {
+	/* padding:5rem; */
+	margin:auto;
+	width:100%;
+	position:relative;
+	z-index:99999;
+    background:var(--red-offset);
+}
+
+.content > h2 {
+	margin:auto;
+	padding:1rem 5vw;
+	max-width:1200px;
+}
+
+.content > .title {
+    font-family: 'Dungeon', cursive;
+    font-size: 3em;
+}
+
+a.social-link  {
+	display:inline-block;	
+	margin:20px 5px;
+	
+}
+
+a.social-link svg {
+	width:30px; 
+	fill:var(--white);
+	position:relative;
+}
+
+a.social-link:hover svg {
+	top:-3px;
+ 	cursor:pointer;
+	fill:#f7d621;
+	
+}
+
+a.button {
+	display:inline-block;
+	margin:auto;
+	padding:13px 20px 12px;
+	background:var(--red);
+	color:#e9e2e5;
+	font-weight:bold;
+	text-transform:uppercase;
+	text-decoration:none;
+	text-align:center;
+	width:auto;
+	position:relative;
+	font-size:1.8em;
+	margin-top:2rem;
+	border-right:7px solid var(--red-offset);
+	border-bottom:7px solid var(--red-offset);
+}
+
+a.button:hover {
+	top:-3px;
+	background:var(--white);
+	cursor:pointer;
+	color:var(--red-offset);
+}
+
+h1, h2, h3, h4, h5 {
+    font-weight:bold;
+}
+
+h2 {
+	font-size:2.3em;
+}
+
+.blogs {
+	margin:0 auto;
+	padding:1rem 5vw;
+	max-width:1200px;
+	display: flex;
+    justify-content: left;
+    gap: 2rem;
+    flex-wrap: wrap;
+    }
+
+.blog {
+    width: 30%;
+    margin-bottom: 3%;
+    min-width: 200px;
+}
+
+.blog h2 {
+	margin:1rem auto 0;
+}
+.blog a,
+.blog img{
+    width: 100%;
+	display:block;
+}
+.blog a.button {
+	display:inline-block;
+	width: auto;
+	margin:1rem auto;
+}
+
+/* Pop Up */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: rgba(0, 0, 0, 0.7); */
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: #2f2f2f;
+    padding: 2rem;
+    width: 100%;
+    max-width: 90%;
+    max-height: 90%;
+    min-height: 70%;
+    overflow-y: auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content img {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    display: block;
+}
+
+.popup-content h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 2.5em;
+    text-align: center;
+    color: var(--white);
+    font-family: 'Dungeon', cursive;
+}
+
+.popup-content p {
+    margin: 0;
+    padding: 0;
+    color: var(--white);
+}
+
+.popup-content .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    cursor: pointer;
+    color: var(--white);
+    font-size: 2em;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: var(--grey);
+    background-image: linear-gradient(to right, var(--grey), var(--grey), var(--grey));
+    width: 50%;
+    margin: 0 auto;
+}
+ 
+.footer {
+	text-align:left;
+	display:block;
+	margin:auto;
+	font-size:1.2em;
+	padding:2rem 5vw;
+	max-width:1200px;
+}
+.footer span {
+	font-family:'Courier New', Courier, monospace; 
+	font-weight:bold;
+}
+
+
+/*/ MEDIA QUERIES START HERE //////////////////////////////////////////////////////////////////////////////*/
+
+@media (max-width: 768px) { /* Hand Held Device */
+
+	body {
+	font-size:13px;
+	}
+	.parallax {
+		background-size: 150%;
+	}
+	.logo img{
+		width:60vw; 
+	}
+
+	.content {
+		padding:1rem;
+	}
+	.blogs {
+		gap: 1rem;
+	}
+	.blog {
+		width: 47%;
+		margin-bottom: 3%;
+		min-width: 200px;
+	}
+
+}
+
+
+@media (max-width: 524px) { /*  Mobile */
+  .parallax {
+    background-size: 200%;
+    }
+    .logo img{
+		width:80vw; 
+	}
+	.blogs {
+    	justify-content: center;
+    }
+	.blog {
+		width: 97%;
+		margin-bottom: 3%;
+		min-width: 200px;
+	}
+}
+
+
+
+@media screen and (min-width: 3240px ) { /* 4K */
+
+}

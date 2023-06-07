@@ -24,7 +24,7 @@ class MainMenu(State):
 
     def draw(self, surface):
         # Set background as background image 
-        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/dungeon.png"))
+        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/main_menu.png"))
         # scale background image to fit screen
         background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(background, (0, 0))

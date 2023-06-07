@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Blog from './components/Blog'
+import Member from './components/Member'
 
 function App() {
 
@@ -20,6 +21,45 @@ function App() {
             image: "blog3.jpg"
         }
     ])
+
+    const [members, setMembers] = useState([
+        {
+            name: "Charlie",
+            bio: "Lead Developer",
+            image: "charlie.jpg"
+        },
+        {
+            name: "James",
+            bio: "Lead Developer",
+            image: "james.jpg"
+        },
+        {
+            name: "Duvina",
+            bio: "Lead Developer",
+            image: "duvina.jpg"
+        },
+        {
+            name: "Morgan",
+            bio: "Lead Developer",
+            image: "morgan.jpg"
+        },
+        {
+            name: "Massimo",
+            bio: "Lead Developer",
+            image: "massimo.jpg"
+        },
+        {
+            name: "Dev",
+            bio: "Lead Developer",
+            image: "dev.jpg"
+        },
+        {
+            name: "Flavia",
+            bio: "Lead Developer",
+            image: "flavia.jpg"
+        }
+    ])
+
     return (
     <div className="container">
         <div className="parallax-wrapper">
@@ -41,7 +81,7 @@ function App() {
             <h2 className="title">
                 Blogs
             </h2>
-            <div class="blogs">
+            <div className="blogs">
                 {blogs.map((blog, index) => (
                     <Blog key={index} props={blog} />
                 ))}
@@ -50,6 +90,11 @@ function App() {
             <h2 className="title">
                 About
             </h2>
+            <div className="blogs">
+                {members.map((member, index) => (
+                    <Member key={index} props={member} />
+                ))}
+            </div>
         </div>
         <small class="footer">(c) Cursed Mage</small>
     </div>

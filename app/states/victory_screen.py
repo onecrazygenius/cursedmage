@@ -18,7 +18,11 @@ class VictoryScreen(State):
                 self.button.handle_click(event)
 
     def draw(self, surface):
-        surface.fill((0, 255, 0))  # Green background for victory screen
+        # Set background as background image 
+        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/victory.png"))
+        # scale background image to fit screen
+        background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        surface.blit(background, (0, 0))
 
         font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 24)
         

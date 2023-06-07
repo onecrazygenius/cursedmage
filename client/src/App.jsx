@@ -75,7 +75,7 @@ function App() {
         <div className="content">
             <h2>
                 Cursed Mage is a dungeon full of magic, demons and roguelike action.<br /><br />
-                Your blog has been kidnapped and lost their power! The world is falling apart and people are DYING! Someone needs to be a hero! But who?
+                Your character has been kidnapped and lost their power! The world is falling apart and people are DYING! Someone needs to be a hero! But who?
             </h2>
             <hr></hr>
             <h2 className="title">

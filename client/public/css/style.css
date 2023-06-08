@@ -29,6 +29,7 @@ html, body {
     background:var(--red-offset);
     color:var(--white);
     font-family:"thaleahfat", helvetica;
+    letter-spacing: 0.07em;
     background:var(--red-offset);
 }
 
@@ -62,11 +63,11 @@ p {
 }
 
 .socials {
-position:absolute;
-z-index:5;
-top:10px;
-text-align:center;
-width:100%;
+    position:absolute;
+    z-index:5;
+    top:10px;
+    text-align:center;
+    width:100%;
 }
 
 .parallax-wrapper {

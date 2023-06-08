@@ -17,7 +17,7 @@ class MainMenu(State):
         
         # Music
         pygame.mixer.init()
-        pygame.mixer.music.load(relative_resource_path("app/assets/music/deku.mp3"))
+        pygame.mixer.music.load(relative_resource_path("app/assets/music/8bit.mp3"))
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(self.game.config.get_master_volume())
 

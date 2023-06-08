@@ -10,6 +10,8 @@ const Blog = ({props}) => {
     const { title, content, image } = props;
     const preview = content.substring(0, 100) + "...";
 
+    const imageURL = "/images/" + image;
+
     const toggle = () => {
         setOpenPopup(!openPopup);
     }
@@ -17,7 +19,7 @@ const Blog = ({props}) => {
     return ( 
     <div class="blog">
         <a onClick={toggle}>
-            <img src="images/{image}" />
+            <img src={imageURL} alt="blog" />
         </a>
         <div class="bio">
             <h2>{title}</h2>

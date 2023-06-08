@@ -6,9 +6,15 @@ function App() {
 
     const [blogs, setBlogs] = useState([
         {
-            title: "Blog 1",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl vitae aliquam ultricies, nunc nisl ultricies nunc, vit",
-            image: "blog1.jpg"
+            title: "Welcome! 18/02",
+            content: "We began our journey in December 2022, and we are now in the process of building our game. \
+                        We have a lot of work to do, but we are confident that we will be able to deliver a game \
+                        that will be fun and enjoyable for all players. Since our inception we have put together a \
+                        hack of the game to start bringing together something that fits the scope of this game - and can help \
+                        us start to make something we know you will love. We are going to continue to work on the game in the background but have done alot of the \
+                        heavy lifting in planning and designing something we know you will love. \
+                        We hope to catch you all in our alpha release soon!",
+            image: "welcome.png"
         },
         {
             title: "Blog 2",

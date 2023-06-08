@@ -2,9 +2,11 @@
 3. ~~Spacing for screens~~ in progress | Charlie
 3. Add a turn indicator
 4. Can't disable fullscreen
-5. Card resize text issue
 6. Enemy card played popup
 7. After ending your turn the mana goes back up immediately
+8. Add cursed screen
+9. Add combat win screen
+10. Buttons should use pixel font
 8. Balance test the game | Charlie
 
 # For Final

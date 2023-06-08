@@ -11,7 +11,7 @@ class Card:
     def __init__(self,
                  name,
                  ):
-    
+
         self.name = name
         self.card_type = self.get_stat_for_card("card_type")
         self.power = self.get_stat_for_card("power")
@@ -31,10 +31,10 @@ class Card:
                 return card[stat_name]
 
         return None
-    
+
     def is_cursed(self):
         return self.cursed
-    
+
     def is_heal(self):
         return self.card_type == "heal"
 
@@ -61,34 +61,33 @@ class Card:
 
         if self.is_cursed():
             return
-        # Load the font
-        font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 30)
+
+        # Calculate scaled font size based on scale factor
+        font_size = int(30 * (scale + 0.2))
+        # Load the font with the scaled font size
+        font = pygame.font.Font(relative_resource_path('app/assets/fonts/pixel_font.ttf'), font_size)
+
         # Make the text white and bold
         text = font.render(self.name, True, WHITE)
-        # Blit the text to the middle of the card
-        if scale == 1.0:
-            screen.blit(text, (position[0] + 75 - text.get_width() // 2, position[1] + 88 - text.get_height() // 2))
-        # else change the position of the text for the scaled card
-        else:
-            # TODO: Fix the scaling of the text
-            screen.blit(text, (position[0] + 75 - text.get_width() // 2, position[1] + 44 - text.get_height() // 2))
+        # Calculate the scaled position of the text, accounting for the base position and scale factor
+        text_position = (
+        position[0] + 75 * scale - text.get_width() // 2, position[1] + 86 * scale - text.get_height() // 2)
+        # Blit the text to the screen
+        screen.blit(text, text_position)
 
         # Mana cost
         text = font.render(str(self.cost), True, BLUE)
-        # Blit the text to the top left of the card, 
-        if scale == 1.0:
-            screen.blit(text, (position[0] + 28 - text.get_width() // 2, position[1] + 30 - text.get_height() // 2))
-        # else change the position of the text for the scaled card
-        else:
-            # TODO: Fix the scaling of the text
-            screen.blit(text, (position[0] + 28 - text.get_width() // 2, position[1] + 15 - text.get_height() // 2))
-        
+        # Calculate the scaled position of the text, accounting for the base position and scale factor
+        text_position = (
+        position[0] + 28 * scale - text.get_width() // 2, position[1] + 30 * scale - text.get_height() // 2)
+        # Blit the text to the screen
+        screen.blit(text, text_position)
+
         # Power
-        text = font.render(str(self.power), True, RED)
-        # Blit the text to the top right of the card
-        if scale == 1.0:
-            screen.blit(text, (position[0] + 122 - text.get_width() // 2, position[1] + 30 - text.get_height() // 2))
-        # else change the position of the text for the scaled card
-        else:
-            # TODO: Fix the scaling of the text
-            screen.blit(text, (position[0] + 122 - text.get_width() // 2, position[1] + 15 - text.get_height() // 2))
+        text = font.render(str(self.power), True, WHITE)
+        # Calculate the scaled position of the text, accounting for the base position and scale factor
+        text_position = (
+        position[0] + 122 * scale - text.get_width() // 2, position[1] + 30 * scale - text.get_height() // 2)
+        # Blit the text to the screen
+        screen.blit(text, text_position)
+

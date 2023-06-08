@@ -216,7 +216,7 @@ class Combat(State):
             card.draw(surface, (card_x, card_y))
 
         # Show the player's cost
-        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 30)
+        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 42)
         text_surface = font.render("Mana: " + str(self.battle_manager.player.cost), True, BLUE)
         text_rect = text_surface.get_rect()
         text_rect.center = (150, SCREEN_HEIGHT // 2 - 50)

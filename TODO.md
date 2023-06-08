@@ -1,6 +1,5 @@
 # For MVP
 3. ~~Spacing for screens~~ in progress | Charlie
-4. Enemy turn bug where you queue mouse events is back
 3. Add a turn indicator
 4. Can't disable fullscreen
 5. Card resize text issue

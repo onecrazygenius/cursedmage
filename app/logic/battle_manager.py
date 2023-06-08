@@ -106,6 +106,7 @@ class BattleManager:
             pygame.event.post(pygame.event.Event(ENEMY_TURN_EVENT))
         else:
             self.current_turn = self.player  # Change to the player's turn
+            pygame.event.post(pygame.event.Event(PLAYER_TURN_EVENT))
 
     
     # handle end of turn
@@ -120,6 +121,7 @@ class BattleManager:
             return
 
         # Otherwise continue the game by rotating to the next character
+        pygame.event.post(pygame.event.Event(PAUSE))
         self.next_turn()
 
     

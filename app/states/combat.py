@@ -41,7 +41,14 @@ class Combat(State):
 
     def handle_event(self, event):
         if event.type == PAUSE:
-            pygame.time.wait(PAUSE_TIME_MS)
+            # Pause pygame so no events can take place
+            pygame.time.delay(PAUSE_TIME_MS)
+            # Get the events queue and clear it
+            pygame.event.get()
+            pygame.event.clear()
+            # Block all events except the PLAYER_TURN and ENEMY_TURN events
+            pygame.event.set_blocked(PLAYER_TURN_EVENT)
+            pygame.event.set_blocked(ENEMY_TURN_EVENT)
 
         if event.type == GAME_OVER_EVENT:
             print("Game Over")
@@ -49,7 +56,6 @@ class Combat(State):
 
         if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
             turn_result = CONTINUE
-            time.sleep(PAUSE_TIME_S)  # Makes it look like the enemy is thinking about what to play. Pause the entire game
             while turn_result == CONTINUE:
                 turn_result = self.battle_manager.simulate_enemy_turn(self.battle_manager.current_turn)
                 self.post_turn_actions(turn_result)
@@ -133,9 +139,6 @@ class Combat(State):
                         self.dragging_card = None
 
     def post_turn_actions(self, turn_result):
-        # Pause pygame events so the player can't try and play cards to click buttons
-        pygame.event.post(pygame.event.Event(PAUSE))
-
         # Check Turn Result and perform the appropriate actions
         if turn_result == END_TURN:
             self.battle_manager.end_turn()
@@ -146,6 +149,8 @@ class Combat(State):
         self.post_combat_actions(turn_result)
         if turn_result == CONTINUE:
             self.update_health_bars()
+        # To prevent visual issues. After each turn set the hovered card back to none
+        self.hovered_card = None
         self.dragging_card = None
         pygame.display.flip()
 

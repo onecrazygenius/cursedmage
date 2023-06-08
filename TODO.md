@@ -3,6 +3,7 @@
 4. Enemy turn bug where you queue mouse events is back
 2. Make the time for enemy turn random within a range
 3. Add a turn indicator
+4. Can't disable fullscreen
 8. Balance test the game | Charlie
 
 # For Final

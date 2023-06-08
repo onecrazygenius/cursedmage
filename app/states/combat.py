@@ -1,6 +1,8 @@
 import random
 import time
 
+import pygame
+
 from app.constants import *
 from app.logic.battle_manager import BattleManager
 from app.states.card_pickup import CardPickupScreen
@@ -68,9 +70,11 @@ class Combat(State):
 
             # check if the player is dragging a card
             elif event.type == pygame.MOUSEMOTION and self.dragging_card is not None:
-                card_x = event.pos[0] - self.dragging_card_offset[0]
-                card_y = event.pos[1] - self.dragging_card_offset[1]
-                self.battle_manager.player.deck.hand[self.dragging_card].position = (card_x, card_y)
+                dragging_card_pos = (
+                    self.game.screen_to_surface(event.pos)[0] - 50,
+                    self.game.screen_to_surface(event.pos)[1] - 100
+                )
+                self.battle_manager.player.deck.hand[self.dragging_card].position = dragging_card_pos
 
             # check if the player released the mouse button
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:

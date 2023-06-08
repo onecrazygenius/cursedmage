@@ -36,33 +36,33 @@ function App() {
         },
         {
             name: "James",
-            bio: "Lead Developer",
-            image: "james.jpg"
+            bio: "Project Manager",
+            image: "james.png"
         },
         {
             name: "Duvina",
-            bio: "Lead Developer",
-            image: "duvina.jpg"
+            bio: "Artist & Web Design",
+            image: "duvina.png"
         },
         {
             name: "Morgan",
-            bio: "Lead Developer",
-            image: "morgan.jpg"
+            bio: "Artist",
+            image: "morgan.png"
         },
         {
             name: "Massimo",
-            bio: "Lead Developer",
-            image: "massimo.jpg"
+            bio: "Developer",
+            image: "massimo.png"
         },
         {
             name: "Dev",
-            bio: "Lead Developer",
-            image: "dev.jpg"
+            bio: "Developer",
+            image: "dev.png"
         },
         {
             name: "Flavia",
-            bio: "Lead Developer",
-            image: "flavia.jpg"
+            bio: "Developer",
+            image: "flavia.png"
         }
     ])
 

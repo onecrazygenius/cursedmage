@@ -20,6 +20,7 @@ class Combat(State):
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
         self.end_turn_button = Button("End Turn", 150, SCREEN_HEIGHT // 2, self.end_turn)
+        self.hovered_card = None
         player.replenish()
 
     def update_health_bars(self):
@@ -75,6 +76,25 @@ class Combat(State):
                     self.game.screen_to_surface(event.pos)[1] - 100
                 )
                 self.battle_manager.player.deck.hand[self.dragging_card].position = dragging_card_pos
+
+            # check if the player has hovered over a card
+            elif event.type == pygame.MOUSEMOTION:
+                # Make the card bigger when the mouse is over it
+                # set self.hovered_card to the card that is being hovered over
+                for i, card in enumerate(self.battle_manager.player.deck.hand):
+                    if card.cursed:
+                        continue
+                    card_x = 100 + (100 + 100) * i
+                    card_y = 800
+                    card_rect = pygame.Rect(card_x, card_y, 150, 225)
+                    if card_rect.collidepoint(self.game.screen_to_surface(event.pos)):
+                        self.hovered_card = i
+                        break
+                # if the card is no longer being hovered over, set self.hovered_card to None
+                else:
+                    self.hovered_card = None
+
+
 
             # check if the player released the mouse button
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
@@ -178,8 +198,11 @@ class Combat(State):
             # center the cards in the middle of the screen
             card_x = 100 + (100 + 100) * i
             card_y = 800
-            # draw the card
-            card.draw(surface, (card_x, card_y))
+            # draw the card, if the current card is self.hovering_card, draw it slightly bigger
+            if i == self.hovered_card:
+                card.draw(surface, (card_x, card_y), 1.2)
+            else:
+                card.draw(surface, (card_x, card_y))
 
         # if the player is dragging a card, draw it last so it's on top
         if self.dragging_card is not None:

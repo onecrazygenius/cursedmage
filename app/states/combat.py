@@ -1,7 +1,4 @@
 import random
-import time
-
-import pygame
 
 from app.constants import *
 from app.logic.battle_manager import BattleManager
@@ -20,6 +17,7 @@ class Combat(State):
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
         self.end_turn_button = Button("End Turn", 150, SCREEN_HEIGHT // 2, self.end_turn)
+        self.active_popup = None
         self.hovered_card = None
         player.replenish()
 
@@ -144,7 +142,8 @@ class Combat(State):
             self.battle_manager.end_turn()
         if turn_result == FAILED:
             # Not enough cost
-            self.popup("Not enough cost")
+            self.popup("Not Enough Mana")
+            pygame.display.flip()
         # Check for results which would end the combat phase
         self.post_combat_actions(turn_result)
         if turn_result == CONTINUE:
@@ -188,12 +187,12 @@ class Combat(State):
             enemy_sprite = pygame.transform.scale(enemy_sprite, (250, 250))
             surface.blit(enemy_sprite, (SCREEN_WIDTH / 2 + (i * 300), SCREEN_HEIGHT / 2 - 100))
 
-        
+
         # draw the player from their sprite
         player_sprite = pygame.image.load(relative_resource_path(self.battle_manager.player.sprite))
         player_sprite = pygame.transform.scale(player_sprite, (250, 250))
         surface.blit(player_sprite, (SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2 - 100))
-        
+
 
         # for each card in the player's hand, draw the card
         for i, card in enumerate(self.battle_manager.player.deck.hand):
@@ -225,6 +224,13 @@ class Combat(State):
         # add an end turn button
         self.end_turn_button.draw(surface)
 
+        if self.active_popup is not None:
+            # Draw the popup only if the difference between current time and popup start time is less than 2 seconds
+            if pygame.time.get_ticks() - self.active_popup.start_time < COMBAT_POPUP_DURATION_MS:
+                self.active_popup.draw(surface)
+            else:
+                self.active_popup = None
+
         # update the display
         pygame.display.flip()
 
@@ -234,13 +240,11 @@ class Combat(State):
 
     def popup(self, text):
         popup = Popup(
-            SCREEN_WIDTH // 2, 
-            SCREEN_HEIGHT // 2, 
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2,
+            pygame.time.get_ticks(),
             text,
             width=300,
-            height=100
+            height=100,
         )
-        popup.draw(self.surface)
-        pygame.display.flip()
-        pygame.time.wait(500)
-        pygame.display.flip()
+        self.active_popup = popup

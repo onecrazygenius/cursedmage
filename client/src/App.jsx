@@ -32,7 +32,7 @@ function App() {
         {
             name: "Charlie",
             bio: "Lead Developer",
-            image: "charlie.jpg"
+            image: "charlie.png"
         },
         {
             name: "James",

@@ -10,7 +10,7 @@
   },
   {
     "name": "Mage",
-    "health": 60,
+    "health": 250,
     "attack": 4,
     "defence": 2,
     "cost": 5,
@@ -19,7 +19,7 @@
   },
   {
     "name": "Rogue",
-    "health": 75,
+    "health": 375,
     "attack": 4,
     "defence": 3,
     "cost": 4,

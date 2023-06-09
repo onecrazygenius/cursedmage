@@ -14,7 +14,7 @@ function App() {
             In our quest to deliver an immersive world the biggest challenge was creating backgrounds that portrays the theme, we agreed that our background should be based off of something dark or cold as that allows us to give the correct theme before we started. \
             In doing this we could add detail and make the backgrounds much more interesting and immersive without having to fixate on dark and cold themes. \
             This will create an overall improvement in your experience as there will be a lot more variety in the surroundings of the character. ",
-            image: "cards.png"
+            image: "magic.png"
         },
         {
             title: "Switch Up! 28/04",

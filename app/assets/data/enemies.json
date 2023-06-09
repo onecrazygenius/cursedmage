@@ -20,7 +20,7 @@
     "sprite": "brute"
   },
   {
-    "name": "Demon",
+    "name": "Reaper",
     "health": 75,
     "attack": 4,
     "defence": 3,

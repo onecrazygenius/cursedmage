@@ -224,6 +224,13 @@ class Combat(State):
         text_rect.center = (150, SCREEN_HEIGHT // 2 - 50)
         surface.blit(text_surface, text_rect)
 
+        # Show the current turn
+        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 36)
+        text_surface = font.render(str(self.battle_manager.current_turn.name) + "'s Turn", True, WHITE)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (SCREEN_WIDTH / 2, 50)
+        surface.blit(text_surface, text_rect)
+
         # add an end turn button
         self.end_turn_button.draw(surface)
 

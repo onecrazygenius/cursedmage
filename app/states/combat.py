@@ -47,6 +47,7 @@ class Combat(State):
             # Block all events except the PLAYER_TURN and ENEMY_TURN events
             pygame.event.set_blocked(PLAYER_TURN_EVENT)
             pygame.event.set_blocked(ENEMY_TURN_EVENT)
+            pygame.event.set_blocked(GAME_OVER_EVENT)
 
         if event.type == GAME_OVER_EVENT:
             print("Game Over")

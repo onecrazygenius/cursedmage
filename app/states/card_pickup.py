@@ -22,23 +22,28 @@ class CardPickupScreen(State):
         cards_picked = random.sample(range(0, len(all_enemy_cards)), 2)
         self.cards_to_show = list(map(all_enemy_cards.__getitem__, cards_picked))
 
-        self.button = Button("Back to Main Menu", SCREEN_WIDTH // 2, 300, self.back_to_main_menu)
+        self.button = Button("Back to Main Menu", SCREEN_WIDTH // 2, 950, self.back_to_main_menu)
 
     def draw(self, surface):
-        # Green background for victory screen
-        surface.fill((0, 255, 0))  # Black background for card pickup screen
+        # Set background as background image
+        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/combat_victory.png"))
+        # scale background image to fit screen
+        background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        surface.blit(background, (0, 0))
 
         # Draw text
-        text_surface = self.font.render("Victory!", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 200))
+        font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 42)
+
+        text_surface = font.render("Victory! Pickup an Enemy Card", True, (255, 255, 255))  # White text
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 425))
         surface.blit(text_surface, text_rect)
         self.button.draw(surface)
-        
+
         # For each card available, draw it
         for i, card in enumerate(self.cards_to_show):
             # center the cards in the middle of the screen
-            card_x = 100 + (100 + 100) * i
-            card_y = 800
+            card_x = 785 + (100 + 100) * i
+            card_y = 650
             # draw the card
             card.draw(surface, (card_x, card_y))
 
@@ -51,8 +56,8 @@ class CardPickupScreen(State):
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
             for i, card in enumerate(self.cards_to_show):
-                card_x = 100 + (100 + 100) * i
-                card_y = 800
+                card_x = 785 + (100 + 100) * i
+                card_y = 650
                 card_rect = pygame.Rect(card_x, card_y, 150, 225)
                 if card_rect.collidepoint(self.game.screen_to_surface(event.pos)):
                     self.pickup_card(card)

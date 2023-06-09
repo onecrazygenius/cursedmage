@@ -23,8 +23,8 @@ class CharacterSelection(State):
         self.start_game_button = Button("Start Game", SCREEN_WIDTH // 2, SCREEN_HEIGHT// 2 + 200, self.start_game)
         self.character_left_arrow = Button("<", SCREEN_WIDTH // 3, SCREEN_HEIGHT// 2, self.select_previous_character)
         self.character_right_arrow = Button(">", 2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT// 2, self.select_next_character)
-        self.difficulty_left_arrow = Button("<", SCREEN_WIDTH // 3, SCREEN_HEIGHT// 2 + 50, self.select_previous_difficulty)
-        self.difficulty_right_arrow = Button(">", 2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT// 2 + 50, self.select_next_difficulty)
+        self.difficulty_left_arrow = Button("<", SCREEN_WIDTH // 3, SCREEN_HEIGHT// 2 + 100, self.select_previous_difficulty)
+        self.difficulty_right_arrow = Button(">", 2 * SCREEN_WIDTH // 3, SCREEN_HEIGHT// 2 + 100, self.select_next_difficulty)
 
     def draw(self, surface):
         # Set background as background image 
@@ -33,7 +33,7 @@ class CharacterSelection(State):
         background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(background, (0, 0))
 
-        character_font = pygame.font.Font(None, 36)
+        character_font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 36)
         character_text = self.characters[self.selected_character].name
         character_surface = character_font.render(character_text, True, BLACK)
         character_rect = character_surface.get_rect()
@@ -41,11 +41,11 @@ class CharacterSelection(State):
         # blitz onto canvas
         surface.blit(character_surface, character_rect)
 
-        difficulty_font = pygame.font.Font(None, 36)
+        difficulty_font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 36)
         difficulty_text = self.difficulties[self.selected_difficulty]
         difficulty_surface = difficulty_font.render(difficulty_text, True, BLACK)
         difficulty_rect = difficulty_surface.get_rect()
-        difficulty_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
+        difficulty_rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 100)
         surface.blit(difficulty_surface, difficulty_rect)
 
         self.start_game_button.draw(surface)

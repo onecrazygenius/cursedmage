@@ -1,15 +1,5 @@
-# For MVP
-3. ~~Spacing for screens~~ in progress | Charlie
-3. Add a turn indicator
-4. Can't disable fullscreen
-6. Enemy card played popup
-7. After ending your turn the mana goes back up immediately
-8. Add cursed screen
-9. Add combat win screen
-10. Buttons should use pixel font
-8. Balance test the game | Charlie
-
 # For Final
+4. Can't disable fullscreen
 2. Make the time for enemy turn random within a range
 1. Implement Difficulty
 2. Implement Bosses

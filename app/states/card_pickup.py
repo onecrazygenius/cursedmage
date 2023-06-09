@@ -32,10 +32,15 @@ class CardPickupScreen(State):
         surface.blit(background, (0, 0))
 
         # Draw text
-        font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 42)
+        victory_font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 72)
+        pickup_font = pygame.font.Font(relative_resource_path('app/assets/fonts/cursed_font.tff'), 40)
 
-        text_surface = font.render("Victory! Pickup an Enemy Card", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 425))
+        text_surface = victory_font.render("Victory!", True, (255, 255, 255))  # White text
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 400))
+        surface.blit(text_surface, text_rect)
+
+        text_surface = pickup_font.render("Pickup an Enemy Card", True, (255, 255, 255))  # White text
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 450))
         surface.blit(text_surface, text_rect)
         self.button.draw(surface)
 

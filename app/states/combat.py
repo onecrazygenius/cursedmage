@@ -19,7 +19,7 @@ class Combat(State):
         self.end_turn_button = Button("End Turn", 150, SCREEN_HEIGHT // 2, self.end_turn)
         self.active_popup = None
         self.hovered_card = None
-        player.replenish()
+        player.replenish(health=True)
 
     def update_health_bars(self):
         player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
@@ -44,10 +44,12 @@ class Combat(State):
             # Get the events queue and clear it
             pygame.event.get()
             pygame.event.clear()
-            # Block all events except the PLAYER_TURN and ENEMY_TURN events
-            pygame.event.set_blocked(PLAYER_TURN_EVENT)
-            pygame.event.set_blocked(ENEMY_TURN_EVENT)
-            pygame.event.set_blocked(GAME_OVER_EVENT)
+            # Block all events except the PLAYER_TURN and ENEMY_TURN events while paused
+            pygame.event.set_allowed([PLAYER_TURN_EVENT, ENEMY_TURN_EVENT, GAME_OVER_EVENT, PAUSE])
+
+        if event.type == PLAYER_TURN_EVENT:
+            # refresh the player's energy
+            self.battle_manager.player.replenish()
 
         if event.type == GAME_OVER_EVENT:
             print("Game Over")

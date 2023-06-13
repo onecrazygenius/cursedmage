@@ -24,16 +24,14 @@ jobs:
         run: |
           (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python - 
 
-      - name: Add Poetry to PATH
-        run: |
-          $env:PATH += ";$env:USERPROFILE\AppData\Roaming\Python\Scripts"
-      
       - name: Install Dependencies
         run: |
+          $env:PATH += ";$env:USERPROFILE\AppData\Roaming\Python\Scripts"
           poetry install
 
       - name: Build application
         run: |
+          $env:PATH += ";$env:USERPROFILE\AppData\Roaming\Python\Scripts"
           poetry run pyinstaller build.spec
 
       - name: Upload artifact

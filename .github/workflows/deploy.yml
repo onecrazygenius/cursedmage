@@ -54,11 +54,6 @@ jobs:
           path: .
 
       - name: Copy to Server
-        shell: bash
-        env:
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
         run: |
           sudo apt-get install -y sshpass
-          sshpass -p $SSH_PASSWORD scp CursedMage.exe $SSH_USERNAME@$SSH_HOST:/www/public/dist/CursedMage.exe 
+          sshpass -p curs3dmag3 scp CursedMage.exe github@77.68.54.40:/www/public/dist/CursedMage.exe 

@@ -1,5 +1,4 @@
 import random
-import time
 
 from app.constants import *
 from app.logic.battle_manager import BattleManager
@@ -18,7 +17,9 @@ class Combat(State):
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
         self.end_turn_button = Button("End Turn", 150, SCREEN_HEIGHT // 2, self.end_turn)
-        player.replenish()
+        self.active_popup = None
+        self.hovered_card = None
+        player.replenish(health=True)
 
     def update_health_bars(self):
         player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
@@ -38,7 +39,17 @@ class Combat(State):
 
     def handle_event(self, event):
         if event.type == PAUSE:
-            pygame.time.wait(PAUSE_TIME_MS)
+            # Pause pygame so no events can take place
+            pygame.time.delay(PAUSE_TIME_MS)
+            # Get the events queue and clear it
+            pygame.event.get()
+            pygame.event.clear()
+            # Block all events except the PLAYER_TURN and ENEMY_TURN events while paused
+            pygame.event.set_allowed([PLAYER_TURN_EVENT, ENEMY_TURN_EVENT, GAME_OVER_EVENT, PAUSE])
+
+        if event.type == PLAYER_TURN_EVENT:
+            # refresh the player's energy
+            self.battle_manager.player.replenish()
 
         if event.type == GAME_OVER_EVENT:
             print("Game Over")
@@ -46,7 +57,6 @@ class Combat(State):
 
         if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
             turn_result = CONTINUE
-            time.sleep(PAUSE_TIME_S)  # Makes it look like the enemy is thinking about what to play. Pause the entire game
             while turn_result == CONTINUE:
                 turn_result = self.battle_manager.simulate_enemy_turn(self.battle_manager.current_turn)
                 self.post_turn_actions(turn_result)
@@ -68,9 +78,30 @@ class Combat(State):
 
             # check if the player is dragging a card
             elif event.type == pygame.MOUSEMOTION and self.dragging_card is not None:
-                card_x = event.pos[0] - self.dragging_card_offset[0]
-                card_y = event.pos[1] - self.dragging_card_offset[1]
-                self.battle_manager.player.deck.hand[self.dragging_card].position = (card_x, card_y)
+                dragging_card_pos = (
+                    self.game.screen_to_surface(event.pos)[0] - 50,
+                    self.game.screen_to_surface(event.pos)[1] - 100
+                )
+                self.battle_manager.player.deck.hand[self.dragging_card].position = dragging_card_pos
+
+            # check if the player has hovered over a card
+            elif event.type == pygame.MOUSEMOTION:
+                # Make the card bigger when the mouse is over it
+                # set self.hovered_card to the card that is being hovered over
+                for i, card in enumerate(self.battle_manager.player.deck.hand):
+                    if card.cursed:
+                        continue
+                    card_x = 100 + (100 + 100) * i
+                    card_y = 800
+                    card_rect = pygame.Rect(card_x, card_y, 150, 225)
+                    if card_rect.collidepoint(self.game.screen_to_surface(event.pos)):
+                        self.hovered_card = i
+                        break
+                # if the card is no longer being hovered over, set self.hovered_card to None
+                else:
+                    self.hovered_card = None
+
+
 
             # check if the player released the mouse button
             elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
@@ -109,19 +140,19 @@ class Combat(State):
                         self.dragging_card = None
 
     def post_turn_actions(self, turn_result):
-        # Pause pygame events so the player can't try and play cards to click buttons
-        pygame.event.post(pygame.event.Event(PAUSE))
-
         # Check Turn Result and perform the appropriate actions
         if turn_result == END_TURN:
             self.battle_manager.end_turn()
         if turn_result == FAILED:
             # Not enough cost
-            self.popup("Not enough cost")
+            self.popup("Not Enough Mana")
+            pygame.display.flip()
         # Check for results which would end the combat phase
         self.post_combat_actions(turn_result)
         if turn_result == CONTINUE:
             self.update_health_bars()
+        # To prevent visual issues. After each turn set the hovered card back to none
+        self.hovered_card = None
         self.dragging_card = None
         pygame.display.flip()
 
@@ -159,12 +190,12 @@ class Combat(State):
             enemy_sprite = pygame.transform.scale(enemy_sprite, (250, 250))
             surface.blit(enemy_sprite, (SCREEN_WIDTH / 2 + (i * 300), SCREEN_HEIGHT / 2 - 100))
 
-        
+
         # draw the player from their sprite
         player_sprite = pygame.image.load(relative_resource_path(self.battle_manager.player.sprite))
         player_sprite = pygame.transform.scale(player_sprite, (250, 250))
         surface.blit(player_sprite, (SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2 - 100))
-        
+
 
         # for each card in the player's hand, draw the card
         for i, card in enumerate(self.battle_manager.player.deck.hand):
@@ -174,8 +205,11 @@ class Combat(State):
             # center the cards in the middle of the screen
             card_x = 100 + (100 + 100) * i
             card_y = 800
-            # draw the card
-            card.draw(surface, (card_x, card_y))
+            # draw the card, if the current card is self.hovering_card, draw it slightly bigger
+            if i == self.hovered_card:
+                card.draw(surface, (card_x, card_y), 1.2)
+            else:
+                card.draw(surface, (card_x, card_y))
 
         # if the player is dragging a card, draw it last so it's on top
         if self.dragging_card is not None:
@@ -184,14 +218,28 @@ class Combat(State):
             card.draw(surface, (card_x, card_y))
 
         # Show the player's cost
-        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 30)
+        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 42)
         text_surface = font.render("Mana: " + str(self.battle_manager.player.cost), True, BLUE)
         text_rect = text_surface.get_rect()
         text_rect.center = (150, SCREEN_HEIGHT // 2 - 50)
         surface.blit(text_surface, text_rect)
 
+        # Show the current turn
+        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 36)
+        text_surface = font.render(str(self.battle_manager.current_turn.name) + "'s Turn", True, WHITE)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (SCREEN_WIDTH / 2, 50)
+        surface.blit(text_surface, text_rect)
+
         # add an end turn button
         self.end_turn_button.draw(surface)
+
+        if self.active_popup is not None:
+            # Draw the popup only if the difference between current time and popup start time is less than 2 seconds
+            if pygame.time.get_ticks() - self.active_popup.start_time < COMBAT_POPUP_DURATION_MS:
+                self.active_popup.draw(surface)
+            else:
+                self.active_popup = None
 
         # update the display
         pygame.display.flip()
@@ -202,13 +250,11 @@ class Combat(State):
 
     def popup(self, text):
         popup = Popup(
-            SCREEN_WIDTH // 2, 
-            SCREEN_HEIGHT // 2, 
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2,
+            pygame.time.get_ticks(),
             text,
             width=300,
-            height=100
+            height=100,
         )
-        popup.draw(self.surface)
-        pygame.display.flip()
-        pygame.time.wait(500)
-        pygame.display.flip()
+        self.active_popup = popup

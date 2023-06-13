@@ -1,11 +1,6 @@
-# For MVP
-3. ~~Spacing for screens~~ in progress | Charlie
-4. Enemy turn bug where you queue mouse events is back
-2. Make the time for enemy turn random within a range
-3. Add a turn indicator
-8. Balance test the game | Charlie
-
 # For Final
+4. Can't disable fullscreen
+2. Make the time for enemy turn random within a range
 1. Implement Difficulty
 2. Implement Bosses
 3. Implement card upgrade after boss

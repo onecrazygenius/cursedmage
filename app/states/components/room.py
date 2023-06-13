@@ -18,7 +18,7 @@ class Room:
         door_type = "locked"
         # if the room is complete make the door open
         if self.completed:
-            door_type = "open"
+            door_type = "broken"
         elif self.visited:
             door_type = "open"
         # if the room is the next room the player should go to make the door unlocked

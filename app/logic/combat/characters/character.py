@@ -44,11 +44,12 @@ class Character:
         return self.cur_health <= 0
 
     # Used to replenish the players health, cost and put all their cards back into the deck
-    def replenish(self):
+    def replenish(self, health=False):
         self.deck.ready_deck_for_combat()
         self.deck.draw_card(3 - len(self.deck.hand))
-        self.cur_health = self.max_health
         self.cost = self.max_cost
+        if health:
+            self.cur_health = self.max_health
 
     def starting_deck(self):
         json_file = (relative_resource_path('app/assets/data/cards.json'))

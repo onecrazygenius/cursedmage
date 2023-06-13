@@ -1,0 +1,61 @@
+# deploy cursed mage build to ubuntu box
+name: Deploy Cursed Mage
+
+# actions will run on tagged commits
+on:
+  push:
+    tags:
+      - 'v*'
+
+# jobs to run
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+    
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+        
+      - name: Install Poetry
+        run: |
+          (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python - 
+      
+      - name: Install Dependencies
+        run: |
+          poetry install
+
+      - name: Build application
+        run: |
+          poetry run pyinstaller build.spec
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: CursedMage.exe
+          path: dist/CursedMage.exe
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: CursedMage.exe
+          path: .
+
+      - name: Copy to Server
+        run: |
+          sudo apt-get install -y rsync sshpass
+          sshpass -p ${{ secrets.SSH_PASSWORD }} rsync -avz -e 'ssh -p 22' --progress CursedMage.exe ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/www/public/dist/CursedMage.exe 
+        env:
+          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}

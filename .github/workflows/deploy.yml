@@ -56,7 +56,7 @@ jobs:
       - name: Copy to Server
         shell: bash
         run: |
-          sudo apt-get install -y sshpass rsync
+          sudo apt-get install -y sshpass
           sshpass -p $SSH_PASSWORD scp CursedMage.exe $SSH_USERNAME@$SSH_HOST:/www/public/dist/CursedMage.exe 
         env:
           SSH_USERNAME: ${{ secrets.SSH_USERNAME }}

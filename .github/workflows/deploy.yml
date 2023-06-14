@@ -1,13 +1,17 @@
 # deploy cursed mage build to ubuntu box
 name: Deploy Cursed Mage
 
-# actions will run on manual trigger
+# actions will run on tagged commits or manual triggers
 on:
+  push:
+    tags:
+      - 'v*.*.*'
   workflow_dispatch:
     inputs:
       deploy:
-        description: 'Deploy Cursed Mage'
-        required: false
+        description: 'Release Version'
+        required: true
+        default: 'v0.0.0'
 
 # jobs to run
 jobs:

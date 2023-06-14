@@ -85,8 +85,10 @@ class BattleManager:
     
     # simulate enemy turn
     def simulate_enemy_turn(self, enemy):
+
         card = EnemyLogic.select_card(enemy, self.player)
 
+        #print("Enemy " + enemy.name + " played " + (card.name if card is not None else "nothing"))
         # If enemy can't play a card, they should end their turn
         if card is not None:
             turn_result = self.handle_turn(card)
@@ -103,16 +105,20 @@ class BattleManager:
 
         if current_index == -1 and current_index < len(self.enemies) - 1:
             self.current_turn = self.enemies[current_index + 1]  # Move to the next enemy's turn
+            # replenish enemy
+            self.current_turn.cost = self.current_turn.max_cost
+            self.current_turn.deck.draw_card(3 - len(self.current_turn.deck.hand))
             pygame.event.post(pygame.event.Event(ENEMY_TURN_EVENT))
         else:
             self.current_turn = self.player  # Change to the player's turn
+            pygame.event.post(pygame.event.Event(PLAYER_TURN_EVENT))
 
     
     # handle end of turn
     def end_turn(self):
         # Set the current turn character to full cost and draw back to 3 cards
-        self.current_turn.cost = self.current_turn.max_cost
-        self.current_turn.deck.draw_card(3 - len(self.current_turn.deck.hand))
+        # self.current_turn.cost = self.current_turn.max_cost
+        # self.current_turn.deck.draw_card(3 - len(self.current_turn.deck.hand))
 
         # If player is dead, game is over
         if self.player.is_dead():
@@ -120,6 +126,7 @@ class BattleManager:
             return
 
         # Otherwise continue the game by rotating to the next character
+        pygame.event.post(pygame.event.Event(PAUSE))
         self.next_turn()
 
     

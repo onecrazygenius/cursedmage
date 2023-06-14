@@ -31,8 +31,11 @@ class Dungeon(State):
             self.rooms[0][0].next = True
 
     def draw(self, surface):
-        # Set black background
-        surface.fill(BLACK)
+        # Set background as background image
+        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/brick.png"))
+        # scale background image to fit screen
+        background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        surface.blit(background, (0, 0))
         # Generate map
         for x in range(DUNGEON_SIZE_X):
             for y in range(DUNGEON_SIZE_Y):

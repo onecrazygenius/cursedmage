@@ -1,11 +1,13 @@
 # deploy cursed mage build to ubuntu box
 name: Deploy Cursed Mage
 
-# actions will run on tagged commits
+# actions will run on manual trigger
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy Cursed Mage'
+        required: false
 
 # jobs to run
 jobs:
@@ -54,11 +56,10 @@ jobs:
           path: .
 
       - name: Copy to Server
-        shell: bash
-        env:
-          SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-        run: |
-          sudo apt-get install -y sshpass
-          sshpass -p $SSH_PASSWORD scp CursedMage.exe $SSH_USERNAME@$SSH_HOST:/www/public/dist/CursedMage.exe 
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: CursedMage.exe
+          target: /www/public/dist/CursedMage.exe

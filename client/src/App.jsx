@@ -6,19 +6,38 @@ function App() {
 
     const [blogs, setBlogs] = useState([
         {
-            title: "Blog 1",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl vitae aliquam ultricies, nunc nisl ultricies nunc, vit",
-            image: "blog1.jpg"
+            title: "New Magic! 02/06",
+            content: "Introducing the Cursed Mage's revolutionary deck building feature! \
+            In this immersive game, each character possesses a distinctive deck, creating endless strategic possibilities. But that's not all - we've recently added an exciting twist. \
+            Now, players can handpick a card of their choice upon vanquishing an adversary, enhancing their arsenal and empowering their gameplay. With this new addition, the Cursed Mage offers an unparalleled level of customization and rewards skillful combat. \
+            Embrace the challenge, assemble your perfect deck, and become the ultimate mage in this enchanting world of magic and adventure. \
+            In our quest to deliver an immersive world the biggest challenge was creating backgrounds that portrays the theme, we agreed that our background should be based off of something dark or cold as that allows us to give the correct theme before we started. \
+            In doing this we could add detail and make the backgrounds much more interesting and immersive without having to fixate on dark and cold themes. \
+            This will create an overall improvement in your experience as there will be a lot more variety in the surroundings of the character. ",
+            image: "magic.png"
         },
         {
-            title: "Blog 2",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl vitae aliquam ultricies, nunc nisl ultricies nunc, vit",
-            image: "blog2.jpg"
+            title: "Switch Up! 28/04",
+            content: "We have made an amazing switch from Unity to Python for our game development. \
+            We encountered a range of blockers when developing our game with Unity such as lack of motivation which resulted in a lack of contributions towards the game development. \
+            The Strategic Switch motivated all our developers to contribute towards the game and we found that they were happier with a coding language and game development method that they were familiar with. \
+            Progress is now astonishingly quick and we look forward to showing off our results in the upcoming MVP day. \
+            In our creation of Cursed Mage we started out with a cartoonish art style but quickly realized it would not match with the game we wanted to make and was unrealistic for us to turn over large amounts or quality art. \
+            Because of this we decided to transition to a pixel art style which gave us the opportunity to create a lot of quality artwork that fits the game perfectly \
+            We view this change as a part of the games journey and believe it will improve you experience dramatically while playing the game. \
+            Look out for the MVP alpha release on the 9th of June!",
+            image: "python.png"
         },
         {
-            title: "Blog 3",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla euismod, nisl vitae aliquam ultricies, nunc nisl ultricies nunc, vit",
-            image: "blog3.jpg"
+            title: "Welcome! 18/02",
+            content: "We began our journey in December 2022, and we are now in the process of building our game. \
+                        We have a lot of work to do, but we are confident that we will be able to deliver a game \
+                        that will be fun and enjoyable for all players. Since our inception we have put together a \
+                        hack of the game to start bringing together something that fits the scope of this game - and can help \
+                        us start to make something we know you will love. We are going to continue to work on the game in the background but have done alot of the \
+                        heavy lifting in planning and designing something we know you will love. \
+                        We hope to catch you all in our alpha release soon!",
+            image: "welcome.png"
         }
     ])
 
@@ -26,37 +45,37 @@ function App() {
         {
             name: "Charlie",
             bio: "Lead Developer",
-            image: "charlie.jpg"
+            image: "charlie.png"
         },
         {
             name: "James",
-            bio: "Lead Developer",
-            image: "james.jpg"
+            bio: "Project Manager",
+            image: "james.png"
         },
         {
             name: "Duvina",
-            bio: "Lead Developer",
-            image: "duvina.jpg"
+            bio: "Artist & Web Design",
+            image: "duvina.png"
         },
         {
             name: "Morgan",
-            bio: "Lead Developer",
-            image: "morgan.jpg"
+            bio: "Artist",
+            image: "morgan.png"
         },
         {
             name: "Massimo",
-            bio: "Lead Developer",
-            image: "massimo.jpg"
+            bio: "Developer",
+            image: "massimo.png"
         },
         {
             name: "Dev",
-            bio: "Lead Developer",
-            image: "dev.jpg"
+            bio: "Developer",
+            image: "dev.png"
         },
         {
             name: "Flavia",
-            bio: "Lead Developer",
-            image: "flavia.jpg"
+            bio: "Developer",
+            image: "flavia.png"
         }
     ])
 

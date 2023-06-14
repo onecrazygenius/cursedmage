@@ -17,14 +17,24 @@ class Button:
         self.text = text
 
     def draw(self, canvas):
-        # Draw the button
-        pygame.draw.rect(canvas, BLACK, self.rect)
+        # Draw the button with a shadow bottom and right
+        pygame.draw.rect(canvas, BUTTON_BACKGROUND, self.rect)
+        pygame.draw.line(canvas, BUTTON_SHADOW, (self.x - self.width // 2, self.y + self.height // 2), (self.x + self.width // 2, self.y + self.height // 2), 2)
+        pygame.draw.line(canvas, BUTTON_SHADOW, (self.x + self.width // 2, self.y - self.height // 2), (self.x + self.width // 2, self.y + self.height // 2), 2)
 
         # Draw the text
-        font = pygame.font.Font(None, self.font_size)
+        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), self.font_size)
         text_surface = font.render(self.text, True, WHITE)
         text_rect = text_surface.get_rect()
         text_rect.center = (self.x, self.y)
+
+        # get text width. if over the button, scale it down
+        text_width = text_rect.width
+        text_height = text_rect.height
+        if text_width > self.width:
+            text_surface = pygame.transform.scale(text_surface, (self.width - 10, text_height))
+            text_rect = text_surface.get_rect()
+            text_rect.center = (self.x, self.y)
         
         # Blit the text
         canvas.blit(text_surface, text_rect)

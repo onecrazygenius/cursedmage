@@ -43,3 +43,9 @@ pytest
 ```bash
 pyinstaller build.spec
 ```
+
+# Github Actions
+## Build
+Builds the game using pyinstaller and uploads to artifacts
+## Deploy
+Deploys the game to web server's dist folder

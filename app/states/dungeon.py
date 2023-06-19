@@ -105,7 +105,7 @@ class Dungeon(State):
         if not room.enemies_defeated():
             self.game.save_game()
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
-            self.game.push_state(self.game.combat)
+            self.game.change_state(self.game.combat)
         else:
             self.update_player_position()
             self.draw(self.surface)

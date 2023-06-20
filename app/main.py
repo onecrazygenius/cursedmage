@@ -7,7 +7,7 @@ from app.states.game_over import GameOverScreen
 from app.states.settings import SettingsMenu
 from app.states.main_menu import MainMenu
 from app.states.dungeon import Dungeon
-import pygame, os
+import pygame
 
 # Game class definition
 class Game:
@@ -45,9 +45,14 @@ class Game:
         self.config = ConfigManager()
         self.save_manager = SaveManager()
 
-        # Initialize screen and clock with config-provided width and height
-        self.screen = pygame.display.set_mode((self.config.get_width(), self.config.get_height()))
+        # Initialize screen with config-provided width, height and fullscreen status
+        if self.config.is_fullscreen():
+            self.screen = pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.FULLSCREEN)
+        else:
+            self.screen = pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.RESIZABLE)
         self.surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+        # Initialise clock
         self.clock = pygame.time.Clock()
 
         # Load game icon and set window caption
@@ -133,20 +138,24 @@ class Game:
     # Screen size management functions
 
     def resize_screen(self, width, height):
-        # Resize the screen and save the new dimensions in config
-        self.screen = pygame.display.set_mode((width, height), self.screen.get_flags())
+        # Resize the screen with the new dimensions
+        # Maintain fullscreen status if user is in fullscreen, otherwise stay in windowed mode
+        if self.config.is_fullscreen():
+            self.screen = pygame.display.set_mode((width, height), self.screen.get_flags(), pygame.FULLSCREEN)
+        else:
+            self.screen = pygame.display.set_mode((width, height), self.screen.get_flags(), pygame.RESIZABLE)
+
         self.config.update("graphics", "width", str(width))
         self.config.update("graphics", "height", str(height))
 
     def toggle_fullscreen(self):
         # Toggle fullscreen mode and save the change in config
-        flags = self.screen.get_flags()
-        # if not 1920x1080, then set to 1920x1080
-        self.resize_screen(1920, 1080)
-        if flags & pygame.FULLSCREEN:
-            pygame.display.set_mode((self.config.get_width(), self.config.get_height()))
+        if self.config.is_fullscreen():
+            self.resize_screen(1280, 720)
+            pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.RESIZABLE)
             self.config.update("graphics", "fullscreen", "False")
         else:
+            self.resize_screen(1920, 1080)
             pygame.display.set_mode((self.config.get_width(), self.config.get_height()), pygame.FULLSCREEN)
             self.config.update("graphics", "fullscreen", "True")
 
@@ -196,6 +205,9 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.quit_game()
+                elif event.type == pygame.VIDEORESIZE:
+                    # Update the display surface with the new size
+                    self.resize_screen(event.w, event.h)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         # If ESC is pressed, show/hide settings depending on current state

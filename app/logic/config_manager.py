@@ -57,5 +57,8 @@ class ConfigManager:
     def get_height(self):
         return int(self.config.get("graphics", "height"))
     
+    def is_fullscreen(self):
+        return self.config.get("graphics", "fullscreen") == "True"
+
     def get_master_volume(self):
         return float(self.config.get("audio", "master_volume"))

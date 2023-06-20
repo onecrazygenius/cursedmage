@@ -205,6 +205,9 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.quit_game()
+                elif event.type == pygame.VIDEORESIZE:
+                    # Update the display surface with the new size
+                    self.resize_screen(event.w, event.h)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         # If ESC is pressed, show/hide settings depending on current state

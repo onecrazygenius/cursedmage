@@ -21,6 +21,8 @@ class Combat(State):
         self.hovered_card = None
         player.replenish(health=True)
 
+        self.game_difficulty = DIFFICULTY_INT_MAPPING[self.game.difficulty]
+
     def update_health_bars(self):
         player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
         player_bar_width = int(player_health_ratio * 200)
@@ -58,7 +60,7 @@ class Combat(State):
         if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
             turn_result = CONTINUE
             while turn_result == CONTINUE:
-                turn_result = self.battle_manager.simulate_enemy_turn(self.battle_manager.current_turn)
+                turn_result = self.battle_manager.simulate_enemy_turn(self.battle_manager.current_turn, self.game_difficulty)
                 self.post_turn_actions(turn_result)
 
         # check if the player turn

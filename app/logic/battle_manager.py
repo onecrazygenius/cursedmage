@@ -1,6 +1,6 @@
 # app/logic/battle_manager.py
-import time
 from collections import deque
+
 from app.constants import *
 from app.logic.combat.enemy_logic import EnemyLogic
 
@@ -84,9 +84,9 @@ class BattleManager:
         return self.player.is_dead()
     
     # simulate enemy turn
-    def simulate_enemy_turn(self, enemy):
+    def simulate_enemy_turn(self, enemy, game_difficulty):
 
-        card = EnemyLogic.select_card(enemy, self.player)
+        card = EnemyLogic.select_card(enemy, self.player, game_difficulty)
 
         #print("Enemy " + enemy.name + " played " + (card.name if card is not None else "nothing"))
         # If enemy can't play a card, they should end their turn

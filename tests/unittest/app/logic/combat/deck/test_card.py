@@ -15,6 +15,9 @@ class TestCard(unittest.TestCase):
         self.assertIsNone(card.target)
         self.assertEqual(card.position, (0, 0))
 
+    def test_invalid_card_initialisation(self):
+        self.assertFalse(True)
+
 
 if __name__ == '__main__':
     unittest.main()

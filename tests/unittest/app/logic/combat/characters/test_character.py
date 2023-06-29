@@ -18,14 +18,13 @@ class TestCharacter(unittest.TestCase):
        self.assertNotEqual(character.max_health, 5)
        self.assertNotEqual(character.attack, 5)
        self.assertNotEqual(character.defense, 5)
-       self.assertNotEqual(character.cost, 5)       
-
+       self.assertNotEqual(character.cost, 5)     
 
     def test_health_stats(self):
         character = Character("Warrior")
         character.cur_health = 200
         self.assertEqual(character.cur_health, 200)
-        self.assertFalse(character.is_dead)
+        self.assertFalse(character.is_dead())
 
     
 

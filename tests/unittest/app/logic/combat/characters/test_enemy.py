@@ -25,4 +25,4 @@ class TestCharacter(unittest.TestCase):
         enemy = Enemy("Goblin")
         enemy.cur_health = 200
         self.assertEqual(enemy.cur_health, 200)
-        self.assertFalse(enemy.is_dead)
+        self.assertFalse(enemy.is_dead())

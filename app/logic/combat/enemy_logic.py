@@ -10,14 +10,14 @@ class EnemyLogic:
     # This means that the AI won't always pick the best possible play but by controlling how many instances of each
     # card are in the possible plays array, you can increase the odds of a specific card being played.
     @staticmethod
-    def select_card(enemy, player):
+    def select_card(enemy, player, game_difficulty):
         cards_in_cost = [card for card in enemy.deck.hand if card.cost <= enemy.cost]
 
         possible_plays = []
         possible_plays += cards_in_cost  # Add any card which can be played
 
         # The following methods add best play scenarios
-        possible_plays += EnemyLogic.cards_that_kill(cards_in_cost, player)
+        possible_plays += EnemyLogic.cards_that_kill(cards_in_cost, player) * game_difficulty
         possible_plays += EnemyLogic.cards_allow_to_survive(cards_in_cost, enemy, player)
 
         best_card_allows_another_to_be_played = EnemyLogic.best_card_that_allows_another_card_to_be_played(cards_in_cost, enemy)

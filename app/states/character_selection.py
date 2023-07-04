@@ -17,7 +17,7 @@ class CharacterSelection(State):
             Character("Mage"),
             Character("Rogue"),
         ]
-        self.difficulties = ["Easy", "Normal", "Hard"]
+        self.difficulties = DIFFICULTIES
         self.selected_character = 0
         self.selected_difficulty = 0
         self.start_game_button = Button("Start Game", SCREEN_WIDTH // 2, SCREEN_HEIGHT// 2 + 200, self.start_game)

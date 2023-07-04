@@ -1,10 +1,10 @@
 # For Final
-1. Make the time for enemy turn random within a range
-2. Implement Difficulty
-3. Implement Bosses
-4. Implement card upgrade after boss
-5. Implement Shield Cards
-6. Implement new card effects
-7. Random dungeon paths
-8. See hand & deck from combat screen
+1. Implement Bosses
+2. Implement card upgrade after boss
+3. Implement Shield Cards
+4. Implement new card effects
+5. Random dungeon paths
+6. See hand & deck from combat screen
+7. Tutorial
+8. Animation
 9. Re-implement automated testing

@@ -29,6 +29,14 @@ PAUSE_TIME_S = 1
 
 COMBAT_POPUP_DURATION_MS = 1500
 
+# Difficulties
+DIFFICULTIES = ["Easy", "Normal", "Hard"]
+DIFFICULTY_INT_MAPPING = {  # Used in difficulty scaling calculations
+    "Easy": 1,
+    "Normal": 2,
+    "Hard": 3
+}
+
 # Turn Results
 CONTINUE = "continue"
 GAME_OVER = "game_over"

@@ -71,7 +71,9 @@ class Dungeon(State):
         relative_position_weighted = base_factor_x * relative_position_x + base_factor_y * relative_position_y
 
         # Add some randomness to the calculation. This will add a random value between -0.2 and 0.2 to the result
-        randomness = numpy.random.uniform(-0.2, 0.2)
+        # This randomness scales with the difficulty
+        difficulty_multiplier = DIFFICULTY_INT_MAPPING[self.game.difficulty]
+        randomness = numpy.random.uniform(-0.2 / difficulty_multiplier, 0.2 * difficulty_multiplier)
 
         # Scale the relative position to the range of 1-3 and add randomness
         # Use 1 + 2 to ensure the minimum value will be 1 before randomness instead of 0 if just 3 was used.
@@ -86,6 +88,13 @@ class Dungeon(State):
         for name in enemy_names:
             enemies.append(Enemy(name))
 
+        # These are extremely useful to debug this method. Leaving these here intentionally
+        # print("Room ["+str(room_position_x)+","+str(room_position_y)+"]")
+        # print("Room Difficulty: " + str(scaled_enemy_number_within_bounds))
+        # print("Randomness: " + str(randomness))
+        # print("Number Of Enemies: " + str(number_of_enemies))
+        # print("Enemies: " + str(enemy_names))
+        # print("\n")
         return enemies
 
     def choose_enemy_names_from_difficulty(self, difficulty_threshold, number_of_enemies):

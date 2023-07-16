@@ -1,16 +1,18 @@
 import json
-import os
 import random
 
 import numpy
-
-from app.states.components.room import Room
-from app.states.combat import Combat
-from app.logic.combat.characters.enemy import Enemy
-from app.states.state import State
-from app.constants import *
 from pygame.locals import *
-import pygame
+
+from app.constants import *
+from app.logic.combat.characters.boss import Boss
+from app.logic.combat.characters.enemy import Enemy
+from app.states.combat import Combat
+from app.states.components.popup import Popup
+from app.states.components.room import Room
+from app.states.state import State
+from app.util.run_once import run_once
+
 
 class Dungeon(State):
 
@@ -22,6 +24,9 @@ class Dungeon(State):
         self.game = game
         self.player_position = (0, 0)
         self.rooms = []
+        self.boss_room = self.generate_boss_room() # The boss room is always the same at the moment, so can be generated
+
+        self.active_popup = None
 
         if game_data:
             self.load_data(game_data)
@@ -37,10 +42,26 @@ class Dungeon(State):
         background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(background, (0, 0))
         # Generate map
+
+        # If the boss requirements are met, draw the room
+        if self.game.character.boss_requirements_met():
+            self.boss_appeared_popup("The boss has finally shown itself! Challenge it at the red-outlined door.")
+            # If you managed to get to the boss, you completed the first floor. So for now override it
+            # TODO: In map rework give this a proper position
+            self.rooms[self.boss_room.position[0]][self.boss_room.position[1]] = self.boss_room
         for x in range(DUNGEON_SIZE_X):
             for y in range(DUNGEON_SIZE_Y):
                 room = self.rooms[x][y]
                 room.draw(surface)
+
+        # If there are any active popups, show them on the screen
+        if self.active_popup is not None:
+            # Draw the popup only if the difference between current time and popup start time is less than 2 seconds
+            if pygame.time.get_ticks() - self.active_popup.start_time < DUNGEON_POPUP_DURATION_MS:
+                self.active_popup.draw(surface)
+            else:
+                self.active_popup = None
+
         # Update the display
         pygame.display.flip()
 
@@ -54,12 +75,17 @@ class Dungeon(State):
                 room = Room(self.game, position, enemies)
                 self.rooms[x].append(room)
 
-    # Based on the position of the room, between 1 and 3 enemies will be created where as you progress
+    def generate_boss_room(self):
+        # Create boss room if requirements are met
+        boss_position = (0, 0)  # For now put this position at 0,0. This should be changed eventually
+        boss_enemy = Boss("Boss")
+        return Room(self.game, boss_position, [boss_enemy], is_boss_room=True)
+
+    # Based on the position of the room, between 1 and 3 enemies will be created whereas you progress
     # Through the dungeon, there is a higher chance of more enemies being in the room
     def create_enemies(self, room_position_x, room_position_y):
         # These factors control how much each variable contributes to the output.
-        # Since DUNGEON_SIZE_Y should have a bigger impact, we could give it a higher weight
-        # TODO: Difficulty could alter these to increase the chance of multiple enemies
+        # Since DUNGEON_SIZE_Y should have a bigger impact, we give it a higher weight
         base_factor_x = 0.3
         base_factor_y = 0.7
 
@@ -138,11 +164,14 @@ class Dungeon(State):
             # update the player position to the next column
             self.player_position = (x + 1, y)
 
-    def is_last_room(self):
-        return self.player_position == (DUNGEON_SIZE_X - 1, DUNGEON_SIZE_Y - 1)
+    def win_conditions_met(self):
+        return self.player_position == self.boss_room.position and self.game.character.boss_requirements_met()
 
     def handle_event(self, event):
         if event.type == MOUSEBUTTONUP:
+            # The Boss Room is not in Rooms as it's not part of the standard dungeon. Also check if it was clicked
+            self.boss_room.handle_click(event)
+            # Iterate over all rooms to see if one was clicked
             for row in self.rooms:
                 for room in row:
                     room.handle_click(event)
@@ -165,3 +194,14 @@ class Dungeon(State):
                 completed = room_data["completed"]
                 room = Room(self.game, position, enemies, next, visited, completed)
                 self.rooms[x].append(room)
+    @run_once
+    def boss_appeared_popup(self, text):
+        popup = Popup(
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2,
+            pygame.time.get_ticks(),
+            text,
+            width=575,
+            height=100,
+        )
+        self.active_popup = popup

@@ -168,7 +168,7 @@ class Combat(State):
             else:
                 self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
                 # After completing a floor, you have a chance to pickup a cursed card
-                if random.randint(1,4) == 4:
+                if random.randint(1, 100) <= CURSED_CARD_CHANCE:
                     # Use push_state instead of change_state because this state is informational
                     # and afterwards we want to return to the card pickup screen without coming back
                     # to the combat class

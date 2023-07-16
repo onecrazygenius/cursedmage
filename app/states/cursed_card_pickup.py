@@ -28,7 +28,8 @@ class CursedCardPickupScreen(State):
 
         # Draw text
         text_surface = cursed_font.render("You were cursed.", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(self.game.config.get_width() // 2, 420))
+        text_rect = text_surface.get_rect()
+        text_rect.center = (SCREEN_WIDTH // 2, 420)
         surface.blit(text_surface, text_rect)
         self.button.draw(surface)
 

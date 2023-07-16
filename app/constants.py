@@ -37,6 +37,9 @@ DIFFICULTY_INT_MAPPING = {  # Used in difficulty scaling calculations
     "Hard": 3
 }
 
+# % Chance to pickup a cursed card after each combat
+CURSED_CARD_CHANCE = 25
+
 # Turn Results
 CONTINUE = "continue"
 GAME_OVER = "game_over"

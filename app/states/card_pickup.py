@@ -19,6 +19,7 @@ class CardPickupScreen(State):
         for enemy in enemies:
             all_enemy_cards += enemy.deck.cards
 
+        # If the enemy only has 1 card in the JSON file - this will break!
         cards_picked = random.sample(range(0, len(all_enemy_cards)), 2)
         self.cards_to_show = list(map(all_enemy_cards.__getitem__, cards_picked))
 

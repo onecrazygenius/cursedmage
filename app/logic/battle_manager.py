@@ -66,6 +66,13 @@ class BattleManager:
             else:
                 self.player.cur_health = self.player.max_health
             return True
+        # The target will be none if an enemy is trying to play it. In this case
+        if card.target is None and self.current_turn in self.enemies:
+            if self.current_turn.cur_health + card.power < self.current_turn.max_health:
+                self.current_turn.cur_health += card.power
+            else:
+                self.current_turn.cur_health = self.current_turn.max_health
+            return True
         return False
 
     # win condition check
@@ -86,7 +93,7 @@ class BattleManager:
     # simulate enemy turn
     def simulate_enemy_turn(self, enemy, game_difficulty):
 
-        card = EnemyLogic.select_card(enemy, self.player, game_difficulty)
+        card = EnemyLogic.select_card(enemy, self.player.cur_health, game_difficulty)
 
         # print("Enemy " + enemy.name + " played " + (card.name if card is not None else "nothing"))
         # If enemy can't play a card, they should end their turn

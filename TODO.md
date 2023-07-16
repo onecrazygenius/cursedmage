@@ -14,7 +14,5 @@
 9. Re-implement automated testing
 
 # Bugs
-2. AI Logic breaks when they have a heal card. It displayes the 'Out of Mana' popup and gets stuck in an infinite loop
-   1. _James suspects this is something to do with how the card is played rather than the logic itself_
-3. After completing a room and going back to the room select screen. If you quit and load the room you just completed needs finishing again
+1. After completing a room and going back to the room select screen. If you quit and load the room you just completed needs finishing again
    1. _The fix for this is almost definitely just changing the save order_

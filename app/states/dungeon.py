@@ -112,7 +112,6 @@ class Dungeon(State):
         room.visited = True
 
         if not room.enemies_defeated():
-            self.game.save_game()
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.change_state(self.game.combat)
         else:
@@ -127,6 +126,8 @@ class Dungeon(State):
         self.update_player_position()
         self.rooms[self.player_position[0]][self.player_position[1]].next = True
         self.draw(self.surface)
+
+        self.game.save_game()
 
     def update_player_position(self):
         # move the player 1 room forward

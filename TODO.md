@@ -14,5 +14,3 @@
 9. Re-implement automated testing
 
 # Bugs
-1. After completing a room and going back to the room select screen. If you quit and load the room you just completed needs finishing again
-   1. _The fix for this is almost definitely just changing the save order_

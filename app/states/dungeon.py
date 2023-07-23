@@ -21,6 +21,7 @@ class Dungeon(State):
         super().__init__(game)
 
         self.game = game
+        self.root = []
         self.rooms = []
         # Probably replace this with player depth
         self.player_position = (0, 0)
@@ -36,7 +37,8 @@ class Dungeon(State):
             # TODO: Loading doesn't work
             self.load_data(game_data)
         else:
-            self.root = self.generate_rooms()
+            self.root = Room(self.game, (0, 0), self.create_enemies(0, 0), next=True)
+            self.rooms = self.generate_rooms(self.root)
 
     def draw(self, surface):
         # Set background as background image
@@ -68,20 +70,15 @@ class Dungeon(State):
         for child_room in room.children:
             self.draw_room(child_room, surface)
 
-    def generate_rooms(self):
-        # TODO: Can this be removed from this method and into the init? Return rooms instead. Makes this a more pure function
-        # Create the root room
-        root = Room(self.game, (0, 0), self.create_enemies(0, 0))
-        root.next = True
-
-        # Add the root room to self.rooms
-        self.rooms.append([root])  # The root room is the first room in the first row
+    def generate_rooms(self, root):
+        # Create rooms list and add the root room
+        rooms = [[root]]
 
         # Generate the expanding part of the dungeon
         current_level = [root]
         for y in range(1, DUNGEON_SIZE_Y // 2):
             next_level = []
-            self.rooms.append([])  # Add a new row to self.rooms
+            rooms.append([])  # Add a new row to self.rooms
             for room in current_level:
                 for i in range(2):
                     position = (room.position[0] + i - 0.5, y)
@@ -91,13 +88,13 @@ class Dungeon(State):
                     next_level.append(child_room)
 
                     # Add the new room to the current row in self.rooms
-                    self.rooms[y].append(child_room)
+                    rooms[y].append(child_room)
             current_level = next_level
 
         # Generate the contracting part of the dungeon
         for y in range(DUNGEON_SIZE_Y // 2, DUNGEON_SIZE_Y):
             next_level = []
-            self.rooms.append([])  # Add a new row to self.rooms
+            rooms.append([])  # Add a new row to self.rooms
             for i in range(0, len(current_level) - 1, 2):
                 room1 = current_level[i]
                 room2 = current_level[i + 1]
@@ -111,10 +108,10 @@ class Dungeon(State):
                 next_level.append(child_room)
 
                 # Add the new room to the current row in self.rooms
-                self.rooms[y].append(child_room)
+                rooms[y].append(child_room)
             current_level = next_level
 
-        return root
+        return rooms
 
     def generate_boss_room(self, position):
         # Room with boss configuration
@@ -248,7 +245,7 @@ class Dungeon(State):
 
     def handle_room_click(self, event):
         # Convert the screen coordinates to room coordinates
-        click_pos = ((event.pos[0] * self.zoom_level), (event.pos[1] * self.zoom_level))
+        click_pos = ((event.pos[0]), (event.pos[1]))
         # Traverse the dungeon and check if any room was clicked
         if self.handle_room_click_recursive(self.root, click_pos):
             return True

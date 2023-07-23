@@ -3,13 +3,14 @@ from pygame.locals import *
 from app.constants import *
 
 class Room:
-    def __init__(self, game, position, enemies=[], next=False, visited=False, completed=False):
+    def __init__(self, game, position, enemies=[], next=False, visited=False, completed=False, is_boss_room=False):
         self.game = game
         self.position = position
         self.enemies = enemies
         self.next = next
         self.visited = visited
         self.completed = completed
+        self.is_boss_room = is_boss_room
         self.offset = 0
 
     def draw(self, screen):
@@ -25,6 +26,9 @@ class Room:
         elif self.next:
             door_type = "unlocked"
 
+        # if the room is a boss room
+        if self.is_boss_room:
+            door_type = "unlocked_boss"
 
         # draw the room image
         room_sprite = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/{}.png".format(door_type)))
@@ -46,8 +50,8 @@ class Room:
         if event.type == MOUSEBUTTONUP and event.button == 1:
             if rect.collidepoint(self.game.screen_to_surface(event.pos)) and not self.completed:
                 # DONE: print("Clicked on room at position", self.position)
-                # Check if the room is the next available room starting with 0,0
-                if self.position == self.game.dungeon.player_position:
+                # Check if the room is the next available room starting with 0,0 or if it was the boss room
+                if self.position == self.game.dungeon.player_position or self.is_boss_room:
                     self.game.dungeon.move_to_room(self.position)
 
     def get_data(self):

@@ -12,7 +12,7 @@ class CursedCardPickupScreen(State):
         path = os.path.dirname(os.path.abspath(__file__))
         self.font = pygame.font.Font(relative_resource_path("app/assets/fonts/cursed_font.tff"), 24)
 
-        self.button = Button("OK", self.game.config.get_width() // 2, 750, self.return_to_combat)
+        self.button = Button("OK", SCREEN_WIDTH // 2, 750, self.return_to_combat)
 
         # Actually pickup the cursed card
         self.pickup_card()
@@ -28,7 +28,8 @@ class CursedCardPickupScreen(State):
 
         # Draw text
         text_surface = cursed_font.render("You were cursed.", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(self.game.config.get_width() // 2, 420))
+        text_rect = text_surface.get_rect()
+        text_rect.center = (SCREEN_WIDTH // 2, 420)
         surface.blit(text_surface, text_rect)
         self.button.draw(surface)
 

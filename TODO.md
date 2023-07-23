@@ -13,6 +13,7 @@
 8. Animation
 9. Re-implement automated testing
 
+
 # Bugs
 1. When you load a game and are on the room select screen. If you don't click on a door the game crashes
    1. This **DOES NOT** happen when you make a new game
@@ -21,3 +22,4 @@
    1. _James suspects this is something to do with how the card is played rather than the logic itself_
 4. After completing a room and going back to the room select screen. If you quit and load the room you just completed needs finishing again
    1. _The fix for this is almost definitely just changing the save order_
+

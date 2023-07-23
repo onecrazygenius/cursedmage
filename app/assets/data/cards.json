@@ -50,7 +50,7 @@
 	{
 		"name": "Heal",
 		"card_type": "heal",
-		"power": 50,
+		"power": 30,
 		"cost": 2,
 		"cursed": false,
 		"image": "heal"

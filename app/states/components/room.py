@@ -13,8 +13,16 @@ class Room:
         self.is_boss_room = is_boss_room
         self.offset = 0
 
-    def draw(self, screen):
+        self.children = []  # List of connected rooms
+        self.parent = None  # The room that leads to this room
+        self.offset = [0, 0]
+
+        self.rect = None
+
+    def draw(self, screen, offset=(0, 0), zoom_level=1.0):
         x, y = self.position
+        # Update the scroll offset
+        self.offset = offset
 
         door_type = "locked"
         # if the room is complete make the door open
@@ -32,14 +40,23 @@ class Room:
 
         # draw the room image
         room_sprite = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/{}.png".format(door_type)))
-        room_sprite = pygame.transform.scale(room_sprite, (100, 140))
+        room_sprite = pygame.transform.scale(room_sprite, (int(100 * zoom_level), int(140 * zoom_level)))
+
         # calculate offset
         screen_width = screen.get_width()
-        gap = screen_width - (DUNGEON_SIZE_X * 300) + 140
+        gap = screen_width - (DUNGEON_SIZE_X * 300 * zoom_level) + 140 * zoom_level
         self.offset = gap / 2
-        # make so that row of rooms are spaced out to the width of the screen
-        screen.blit(room_sprite, (self.offset + (x * 300), 50 + (y * 280)))
 
+        # calculate position with offset, scrolling, and zooming
+        pos_x = self.offset + (x * 300 * zoom_level) - offset[0]
+        pos_y = 50 * zoom_level + (y * 280 * zoom_level) - offset[1]
+
+        # update rect
+        self.rect = pygame.Rect(pos_x, pos_y, int(100 * zoom_level), int(140 * zoom_level))
+        # print(f"Updated rect for room at position {self.position} to {self.rect}")
+
+        # make so that row of rooms are spaced out to the width of the screen
+        screen.blit(room_sprite, (pos_x, pos_y))
 
     def handle_click(self, event):
         x, y = self.position

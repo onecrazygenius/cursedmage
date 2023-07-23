@@ -161,14 +161,13 @@ class Combat(State):
     def post_combat_actions(self, turn_result):
         if turn_result == GAME_OVER:
             self.game.game_over()
-            # TODO: Game over screen
         if turn_result == FLOOR_COMPLETE:
-            if self.game.dungeon.is_last_room():
+            if self.game.dungeon.win_conditions_met():
                 self.game.victory()
             else:
                 self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
                 # After completing a floor, you have a chance to pickup a cursed card
-                if random.randint(1,4) == 4:
+                if random.randint(1, 100) <= CURSED_CARD_CHANCE:
                     # Use push_state instead of change_state because this state is informational
                     # and afterwards we want to return to the card pickup screen without coming back
                     # to the combat class

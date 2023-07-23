@@ -1,4 +1,6 @@
-import pygame, os, sys
+import os
+import pygame
+import sys
 
 # Screen size
 SCREEN_WIDTH = 1920
@@ -27,7 +29,9 @@ PAUSE = pygame.USEREVENT + 3
 PAUSE_TIME_MS = 1000
 PAUSE_TIME_S = 1
 
+# Popup Durations
 COMBAT_POPUP_DURATION_MS = 1500
+DUNGEON_POPUP_DURATION_MS = 2500
 
 # Difficulties
 DIFFICULTIES = ["Easy", "Normal", "Hard"]
@@ -36,6 +40,12 @@ DIFFICULTY_INT_MAPPING = {  # Used in difficulty scaling calculations
     "Normal": 2,
     "Hard": 3
 }
+
+# % Chance to pickup a cursed card after each combat
+CURSED_CARD_CHANCE = 25
+
+# Number of Cursed Cards required for the boss room to open
+BOSS_CURSED_CARD_REQUIREMENT = 3
 
 # Turn Results
 CONTINUE = "continue"

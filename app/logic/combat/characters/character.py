@@ -1,7 +1,7 @@
 import json
 import os
 
-from app.constants import relative_resource_path
+from app.constants import relative_resource_path, BOSS_CURSED_CARD_REQUIREMENT
 from app.logic.combat.deck.card import Card
 from app.logic.combat.deck.deck import Deck
 
@@ -28,7 +28,7 @@ class Character:
         self.cost = self.get_stat_for_character("cost")
         self.max_cost = self.cost
         self.level = 1
-        # TODO: Long term this won't be necessary
+        # TODO: Long term this won't be necessary. It's because we are missing 2 character sprites
         sprite = self.get_stat_for_character("sprite")
         if sprite is None or sprite == "None":
             sprite = "mage"
@@ -42,6 +42,11 @@ class Character:
 
     def is_dead(self):
         return self.cur_health <= 0
+
+    def boss_requirements_met(self):
+        # For now the only requirement is the player has X or more cursed cards.
+        # We may want to add more in the future
+        return [card.name for card in self.deck.cards].count("Cursed Card") >= BOSS_CURSED_CARD_REQUIREMENT
 
     # Used to replenish the players health, cost and put all their cards back into the deck
     def replenish(self, health=False):

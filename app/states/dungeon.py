@@ -1,5 +1,6 @@
 import json
 import random
+from collections import deque
 
 import numpy
 from pygame.locals import *
@@ -23,8 +24,6 @@ class Dungeon(State):
         self.game = game
         self.root = []
         self.rooms = []
-        # Probably replace this with player depth
-        self.player_position = (0, 0)
 
         self.active_popup = None
 
@@ -39,6 +38,8 @@ class Dungeon(State):
         else:
             self.root = Room(self.game, (0, 0), self.create_enemies(0, 0), next=True)
             self.rooms = self.generate_rooms(self.root)
+
+            self.player_position = self.root
 
     def draw(self, surface):
         # Set background as background image
@@ -65,11 +66,13 @@ class Dungeon(State):
         # Update the display
         pygame.display.flip()
 
+    # TODO: Investigate adding lazy loading to this to improve performance
     def draw_room(self, room, surface):
         room.draw(surface, self.scroll_offset, self.zoom_level)
         for child_room in room.children:
             self.draw_room(child_room, surface)
 
+    # TODO: This is broken as rooms which are shared are actually 2 rooms overlapping.
     def generate_rooms(self, root):
         # Create rooms list and add the root room
         rooms = [[root]]
@@ -169,48 +172,32 @@ class Dungeon(State):
         eligible_names = [enemy['name'] for enemy in data if enemy['difficulty'] <= difficulty_threshold]
         return random.choices(eligible_names, k=number_of_enemies)
 
-    # TODO: This is completely broken and doesn't actually make much sense
-    # This should be to do with the new depth and the children of the current position
     def move_to_room(self, room):
-        # Update the player's position
-        self.player_position = room.position
-        # Traverse the dungeon and update the 'next' attribute of the rooms
-        self.update_rooms_recursive(self.root)
+        # The player is now in the new room
+        self.player_position = room
 
         if not room.enemies_defeated():
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.change_state(self.game.combat)
-        else:
-            self.update_player_position()
-            self.draw(self.surface)
 
     def update_rooms_recursive(self, room):
         room.next = (room.position == self.player_position)
         for child_room in room.children:
             self.update_rooms_recursive(child_room)
 
-    # TODO: This can probably be entirely removed. Without forced linear progression there is no need to
-    # force the user into moving to the next room
     def progress_to_next_room(self):
-        x, y = self.player_position
-        room = self.rooms[x][y]
-        room.completed = True
-        room.next = False
-        self.update_player_position()
-        self.rooms[self.player_position[0]][self.player_position[1]].next = True
-        self.draw(self.surface)
+        self.player_position.completed = True
+        self.player_position.next = False
+
+        # The room you just cleared, set it's children (Including the room you moved to) next to false, blocking the tree
+        if self.player_position.parent is not None:  # The root has no parent, so a none check is required
+            for child in self.player_position.parent.children:
+                child.next = False
+
+        for child in self.player_position.children:
+            child.next = True
 
         self.game.save_game()
-
-    def update_player_position(self):
-        # move the player 1 room forward
-        x, y = self.player_position
-        if x == DUNGEON_SIZE_X - 1:
-            # update the player position to the next row
-            self.player_position = (0, y + 1)
-        else:
-            # update the player position to the next column
-            self.player_position = (x + 1, y)
 
     def win_conditions_met(self):
         return self.game.character.boss_requirements_met() and self.player_position == self.boss_room.position
@@ -244,16 +231,15 @@ class Dungeon(State):
             self.handle_room_click(event)
 
     def handle_room_click(self, event):
-        # Convert the screen coordinates to room coordinates
-        click_pos = ((event.pos[0]), (event.pos[1]))
         # Traverse the dungeon and check if any room was clicked
-        if self.handle_room_click_recursive(self.root, click_pos):
+        if self.handle_room_click_recursive(self.root, event.pos):
             return True
         return False
 
     def handle_room_click_recursive(self, room, pos):
         if room.rect.collidepoint(pos):
-            if room.position == self.player_position or room.is_boss_room:
+            # Only allow the user to click on a room that is opened (Next)
+            if room.next:
                 self.move_to_room(room)
                 return True
         for child_room in room.children:
@@ -263,7 +249,7 @@ class Dungeon(State):
 
     def get_data(self):
         return {
-            "player_position": self.player_position,
+            "player_position": self.player_position.get_data(),
             "rooms": [[room.get_data() for room in row] for row in self.rooms],
         }
 

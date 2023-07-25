@@ -67,7 +67,6 @@ class Dungeon(State):
         # Update the display
         pygame.display.flip()
 
-    # TODO: Investigate adding lazy loading to this to improve performance
     def draw_room(self, room, surface):
         room.draw(surface, self.scroll_offset, self.zoom_level)
         for child_room in room.children:
@@ -81,7 +80,8 @@ class Dungeon(State):
         # Create a room in each of the 'None' slots with the appropriate difficulty and position
         for i in range(DUNGEON_SIZE_Y):
             for j in range(math.ceil(DUNGEON_SIZE_Y / 2) - abs((DUNGEON_SIZE_Y // 2) - i)):
-                position = (j - 0.5 + abs(DUNGEON_SIZE_Y // 2 - i) / 2.0, i)
+                # The + 0.5 is to put all the doors in the centre of the map when it first loads
+                position = (j + 0.5 + abs(DUNGEON_SIZE_Y // 2 - i) / 2.0, i)
                 room = Room(self.game, position, self.create_enemies(*position))
                 rooms[i][j] = room
 

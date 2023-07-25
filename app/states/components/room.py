@@ -3,18 +3,19 @@ from pygame.locals import *
 from app.constants import *
 
 class Room:
-    def __init__(self, game, position, enemies=[], next=False, visited=False, completed=False, is_boss_room=False):
+    def __init__(self, game, position, enemies=None, next=False, visited=False, completed=False, is_boss_room=False):
         self.game = game
         self.position = position
+        if enemies is None:
+            enemies = []
         self.enemies = enemies
         self.next = next
         self.visited = visited
         self.completed = completed
         self.is_boss_room = is_boss_room
-        self.offset = 0
 
         self.children = []  # List of connected rooms
-        self.parent = None  # The room that leads to this room
+        self.parents = []  # The room(s) that leads to this room
         self.offset = [0, 0]
 
         self.rect = None

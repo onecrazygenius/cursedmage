@@ -1,6 +1,6 @@
 import json
+import math
 import random
-from collections import deque
 
 import numpy
 from pygame.locals import *
@@ -36,8 +36,9 @@ class Dungeon(State):
             # TODO: Loading doesn't work
             self.load_data(game_data)
         else:
-            self.root = Room(self.game, (0, 0), self.create_enemies(0, 0), next=True)
-            self.rooms = self.generate_rooms(self.root)
+            self.rooms = self.generate_rooms()
+            self.root = self.rooms[0][0]
+            self.root.next = True
 
             self.player_position = self.root
 
@@ -72,48 +73,35 @@ class Dungeon(State):
         for child_room in room.children:
             self.draw_room(child_room, surface)
 
-    # TODO: This is broken as rooms which are shared are actually 2 rooms overlapping.
-    def generate_rooms(self, root):
-        # Create rooms list and add the root room
-        rooms = [[root]]
+    def generate_rooms(self):
+        # Create diamond shape as array, with None entries
+        rooms = [[None for _ in range(math.ceil(DUNGEON_SIZE_Y / 2) - abs((DUNGEON_SIZE_Y // 2) - depth))] for depth in
+                 range(DUNGEON_SIZE_Y)]
 
-        # Generate the expanding part of the dungeon
-        current_level = [root]
-        for y in range(1, DUNGEON_SIZE_Y // 2):
-            next_level = []
-            rooms.append([])  # Add a new row to self.rooms
-            for room in current_level:
-                for i in range(2):
-                    position = (room.position[0] + i - 0.5, y)
-                    child_room = Room(self.game, position, self.create_enemies(*position))
-                    room.children.append(child_room)
-                    child_room.parent = room
-                    next_level.append(child_room)
+        # Create a room in each of the 'None' slots with the appropriate difficulty and position
+        for i in range(DUNGEON_SIZE_Y):
+            for j in range(math.ceil(DUNGEON_SIZE_Y / 2) - abs((DUNGEON_SIZE_Y // 2) - i)):
+                position = (j - 0.5 + abs(3 - i) / 2.0, i)
+                room = Room(self.game, position, self.create_enemies(*position))
+                rooms[i][j] = room
 
-                    # Add the new room to the current row in self.rooms
-                    rooms[y].append(child_room)
-            current_level = next_level
+                # Assign parents and children
+                if i > 0:  # If it's not the first row
+                    if j < len(rooms[i - 1]):  # Avoid out of index error
+                        room.parents.append(rooms[i - 1][j])
+                        if room not in rooms[i - 1][j].children:
+                            rooms[i - 1][j].children.append(room)
 
-        # Generate the contracting part of the dungeon
-        for y in range(DUNGEON_SIZE_Y // 2, DUNGEON_SIZE_Y):
-            next_level = []
-            rooms.append([])  # Add a new row to self.rooms
-            for i in range(0, len(current_level) - 1, 2):
-                room1 = current_level[i]
-                room2 = current_level[i + 1]
-                position = ((room1.position[0] + room2.position[0]) / 2, y)
-                child_room = Room(self.game, position, self.create_enemies(*position))
-                if len(current_level) == 2 and self.game.character.boss_requirements_met():
-                    child_room = self.generate_boss_room(position)
-                room1.children.append(child_room)
-                room2.children.append(child_room)
-                child_room.parent = room1
-                next_level.append(child_room)
-
-                # Add the new room to the current row in self.rooms
-                rooms[y].append(child_room)
-            current_level = next_level
-
+                    if i <= DUNGEON_SIZE_Y // 2:  # Expanding half of the diamond
+                        if j > 0:  # Add the left parent, if it exists
+                            room.parents.append(rooms[i - 1][j - 1])
+                            if room not in rooms[i - 1][j - 1].children:
+                                rooms[i - 1][j - 1].children.append(room)
+                    else:  # Shrinking half of the diamond
+                        if j < len(rooms[i - 1]) - 1:  # Add the right parent, if it exists
+                            room.parents.append(rooms[i - 1][j + 1])
+                            if room not in rooms[i - 1][j + 1].children:
+                                rooms[i - 1][j + 1].children.append(room)
         return rooms
 
     def generate_boss_room(self, position):
@@ -189,16 +177,18 @@ class Dungeon(State):
         self.player_position.completed = True
         self.player_position.next = False
 
-        # The room you just cleared, set it's children (Including the room you moved to) next to false, blocking the tree
-        if self.player_position.parent is not None:  # The root has no parent, so a none check is required
-            for child in self.player_position.parent.children:
-                child.next = False
+        # First, for the room you just cleared, set its siblings' children next to false, blocking the tree
+        for parent in self.player_position.parents:
+            for sibling in parent.children:
+                sibling.next = False
 
+        # Then, set the player's current room children next to true, opening the tree
         for child in self.player_position.children:
             child.next = True
 
         self.game.save_game()
 
+    # TODO: Boss room doesn't exist anymore, so this won't work
     def win_conditions_met(self):
         return self.game.character.boss_requirements_met() and self.player_position == self.boss_room.position
 
@@ -253,6 +243,7 @@ class Dungeon(State):
             "rooms": [[room.get_data() for room in row] for row in self.rooms],
         }
 
+    # TODO: Loading is currently broken
     def load_data(self, game_data):
         self.player_position = game_data["player_position"]
         for x, row in enumerate(game_data["rooms"]):

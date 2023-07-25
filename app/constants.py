@@ -18,7 +18,7 @@ BUTTON_SHADOW = BLACK
 
 # TEMP Dungeon size
 DUNGEON_SIZE_X = 5
-DUNGEON_SIZE_Y = 8
+DUNGEON_SIZE_Y = 7 # This should always be odd to form the diamond shape.
 
 # Events
 ENEMY_TURN_EVENT = pygame.USEREVENT + 1

@@ -81,7 +81,7 @@ class Dungeon(State):
         # Create a room in each of the 'None' slots with the appropriate difficulty and position
         for i in range(DUNGEON_SIZE_Y):
             for j in range(math.ceil(DUNGEON_SIZE_Y / 2) - abs((DUNGEON_SIZE_Y // 2) - i)):
-                position = (j - 0.5 + abs(3 - i) / 2.0, i)
+                position = (j - 0.5 + abs(DUNGEON_SIZE_Y // 2 - i) / 2.0, i)
                 room = Room(self.game, position, self.create_enemies(*position))
                 rooms[i][j] = room
 
@@ -115,7 +115,7 @@ class Dungeon(State):
         # These factors control how much each variable contributes to the output.
         # Since DUNGEON_SIZE_Y should have a bigger impact, we give it a higher weight
         base_factor_x = 0
-        base_factor_y = 1.3
+        base_factor_y = 1.2
 
         # Calculate the room's relative position in the dungeon
         relative_position_x = room_position_x / DUNGEON_SIZE_X

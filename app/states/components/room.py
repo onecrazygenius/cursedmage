@@ -1,8 +1,18 @@
-import pygame
 from pygame.locals import *
+
 from app.constants import *
 
+
 class Room:
+    DOOR_SPRITES = {
+        "locked": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/locked.png")),
+        "broken": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/broken.png")),
+        "open": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/open.png")),
+        "unlocked": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/unlocked.png")),
+        "unlocked_boss": pygame.image.load(
+            relative_resource_path("app/assets/images/backgrounds/doors/unlocked_boss.png"))
+    }
+
     def __init__(self, game, position, enemies=None, next=False, visited=False, completed=False, is_boss_room=False):
         self.game = game
         self.position = position
@@ -19,6 +29,7 @@ class Room:
         self.offset = [0, 0]
 
         self.rect = None
+        self.room_sprite = None
 
     def draw(self, screen, offset=(0, 0), zoom_level=1.0):
         x, y = self.position
@@ -40,8 +51,9 @@ class Room:
             door_type = "unlocked_boss"
 
         # draw the room image
-        room_sprite = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/{}.png".format(door_type)))
-        room_sprite = pygame.transform.scale(room_sprite, (int(100 * zoom_level), int(140 * zoom_level)))
+        if self.room_sprite is None:
+            self.room_sprite = Room.DOOR_SPRITES[door_type]
+            self.room_sprite = pygame.transform.scale(self.room_sprite, (int(100 * zoom_level), int(140 * zoom_level)))
 
         # calculate offset
         screen_width = screen.get_width()
@@ -54,10 +66,10 @@ class Room:
 
         # update rect
         self.rect = pygame.Rect(pos_x, pos_y, int(100 * zoom_level), int(140 * zoom_level))
-        # print(f"Updated rect for room at position {self.position} to {self.rect}")
 
         # make so that row of rooms are spaced out to the width of the screen
-        screen.blit(room_sprite, (pos_x, pos_y))
+        if self.rect.colliderect(screen.get_rect()):  # Only draw if the room is visible
+            screen.blit(self.room_sprite, (pos_x, pos_y))
 
     def handle_click(self, event):
         x, y = self.position
@@ -79,9 +91,9 @@ class Room:
             "visited": self.visited,
             "completed": self.completed,
         }
-    
+
     def has_enemies(self):
         return len(self.enemies) > 0
-    
+
     def enemies_defeated(self):
         return all([enemy.cur_health <= 0 for enemy in self.enemies])

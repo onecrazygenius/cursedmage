@@ -54,7 +54,7 @@ class Dungeon(State):
             self.boss_appeared_popup("You are ready to challenge the boss at the end of this floor.")
 
         # Draw all of the rooms on the map
-        self.draw_room(self.root, surface)
+        self.draw_room(surface)
 
         # If there are any active popups, show them on the screen
         if self.active_popup is not None:
@@ -67,34 +67,29 @@ class Dungeon(State):
         # Update the display
         pygame.display.flip()
 
-    def draw_room(self, room, surface):
-        room.draw(surface, self.scroll_offset, self.zoom_level)
-        for child_room in room.children:
-            self.draw_room(child_room, surface)
+    def draw_room(self, surface):
+        for level in self.rooms:
+            for room in level:
+                room.draw(surface, self.scroll_offset, self.zoom_level)
 
     def generate_rooms(self):
-        # Initialize the number of rooms in the first layer
-        initial_room_counts = [1, 2, 3]
-        min_rooms = DUNGEON_MIN_SIZE_X
-        max_rooms = DUNGEON_MAX_SIZE_X
-
         # Create a list to hold all room layers
         rooms = []
 
         # Iterate over all layers
         for i in range(DUNGEON_SIZE_Y):
             # Determine the number of rooms for the current layer
-            if i < len(initial_room_counts):
-                num_rooms = initial_room_counts[i]
+            if i < DUNGEON_MIN_SIZE_X:
+                num_rooms = i + 1
             else:
                 prev_rooms = len(rooms[-1])
-                num_rooms = random.randint(max(min_rooms, prev_rooms - 1), min(max_rooms, prev_rooms + 1))
+                num_rooms = random.randint(max(DUNGEON_MIN_SIZE_X, prev_rooms - 1), min(DUNGEON_MAX_SIZE_X, prev_rooms + 1))
 
             # Create the current layer with 'None' entries
             current_layer = [None for _ in range(num_rooms)]
 
             # Calculate the offset to center the rooms
-            offset = (max_rooms - num_rooms) / 2.0
+            offset = (DUNGEON_MAX_SIZE_X - num_rooms) / 2.0
 
             # Iterate over all slots in the current layer
             for j in range(num_rooms):
@@ -110,11 +105,15 @@ class Dungeon(State):
                 # Assign parents and children
                 if i > 0:  # If it's not the first layer
                     # Assign parent from the previous layer
-                    parent_index = max(0, min(j, len(rooms[i - 1]) - 1))
-                    room.parents.append(rooms[i - 1][parent_index])
-
-                    if room not in rooms[i - 1][parent_index].children:
-                        rooms[i - 1][parent_index].children.append(room)
+                    for dx in [-1, 0, 1]:  # Check the rooms above and to the left, right, and directly above
+                        parent_index = j + dx
+                        if 0 <= parent_index < len(rooms[i - 1]):
+                            parent_room = rooms[i - 1][parent_index]
+                            if parent_room is not None and room not in parent_room.children:
+                                # Avoid adding rooms as children if the relative distance is greater than 1
+                                if abs(parent_room.position[0] - room.position[0]) <= 1:
+                                    parent_room.children.append(room)
+                                    room.parents.append(parent_room)
 
             # Add the current layer to the list of all layers
             rooms.append(current_layer)

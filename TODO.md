@@ -14,12 +14,14 @@
 9. Re-implement automated testing
 
 # Bugs
-1. You can not get enough cursed cards before reaching the end of the dungeon
+1. Re-evaluate and fix enemy damage scaling
 2. Loading the game is broken
 3. Re-Implement bosses properly
 4. When you load game the escape button doesn't work
+5. You cannot generate large dungeons (15+ Floors)
 
 ## Map Rework TODO:
 1. Add lines between doors to show paths
 2. We should be moving upwards not downwards
    3. Just invert the Y when drawing
+3. Implement a score-like system

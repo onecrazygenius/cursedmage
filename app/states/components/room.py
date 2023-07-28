@@ -36,6 +36,22 @@ class Room:
         # Update the scroll offset
         self.offset = offset
 
+        # calculate offset
+        screen_width = screen.get_width()
+        gap = screen_width - (DUNGEON_MAX_SIZE_X * 300 * zoom_level) + 140 * zoom_level
+        self.offset = gap / 2
+
+        # calculate position with offset, scrolling, and zooming
+        pos_x = self.offset + (x * 300 * zoom_level) - offset[0]
+        pos_y = 50 * zoom_level + (y * 280 * zoom_level) - offset[1]
+
+        # update rect
+        self.rect = pygame.Rect(pos_x, pos_y, int(100 * zoom_level), int(140 * zoom_level))
+
+        # Only draw if the room is visible
+        if not self.rect.colliderect(screen.get_rect()):
+            return
+
         door_type = "locked"
         # if the room is complete make the door open
         if self.completed:
@@ -50,26 +66,13 @@ class Room:
         if self.is_boss_room:
             door_type = "unlocked_boss"
 
-        # draw the room image
-        if self.room_sprite is None:
+        # To prevent loading from files every time you draw the room, save the sprite and just check if it's none or changed
+        if self.room_sprite is None or Room.DOOR_SPRITES[door_type] is not self.room_sprite:
             self.room_sprite = Room.DOOR_SPRITES[door_type]
             self.room_sprite = pygame.transform.scale(self.room_sprite, (int(100 * zoom_level), int(140 * zoom_level)))
 
-        # calculate offset
-        screen_width = screen.get_width()
-        gap = screen_width - (DUNGEON_MAX_SIZE_X * 300 * zoom_level) + 140 * zoom_level
-        self.offset = gap / 2
-
-        # calculate position with offset, scrolling, and zooming
-        pos_x = self.offset + (x * 300 * zoom_level) - offset[0]
-        pos_y = 50 * zoom_level + (y * 280 * zoom_level) - offset[1]
-
-        # update rect
-        self.rect = pygame.Rect(pos_x, pos_y, int(100 * zoom_level), int(140 * zoom_level))
-
         # make so that row of rooms are spaced out to the width of the screen
-        if self.rect.colliderect(screen.get_rect()):  # Only draw if the room is visible
-            screen.blit(self.room_sprite, (pos_x, pos_y))
+        screen.blit(self.room_sprite, (pos_x, pos_y))
 
     def handle_click(self, event):
         x, y = self.position

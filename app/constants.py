@@ -17,8 +17,9 @@ BUTTON_BACKGROUND = (247, 58, 33)
 BUTTON_SHADOW = BLACK
 
 # TEMP Dungeon size
-DUNGEON_SIZE_X = 5
-DUNGEON_SIZE_Y = 7 # This should always be odd to form the diamond shape.
+DUNGEON_MAX_SIZE_X = 6 # The max width of the dungeon
+DUNGEON_MIN_SIZE_X = 2
+DUNGEON_SIZE_Y = 50 # The max depth of the dungeon #TODO: Deprecate this in favour of endless
 
 # Events
 ENEMY_TURN_EVENT = pygame.USEREVENT + 1

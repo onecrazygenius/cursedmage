@@ -73,35 +73,52 @@ class Dungeon(State):
             self.draw_room(child_room, surface)
 
     def generate_rooms(self):
-        # Create diamond shape as array, with None entries
-        rooms = [[None for _ in range(math.ceil(DUNGEON_SIZE_Y / 2) - abs((DUNGEON_SIZE_Y // 2) - depth))] for depth in
-                 range(DUNGEON_SIZE_Y)]
+        # Initialize the number of rooms in the first layer
+        initial_room_counts = [1, 2, 3]
+        min_rooms = DUNGEON_MIN_SIZE_X
+        max_rooms = DUNGEON_MAX_SIZE_X
 
-        # Create a room in each of the 'None' slots with the appropriate difficulty and position
+        # Create a list to hold all room layers
+        rooms = []
+
+        # Iterate over all layers
         for i in range(DUNGEON_SIZE_Y):
-            for j in range(math.ceil(DUNGEON_SIZE_Y / 2) - abs((DUNGEON_SIZE_Y // 2) - i)):
-                # The + 0.5 is to put all the doors in the centre of the map when it first loads
-                position = (j + 0.5 + abs(DUNGEON_SIZE_Y // 2 - i) / 2.0, i)
+            # Determine the number of rooms for the current layer
+            if i < len(initial_room_counts):
+                num_rooms = initial_room_counts[i]
+            else:
+                prev_rooms = len(rooms[-1])
+                num_rooms = random.randint(max(min_rooms, prev_rooms - 1), min(max_rooms, prev_rooms + 1))
+
+            # Create the current layer with 'None' entries
+            current_layer = [None for _ in range(num_rooms)]
+
+            # Calculate the offset to center the rooms
+            offset = (max_rooms - num_rooms) / 2.0
+
+            # Iterate over all slots in the current layer
+            for j in range(num_rooms):
+                # Compute the position, adjusting for the offset
+                position = (j + offset, i)
+
+                # Create a room at the current position
                 room = Room(self.game, position, self.create_enemies(*position))
-                rooms[i][j] = room
+
+                # Add the room to the current layer
+                current_layer[j] = room
 
                 # Assign parents and children
-                if i > 0:  # If it's not the first row
-                    if j < len(rooms[i - 1]):  # Avoid out of index error
-                        room.parents.append(rooms[i - 1][j])
-                        if room not in rooms[i - 1][j].children:
-                            rooms[i - 1][j].children.append(room)
+                if i > 0:  # If it's not the first layer
+                    # Assign parent from the previous layer
+                    parent_index = max(0, min(j, len(rooms[i - 1]) - 1))
+                    room.parents.append(rooms[i - 1][parent_index])
 
-                    if i <= DUNGEON_SIZE_Y // 2:  # Expanding half of the diamond
-                        if j > 0:  # Add the left parent, if it exists
-                            room.parents.append(rooms[i - 1][j - 1])
-                            if room not in rooms[i - 1][j - 1].children:
-                                rooms[i - 1][j - 1].children.append(room)
-                    else:  # Shrinking half of the diamond
-                        if j < len(rooms[i - 1]) - 1:  # Add the right parent, if it exists
-                            room.parents.append(rooms[i - 1][j + 1])
-                            if room not in rooms[i - 1][j + 1].children:
-                                rooms[i - 1][j + 1].children.append(room)
+                    if room not in rooms[i - 1][parent_index].children:
+                        rooms[i - 1][parent_index].children.append(room)
+
+            # Add the current layer to the list of all layers
+            rooms.append(current_layer)
+
         return rooms
 
     def generate_boss_room(self, position):
@@ -118,7 +135,7 @@ class Dungeon(State):
         base_factor_y = 1.2
 
         # Calculate the room's relative position in the dungeon
-        relative_position_x = room_position_x / DUNGEON_SIZE_X
+        relative_position_x = room_position_x / DUNGEON_MAX_SIZE_X
         relative_position_y = room_position_y / DUNGEON_SIZE_Y
 
         # Based on the room position and the base factor of the X and Y dimensions, create a weighted position value
@@ -198,7 +215,6 @@ class Dungeon(State):
             # If currently dragging, adjust the scroll offset based on the mouse motion
             if self.dragging:
                 dx, dy = event.rel  # The relative motion of the mouse since the last event
-                self.scroll_offset[0] -= dx
                 self.scroll_offset[1] -= dy
 
         # Handle zooming in and out of the map

@@ -57,7 +57,7 @@ class Room:
 
         # calculate offset
         screen_width = screen.get_width()
-        gap = screen_width - (DUNGEON_SIZE_X * 300 * zoom_level) + 140 * zoom_level
+        gap = screen_width - (DUNGEON_MAX_SIZE_X * 300 * zoom_level) + 140 * zoom_level
         self.offset = gap / 2
 
         # calculate position with offset, scrolling, and zooming

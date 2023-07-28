@@ -68,9 +68,23 @@ class Dungeon(State):
         pygame.display.flip()
 
     def draw_room(self, surface):
+        # First draw lines to child rooms
         for level in self.rooms:
             for room in level:
+                for child in room.children:
+                    if room.rect is not None and child.rect is not None:
+                        # Calculate parent and child center coordinates for line drawing
+                        parent_center = ((room.rect.left + room.rect.width / 2),
+                                         (room.rect.top + room.rect.height))
+                        child_center = ((child.rect.left + child.rect.width / 2),
+                                        (child.rect.top))  # Don't add height for top of sprite
+
+                        # Draw a line between parent and child room
+                        pygame.draw.line(surface, pygame.Color(DUNGEON_LINE), parent_center, child_center, 3)
+
+                # Always draw rooms after lines so that the lines go behind rooms
                 room.draw(surface, self.scroll_offset, self.zoom_level)
+
 
     def generate_rooms(self):
         # Create a list to hold all room layers

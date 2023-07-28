@@ -21,7 +21,6 @@
 5. You cannot generate large dungeons (15+ Floors)
 
 ## Map Rework TODO:
-1. Add lines between doors to show paths
-2. We should be moving upwards not downwards
+1. We should be moving upwards not downwards
    3. Just invert the Y when drawing
-3. Implement a score-like system
+2. Implement a score-like system

@@ -16,11 +16,12 @@
 # Bugs
 1. Re-evaluate and fix enemy damage scaling
 2. Loading the game is broken
-3. Re-Implement bosses properly
-4. When you load game the escape button doesn't work
-5. You cannot generate large dungeons (15+ Floors)
+3. When you load game the escape button doesn't work
+4. You cannot generate large dungeons (15+ Floors)
 
 ## Map Rework TODO:
 1. We should be moving upwards not downwards
    3. Just invert the Y when drawing
 2. Implement a score-like system
+3. Decide what to do with victory screen.
+   1. Probably change it to a "Score" screen showing the players score after they die

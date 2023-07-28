@@ -134,10 +134,21 @@ class Dungeon(State):
 
         return rooms
 
-    def generate_boss_room(self, position):
+    def generate_boss_room(self, replaced_room):
         # Room with boss configuration
         boss_enemy = Boss("Boss")
-        return Room(self.game, position, [boss_enemy], is_boss_room=True)
+        boss_room = Room(self.game, replaced_room.position, [boss_enemy], is_boss_room=True)
+        boss_room.parents = replaced_room.parents
+        boss_room.children = replaced_room.children
+
+        # Iterate over all parents of the replaced room
+        for parent in replaced_room.parents:
+            # Find the index of the replaced room in the children list of the current parent
+            index = parent.children.index(replaced_room)
+            # Replace the replaced room with the boss room in the children list of the current parent
+            parent.children[index] = boss_room
+
+        return boss_room
 
     # Based on the position of the room, between 1 and 3 enemies will be created whereas you progress
     # Through the dungeon, there is a higher chance of more enemies being in the room
@@ -216,11 +227,17 @@ class Dungeon(State):
         for child in self.player_position.children:
             child.next = True
 
-        self.game.save_game()
+        if self.game.character.boss_requirements_met():
+            # Randomly select a floor between 2-5 floors below
+            boss_floor = min(len(self.rooms) - 1, self.player_position.position[1] + random.randint(2, 3))
 
-    # TODO: Boss room doesn't exist anymore, so this won't work
-    def win_conditions_met(self):
-        return self.game.character.boss_requirements_met() and self.player_position == self.boss_room.position
+            # Replace a random room on the selected floor with a boss room
+            boss_room_index = random.randint(0, len(self.rooms[boss_floor]) - 1)
+            boss_room = self.generate_boss_room(self.rooms[boss_floor][boss_room_index])
+
+            self.rooms[boss_floor][boss_room_index] = boss_room
+
+        self.game.save_game()
 
     def handle_event(self, event):
         # Handle dragging the map around

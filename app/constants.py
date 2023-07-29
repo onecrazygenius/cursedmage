@@ -44,10 +44,10 @@ DIFFICULTY_INT_MAPPING = {  # Used in difficulty scaling calculations
 }
 
 # % Chance to pickup a cursed card after each combat
-CURSED_CARD_CHANCE = 25
+CURSED_CARD_CHANCE = 100
 
 # Number of Cursed Cards required for the boss room to open
-BOSS_CURSED_CARD_REQUIREMENT = 3
+BOSS_CURSED_CARD_REQUIREMENT = 2
 
 # Turn Results
 CONTINUE = "continue"

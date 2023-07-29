@@ -1,5 +1,4 @@
 import json
-import math
 import random
 
 import numpy
@@ -12,7 +11,6 @@ from app.states.combat import Combat
 from app.states.components.popup import Popup
 from app.states.components.room import Room
 from app.states.state import State
-from app.util.run_once import run_once
 
 
 class Dungeon(State):
@@ -41,6 +39,7 @@ class Dungeon(State):
             self.root.next = True
 
             self.player_position = self.root
+            self.boss_room_position = None
 
     def draw(self, surface):
         # Set background as background image
@@ -48,10 +47,6 @@ class Dungeon(State):
         # scale background image to fit screen
         background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(background, (0, 0))
-
-        # If the boss requirements are met, show the popup
-        if self.game.character.boss_requirements_met():
-            self.boss_appeared_popup("You are ready to challenge the boss at the end of this floor.")
 
         # Draw all of the rooms on the map
         self.draw_room(surface)
@@ -134,7 +129,13 @@ class Dungeon(State):
 
         return rooms
 
-    def generate_boss_room(self, replaced_room):
+    def generate_boss_room(self):
+        # Randomly select a floor between 2-5 floors below
+        boss_floor = min(len(self.rooms) - 1, self.player_position.position[1] + random.randint(2, 5))
+        # Select a random room on the selected floor to be replaced with a boss room
+        boss_room_index = random.randint(0, len(self.rooms[boss_floor]) - 1)
+        replaced_room = self.rooms[boss_floor][boss_room_index]
+
         # Room with boss configuration
         boss_enemy = Boss("Boss")
         boss_room = Room(self.game, replaced_room.position, [boss_enemy], is_boss_room=True)
@@ -148,7 +149,12 @@ class Dungeon(State):
             # Replace the replaced room with the boss room in the children list of the current parent
             parent.children[index] = boss_room
 
-        return boss_room
+        self.rooms[boss_floor][boss_room_index] = boss_room
+
+        # Save boss room position
+        self.boss_room_position = boss_room.position
+
+        self.boss_appeared_popup("A boss room has appeared!")
 
     # Based on the position of the room, between 1 and 3 enemies will be created whereas you progress
     # Through the dungeon, there is a higher chance of more enemies being in the room
@@ -227,15 +233,11 @@ class Dungeon(State):
         for child in self.player_position.children:
             child.next = True
 
-        if self.game.character.boss_requirements_met():
-            # Randomly select a floor between 2-5 floors below
-            boss_floor = min(len(self.rooms) - 1, self.player_position.position[1] + random.randint(2, 3))
-
-            # Replace a random room on the selected floor with a boss room
-            boss_room_index = random.randint(0, len(self.rooms[boss_floor]) - 1)
-            boss_room = self.generate_boss_room(self.rooms[boss_floor][boss_room_index])
-
-            self.rooms[boss_floor][boss_room_index] = boss_room
+        # After progressing the player's character. Check if they meet the boss requirements.
+        # If they do, check there is not an upcoming boss room which they could access.
+        if self.game.character.boss_requirements_met() and \
+                (self.boss_room_position is None or self.player_position.position[1] > self.boss_room_position[1]):
+            self.generate_boss_room()
 
         self.game.save_game()
 
@@ -303,7 +305,6 @@ class Dungeon(State):
                 room = Room(self.game, position, enemies, next, visited, completed)
                 self.rooms[x].append(room)
 
-    @run_once
     def boss_appeared_popup(self, text):
         popup = Popup(
             SCREEN_WIDTH // 2,

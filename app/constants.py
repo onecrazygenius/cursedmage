@@ -2,6 +2,9 @@ import os
 import pygame
 import sys
 
+# Debug Mode
+DEBUG = False
+
 # Screen size
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
@@ -18,9 +21,11 @@ BUTTON_BACKGROUND = (247, 58, 33)
 BUTTON_SHADOW = BLACK
 
 # TEMP Dungeon size
-DUNGEON_MAX_SIZE_X = 6 # The max width of the dungeon
+DUNGEON_MAX_SIZE_X = 6  # The max width of the dungeon
 DUNGEON_MIN_SIZE_X = 2
-DUNGEON_SIZE_Y = 10 # The max depth of the dungeon #TODO: Deprecate this in favour of endless
+DUNGEON_SIZE_Y = 200  # The max depth of the dungeon, this is effectively endless
+
+DIFFICULTY_SCALING_CONSTANT = 20  # This means after ~ 20 floors you will hit max difficulty
 
 # Events
 ENEMY_TURN_EVENT = pygame.USEREVENT + 1

@@ -2,7 +2,10 @@
 name = "cursedmage"
 version = "0.1.0"
 description = ""
-authors = ["Ensor, Charlie George (Capgemini) <charlie.ensor@capgemini.com>"]
+authors = [
+    "Charlie Ensor <charlie.ensor@capgemini.com>",
+    "James Hillyard <james.hillyard@payara.fish>"
+]
 license = "MIT"
 readme = "README.md"
 packages = [{ include = "**/*" }]
@@ -14,6 +17,7 @@ pytest = "^7.3.1"
 pytest-repeat = "^0.9.1"
 numpy = "^1.24.3"
 pyinstaller = "^5.12.0"
+matplotlib = "^3.7.2"
 
 [build-system]
 requires = ["poetry-core"]

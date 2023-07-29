@@ -2,6 +2,7 @@ import json
 import random
 
 import numpy
+from matplotlib import pyplot as plt
 from pygame.locals import *
 
 from app.constants import *
@@ -30,6 +31,8 @@ class Dungeon(State):
         self.drag_start = [0, 0]  # The position where the last drag started
         self.zoom_level = 1.0
 
+        self.generated_difficulties = {}
+
         if game_data:
             self.rooms = self.generate_rooms(game_data["structure"])
             self.root = self.rooms[0][0]
@@ -45,6 +48,9 @@ class Dungeon(State):
 
             self.player_room = self.root
             self.boss_room_position = None
+
+        if DEBUG:
+            self.plot_difficulties()
 
     def draw(self, surface):
         # Set background as background image
@@ -116,10 +122,10 @@ class Dungeon(State):
 
                 if loaded_structure is not None:  # Loaded game
                     position = loaded_structure[i][j]['position']
-                    room = Room(self.game, position, self.create_enemies(*position), loaded_structure[i][j]['next'],
+                    room = Room(self.game, position, self.create_enemies(i), loaded_structure[i][j]['next'],
                                 loaded_structure[i][j]['visited'], loaded_structure[i][j]['completed'])
                 else:
-                    room = Room(self.game, position, self.create_enemies(*position))
+                    room = Room(self.game, position, self.create_enemies(i))
 
                 # Add the room to the current layer
                 current_layer[j] = room
@@ -176,18 +182,13 @@ class Dungeon(State):
 
     # Based on the position of the room, between 1 and 3 enemies will be created whereas you progress
     # Through the dungeon, there is a higher chance of more enemies being in the room
-    def create_enemies(self, room_position_x, room_position_y):
-        # These factors control how much each variable contributes to the output.
-        # Since DUNGEON_SIZE_Y should have a bigger impact, we give it a higher weight
-        base_factor_x = 0
-        base_factor_y = 1.2
 
+    def create_enemies(self, room_position_y):
         # Calculate the room's relative position in the dungeon
-        relative_position_x = room_position_x / DUNGEON_MAX_SIZE_X
-        relative_position_y = room_position_y / DUNGEON_SIZE_Y
+        relative_position_y = room_position_y / DIFFICULTY_SCALING_CONSTANT
 
-        # Based on the room position and the base factor of the X and Y dimensions, create a weighted position value
-        relative_position_weighted = base_factor_x * relative_position_x + base_factor_y * relative_position_y
+        # Use linear scaling for the relative position in Y
+        relative_position_weighted = min(relative_position_y, 1)  # Clamp to a maximum of 1
 
         # Add some randomness to the calculation. This will add a random value between -0.2 and 0.2 to the result
         # This randomness scales with the difficulty
@@ -195,26 +196,54 @@ class Dungeon(State):
         randomness = numpy.random.uniform(-0.2 / difficulty_multiplier, 0.2 * difficulty_multiplier)
 
         # Scale the relative position to the range of 1-3 and add randomness
-        # Use 1 + 2 to ensure the minimum value will be 1 before randomness instead of 0 if just 3 was used.
-        scaled_enemy_number = 1 + 2 * (relative_position_weighted + randomness)
+        scaled_enemy_number = 1 + 2 * relative_position_weighted + randomness
 
         # Make sure the result stays within the range of 1-3
         scaled_enemy_number_within_bounds = max(min(scaled_enemy_number, 3), 1)
 
         number_of_enemies = round(scaled_enemy_number_within_bounds)
         enemy_names = self.choose_enemy_names_from_difficulty(scaled_enemy_number_within_bounds, number_of_enemies)
+
+        # Add the calculated difficulty to the dictionary
+        if DEBUG:
+            if room_position_y in self.generated_difficulties:
+                self.generated_difficulties[room_position_y].append(scaled_enemy_number_within_bounds)
+            else:
+                self.generated_difficulties[room_position_y] = [scaled_enemy_number_within_bounds]
+
         enemies = []
         for name in enemy_names:
             enemies.append(Enemy(name))
 
-        # These are extremely useful to debug this method. Leaving these here intentionally
-        # print("Room ["+str(room_position_x)+","+str(room_position_y)+"]")
-        # print("Room Difficulty: " + str(scaled_enemy_number_within_bounds))
-        # print("Randomness: " + str(randomness))
-        # print("Number Of Enemies: " + str(number_of_enemies))
-        # print("Enemies: " + str(enemy_names))
-        # print("\n")
         return enemies
+
+    # Used to plot a graph of the dungeon difficulty. Excellent for debugging
+    def plot_difficulties(self):
+        # Calculate the average difficulty for each floor
+        average_difficulties = {floor: sum(difficulties) / len(difficulties) for floor, difficulties in
+                                self.generated_difficulties.items()}
+
+        # Sort the floors so they are plotted in order
+        sorted_floors = sorted(average_difficulties.keys())
+        sorted_difficulties = [average_difficulties[floor] for floor in sorted_floors]
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(sorted_floors, sorted_difficulties)
+
+        # Add horizontal lines at 1.5 and 2.5 (For the enemy number thresholds)
+        plt.axhline(y=2.5, color='red', linestyle='--', label='Threshold for 3 Enemies')
+        plt.axhline(y=1.5, color='orange', linestyle='--', label='Threshold for 2 Enemies')
+        # Add a vertical line at DIFFICULTY_SCALING_CONSTANT
+        plt.axvline(x=DIFFICULTY_SCALING_CONSTANT, color='pink', linestyle='--', label='Difficulty Scaling Constant')
+
+        plt.scatter(sorted_floors[:DIFFICULTY_SCALING_CONSTANT], sorted_difficulties[:DIFFICULTY_SCALING_CONSTANT], marker='x', color='blue', label="First {} Rooms Marked".format(DIFFICULTY_SCALING_CONSTANT))
+
+        plt.xlabel('Floor')
+        plt.ylabel('Average Generated Difficulty')
+        plt.title('Average Generated Difficulty for Each Floor')
+        plt.grid(True)
+        plt.legend()
+        plt.savefig('average_floor_difficulty_graph.png')
 
     def choose_enemy_names_from_difficulty(self, difficulty_threshold, number_of_enemies):
         json_file = (relative_resource_path('app/assets/data/enemies.json'))
@@ -287,20 +316,23 @@ class Dungeon(State):
             self.handle_room_click(event)
 
     def handle_room_click(self, event):
-        # Traverse the dungeon and check if any room was clicked
-        if self.handle_room_click_recursive(self.root, event.pos):
-            return True
-        return False
+        current_layer_index = self.player_room.position[1]
+        # Due to an oversight in the player positioning, the first 2 rows will have the player at the root position
+        if self.player_room == self.root and self.root.next:
+            next_layer_index = current_layer_index
+        else:
+            next_layer_index = current_layer_index + 1
 
-    def handle_room_click_recursive(self, room, pos):
-        if room.rect.collidepoint(pos):
-            # Only allow the user to click on a room that is opened (Next)
-            if room.next:
-                self.move_to_room(room)
-                return True
-        for child_room in room.children:
-            if self.handle_room_click_recursive(child_room, pos):
-                return True
+        # Check if there's a layer below the player's current position
+        if next_layer_index < len(self.rooms):
+            # Iterate over the rooms in the next layer
+            for room in self.rooms[next_layer_index]:
+                # Check if the room is a "next" room and collides with the click position
+                if room.next and room.rect.collidepoint(event.pos):
+                    # Move to the room and return True
+                    self.move_to_room(room)
+                    return True
+
         return False
 
     def get_data(self):

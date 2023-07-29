@@ -14,11 +14,10 @@
 9. Re-implement automated testing
 
 # Bugs
-1. Re-evaluate and fix enemy damage scaling
-2. Loading the game seems to have worse performance than a new game
+1. Loading the game seems to have worse performance than a new game
    1. _Check if multiple states are being drawn._
-3. When you load game the escape button doesn't work
-4. You cannot generate large dungeons (15+ Floors)
+2. When you load game the escape button doesn't work
+3. You cannot generate large dungeons (15+ Floors)
 
 ## Map Rework TODO:
 1. We should be moving upwards not downwards

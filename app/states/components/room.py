@@ -43,7 +43,7 @@ class Room:
 
         # calculate position with offset, scrolling, and zooming
         pos_x = self.offset + (x * 300 * zoom_level) - offset[0]
-        pos_y = 50 * zoom_level + (y * 280 * zoom_level) - offset[1]
+        pos_y = -(50 * zoom_level + (y * 280 * zoom_level) - offset[1])
 
         # update rect
         self.rect = pygame.Rect(pos_x, pos_y, int(100 * zoom_level), int(140 * zoom_level))

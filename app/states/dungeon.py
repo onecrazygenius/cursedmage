@@ -26,7 +26,7 @@ class Dungeon(State):
 
         self.active_popup = None
 
-        self.scroll_offset = [0, 0]  # The current scroll offset
+        self.scroll_offset = [0, SCREEN_HEIGHT * 0.9]  # The current scroll offset
         self.dragging = False  # Whether the mouse is currently dragging
         self.drag_start = [0, 0]  # The position where the last drag started
         self.zoom_level = 1.0
@@ -81,9 +81,9 @@ class Dungeon(State):
                     if room.rect is not None and child.rect is not None:
                         # Calculate parent and child center coordinates for line drawing
                         parent_center = ((room.rect.left + room.rect.width / 2),
-                                         (room.rect.top + room.rect.height))
+                                         (room.rect.bottom - room.rect.height))
                         child_center = ((child.rect.left + child.rect.width / 2),
-                                        (child.rect.top))  # Don't add height for top of sprite
+                                        (child.rect.bottom))  # Don't add height for top of sprite
 
                         # Draw a line between parent and child room
                         pygame.draw.line(surface, pygame.Color(DUNGEON_LINE), parent_center, child_center, 3)
@@ -294,7 +294,7 @@ class Dungeon(State):
             # If currently dragging, adjust the scroll offset based on the mouse motion
             if self.dragging:
                 dx, dy = event.rel  # The relative motion of the mouse since the last event
-                self.scroll_offset[1] -= dy
+                self.scroll_offset[1] += dy
 
         # Handle zooming in and out of the map
         if event.type == pygame.MOUSEWHEEL:

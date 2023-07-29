@@ -12,16 +12,12 @@
 7. Tutorial
 8. Animation
 9. Re-implement automated testing
+10. Implement a score-like system
+11. Decide what to do with victory screen.
+    1. Probably change it to a "Score" screen showing the players score after they die
 
 # Bugs
 1. Loading the game seems to have worse performance than a new game
    1. _Check if multiple states are being drawn._
 2. When you load game the escape button doesn't work
 3. You cannot generate large dungeons (15+ Floors)
-
-## Map Rework TODO:
-1. We should be moving upwards not downwards
-   3. Just invert the Y when drawing
-2. Implement a score-like system
-3. Decide what to do with victory screen.
-   1. Probably change it to a "Score" screen showing the players score after they die

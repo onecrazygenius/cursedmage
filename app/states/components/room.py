@@ -84,15 +84,15 @@ class Room:
             if rect.collidepoint(self.game.screen_to_surface(event.pos)) and not self.completed:
                 # DONE: print("Clicked on room at position", self.position)
                 # Check if the room is the next available room starting with 0,0 or if it was the boss room
-                if self.position == self.game.dungeon.player_position or self.is_boss_room:
+                if self.position == self.game.dungeon.player_room or self.is_boss_room:
                     self.game.dungeon.move_to_room(self.position)
 
     def get_data(self):
         return {
-            "enemies": self.enemies,
+            "position": self.position,
             "next": self.next,
             "visited": self.visited,
-            "completed": self.completed,
+            "completed": self.completed
         }
 
     def has_enemies(self):

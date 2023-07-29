@@ -31,14 +31,19 @@ class Dungeon(State):
         self.zoom_level = 1.0
 
         if game_data:
-            # TODO: Loading doesn't work
-            self.load_data(game_data)
+            self.rooms = self.generate_rooms(game_data["structure"])
+            self.root = self.rooms[0][0]
+
+            self.player_room = next(room for room in self.rooms[game_data["player_position"][1]] if room.position[0] == game_data["player_position"][0])
+            self.boss_room_position = game_data["boss_room_position"]
+            if self.boss_room_position is not None:
+                self.generate_boss_room(self.boss_room_position)
         else:
             self.rooms = self.generate_rooms()
             self.root = self.rooms[0][0]
             self.root.next = True
 
-            self.player_position = self.root
+            self.player_room = self.root
             self.boss_room_position = None
 
     def draw(self, surface):
@@ -80,19 +85,23 @@ class Dungeon(State):
                 # Always draw rooms after lines so that the lines go behind rooms
                 room.draw(surface, self.scroll_offset, self.zoom_level)
 
-
-    def generate_rooms(self):
+    def generate_rooms(self, loaded_structure=None):
         # Create a list to hold all room layers
         rooms = []
 
         # Iterate over all layers
         for i in range(DUNGEON_SIZE_Y):
             # Determine the number of rooms for the current layer
-            if i < DUNGEON_MIN_SIZE_X:
-                num_rooms = i + 1
+            if loaded_structure is not None:  # Loaded game
+                num_rooms = len(loaded_structure[i])
             else:
-                prev_rooms = len(rooms[-1])
-                num_rooms = random.randint(max(DUNGEON_MIN_SIZE_X, prev_rooms - 1), min(DUNGEON_MAX_SIZE_X, prev_rooms + 1))
+                if i < DUNGEON_MIN_SIZE_X:
+                    num_rooms = i + 1
+                else:
+                    prev_rooms = len(rooms[-1])
+                    num_rooms = random.randint(max(DUNGEON_MIN_SIZE_X, prev_rooms - 1),
+                                               min(DUNGEON_MAX_SIZE_X, prev_rooms + 1))
+
 
             # Create the current layer with 'None' entries
             current_layer = [None for _ in range(num_rooms)]
@@ -105,8 +114,12 @@ class Dungeon(State):
                 # Compute the position, adjusting for the offset
                 position = (j + offset, i)
 
-                # Create a room at the current position
-                room = Room(self.game, position, self.create_enemies(*position))
+                if loaded_structure is not None:  # Loaded game
+                    position = loaded_structure[i][j]['position']
+                    room = Room(self.game, position, self.create_enemies(*position), loaded_structure[i][j]['next'],
+                                loaded_structure[i][j]['visited'], loaded_structure[i][j]['completed'])
+                else:
+                    room = Room(self.game, position, self.create_enemies(*position))
 
                 # Add the room to the current layer
                 current_layer[j] = room
@@ -129,12 +142,17 @@ class Dungeon(State):
 
         return rooms
 
-    def generate_boss_room(self):
-        # Randomly select a floor between 2-5 floors below
-        boss_floor = min(len(self.rooms) - 1, self.player_position.position[1] + random.randint(2, 5))
-        # Select a random room on the selected floor to be replaced with a boss room
-        boss_room_index = random.randint(0, len(self.rooms[boss_floor]) - 1)
-        replaced_room = self.rooms[boss_floor][boss_room_index]
+    def generate_boss_room(self, loaded_boss_position=None):
+        if loaded_boss_position is None:
+            # Randomly select a floor between 2-5 floors below
+            boss_floor = min(len(self.rooms) - 1, self.player_room.position[1] + random.randint(2, 5))
+            # Select a random room on the selected floor to be replaced with a boss room
+            boss_room_index = random.randint(0, len(self.rooms[boss_floor]) - 1)
+            replaced_room = self.rooms[boss_floor][boss_room_index]
+        else:
+            boss_floor = loaded_boss_position[1]
+            replaced_room = next((room for room in self.rooms[boss_floor] if room.position[0] == loaded_boss_position[0]))
+            boss_room_index = self.rooms[boss_floor].index(replaced_room)
 
         # Room with boss configuration
         boss_enemy = Boss("Boss")
@@ -209,34 +227,34 @@ class Dungeon(State):
 
     def move_to_room(self, room):
         # The player is now in the new room
-        self.player_position = room
+        self.player_room = room
 
         if not room.enemies_defeated():
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.change_state(self.game.combat)
 
     def update_rooms_recursive(self, room):
-        room.next = (room.position == self.player_position)
+        room.next = (room.position == self.player_room)
         for child_room in room.children:
             self.update_rooms_recursive(child_room)
 
     def progress_to_next_room(self):
-        self.player_position.completed = True
-        self.player_position.next = False
+        self.player_room.completed = True
+        self.player_room.next = False
 
         # First, for the room you just cleared, set its siblings' children next to false, blocking the tree
-        for parent in self.player_position.parents:
+        for parent in self.player_room.parents:
             for sibling in parent.children:
                 sibling.next = False
 
         # Then, set the player's current room children next to true, opening the tree
-        for child in self.player_position.children:
+        for child in self.player_room.children:
             child.next = True
 
         # After progressing the player's character. Check if they meet the boss requirements.
         # If they do, check there is not an upcoming boss room which they could access.
         if self.game.character.boss_requirements_met() and \
-                (self.boss_room_position is None or self.player_position.position[1] > self.boss_room_position[1]):
+                (self.boss_room_position is None or self.player_room.position[1] > self.boss_room_position[1]):
             self.generate_boss_room()
 
         self.game.save_game()
@@ -287,23 +305,11 @@ class Dungeon(State):
 
     def get_data(self):
         return {
-            "player_position": self.player_position.get_data(),
-            "rooms": [[room.get_data() for room in row] for row in self.rooms],
+            "player_position": self.player_room.position,
+            "boss_room_position": self.boss_room_position,
+            "structure": [[room.get_data() for room in row] for row in self.rooms]
         }
 
-    # TODO: Loading is currently broken
-    def load_data(self, game_data):
-        self.player_position = game_data["player_position"]
-        for x, row in enumerate(game_data["rooms"]):
-            self.rooms.append([])
-            for y, room_data in enumerate(row):
-                position = (x, y)
-                enemies = room_data["enemies"]
-                next = room_data["next"]
-                visited = room_data["visited"]
-                completed = room_data["completed"]
-                room = Room(self.game, position, enemies, next, visited, completed)
-                self.rooms[x].append(room)
 
     def boss_appeared_popup(self, text):
         popup = Popup(

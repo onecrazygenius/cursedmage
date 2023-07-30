@@ -23,6 +23,10 @@ class Combat(State):
 
         self.game_difficulty = DIFFICULTY_INT_MAPPING[self.game.difficulty]
 
+        # Initialize the animation state
+        self.current_frame = 0
+        self.frame_time = 0
+
     def update_health_bars(self):
         player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
         player_bar_width = int(player_health_ratio * 200)
@@ -181,20 +185,19 @@ class Combat(State):
         surface.blit(background, (0, 0))
         # draw health bars
         self.update_health_bars()
+        self.increment_frametime()
+
         # Visually draw an enemy and player respectively
         # Multiple enmies will be offset from each other
         for i, enemy in enumerate(self.battle_manager.enemies):
             if enemy.is_dead():
                 continue
-            # draw the enemy from their sprite
-            enemy_sprite = pygame.image.load(relative_resource_path(enemy.sprite))
-            enemy_sprite = pygame.transform.scale(enemy_sprite, (250, 250))
+            # Draw the enemy's frame
+            enemy_sprite = enemy.character_frames[self.current_frame]
             surface.blit(enemy_sprite, (SCREEN_WIDTH / 2 + (i * 300), SCREEN_HEIGHT / 2 - 100))
 
-
-        # draw the player from their sprite
-        player_sprite = pygame.image.load(relative_resource_path(self.battle_manager.player.sprite))
-        player_sprite = pygame.transform.scale(player_sprite, (250, 250))
+        # Draw the player frame
+        player_sprite = self.battle_manager.player.character_frames[self.current_frame]
         surface.blit(player_sprite, (SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2 - 100))
 
 
@@ -244,6 +247,14 @@ class Combat(State):
 
         # update the display
         pygame.display.flip()
+
+    # Used to manage the frametime
+    def increment_frametime(self):
+        animation_speed = 5  # The lower this number the faster the animation plays
+        self.frame_time += 1
+        if self.frame_time > animation_speed:
+            self.current_frame = (self.current_frame + 1) % 8  # Loop back to the start if we've gone through all the frames
+            self.frame_time = 0
 
     def end_turn(self):
         # end the player's turn

@@ -6,6 +6,10 @@ import sys
 SCREEN_WIDTH = 1920
 SCREEN_HEIGHT = 1080
 
+# Animation
+FRAMES_IN_SPRITESHEET = 8
+ANIMATION_SPEED = 8
+
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)

@@ -86,6 +86,17 @@ class Room:
                 if self.position == self.game.dungeon.player_room or self.is_boss_room:
                     self.game.dungeon.move_to_room(self.position)
 
+
+    def calculate_score(self):
+        score = 0
+        for enemy in self.enemies:
+            score += SCORE_VALUE.get(enemy.name)
+        if self.is_boss_room:
+            score += SCORE_VALUE.get("Boss_Room")
+        else:
+            score += SCORE_VALUE.get("Room")
+        return score
+
     def get_data(self):
         return {
             "position": self.position,

@@ -48,6 +48,16 @@ DIFFICULTY_INT_MAPPING = {  # Used in difficulty scaling calculations
     "Hard": 3
 }
 
+# The score value of rooms and enemies
+SCORE_VALUE = {
+    "Goblin": 10,
+    "Brute": 25,
+    "Reaper": 50,
+    "Boss": 100,
+    "Room": 5,
+    "Boss_Room": 10
+}
+
 # % Chance to pickup a cursed card after each combat
 CURSED_CARD_CHANCE = 100
 

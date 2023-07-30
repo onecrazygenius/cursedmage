@@ -47,15 +47,11 @@ class Combat(State):
             pygame.event.get()
             pygame.event.clear()
             # Block all events except the PLAYER_TURN and ENEMY_TURN events while paused
-            pygame.event.set_allowed([PLAYER_TURN_EVENT, ENEMY_TURN_EVENT, GAME_OVER_EVENT, PAUSE])
+            pygame.event.set_allowed([PLAYER_TURN_EVENT, ENEMY_TURN_EVENT, PAUSE])
 
         if event.type == PLAYER_TURN_EVENT:
             # refresh the player's energy
             self.battle_manager.player.replenish()
-
-        if event.type == GAME_OVER_EVENT:
-            print("Game Over")
-            self.game.quit_game()
 
         if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
             turn_result = CONTINUE

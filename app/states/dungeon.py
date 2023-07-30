@@ -268,6 +268,9 @@ class Dungeon(State):
             self.update_rooms_recursive(child_room)
 
     def progress_to_next_room(self):
+        # This method is called when a player has completed the room, so add the score here
+        self.update_player_score()
+
         self.player_room.completed = True
         self.player_room.next = False
 
@@ -287,6 +290,10 @@ class Dungeon(State):
             self.generate_boss_room()
 
         self.game.save_game()
+
+    def update_player_score(self):
+        room_score = self.player_room.calculate_score()
+        self.game.player_score += room_score
 
     def handle_event(self, event):
         # Handle dragging the map around

@@ -2,6 +2,7 @@
 from collections import deque
 
 from app.constants import *
+from app.logging_config import logger
 from app.logic.combat.enemy_logic import EnemyLogic
 
 
@@ -18,6 +19,7 @@ class BattleManager:
         # check who the card is targeting
         for enemy in self.enemies:
             if card.target == enemy:
+                logger.debug("Applying {} card damage to {}".format(card.name, card.target.name))
                 # apply damage to enemy
                 enemy.cur_health -= card.power - enemy.defense - enemy.shield
                 return
@@ -94,17 +96,19 @@ class BattleManager:
     def simulate_enemy_turn(self, enemy, game_difficulty):
 
         card = EnemyLogic.select_card(enemy, self.player.cur_health, game_difficulty)
+        logger.debug("Enemy {} chose to play {}".format(enemy.name, card.name if card is not None else "nothing. They could not afford to play a card"))
 
-        # print("Enemy " + enemy.name + " played " + (card.name if card is not None else "nothing"))
         # If enemy can't play a card, they should end their turn
         if card is not None:
             turn_result = self.handle_turn(card)
         else:
             turn_result = END_TURN
 
+        logger.debug("Turn result was " + turn_result)
         return turn_result
 
     def next_turn(self):
+        logger.debug("It was {}'s turn".format(self.current_turn.name))
         if self.current_turn == self.player:  # If current turn is player's
             current_index = -1
         else:  # If current turn is an enemy's
@@ -124,14 +128,19 @@ class BattleManager:
                 self.current_turn = self.enemies[current_index]
                 break
 
+        logger.debug("It's now {}'s turn".format(self.current_turn.name))
+
         # Post event
         if self.current_turn == self.player:
             pygame.event.post(pygame.event.Event(PLAYER_TURN_EVENT))
+            logger.debug("Player Turn Event Sent")
         else:
             pygame.event.post(pygame.event.Event(ENEMY_TURN_EVENT))
+            logger.debug("Enemy Turn Event Sent")
 
     # handle end of turn
     def end_turn(self):
+        logger.debug("{} chose to end their turn".format(self.current_turn.name))
         # Set the current turn character to full cost and draw back to 3 cards
         # self.current_turn.cost = self.current_turn.max_cost
         # self.current_turn.deck.draw_card(3 - len(self.current_turn.deck.hand))
@@ -143,6 +152,7 @@ class BattleManager:
 
         # Otherwise continue the game by rotating to the next character
         pygame.event.post(pygame.event.Event(PAUSE))
+        logger.debug("Pause Event Sent")
         self.next_turn()
 
     

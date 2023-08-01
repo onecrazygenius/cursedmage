@@ -2,7 +2,7 @@ from app.logic.config_manager import ConfigManager
 from app.logic.save_manager import SaveManager
 from app.constants import *
 from app.states.character_selection import CharacterSelection
-from app.states.victory_screen import VictoryScreen
+from app.states.score_screen import ScoreScreen
 from app.states.game_over import GameOverScreen
 from app.states.settings import SettingsMenu
 from app.states.main_menu import MainMenu
@@ -65,12 +65,14 @@ class Game:
         self.character = None
         self.difficulty = None
         self.just_switched = False
+        self.player_name = ""
+        self.player_score = 0
 
         # Initialize game state stack
         self.states = [MainMenu(self)]
 
         # Flag for tracking if the settings menu is currently open
-        self.settings_menu_open = False  
+        self.settings_menu_open = False
 
     # State management functions
 
@@ -100,7 +102,13 @@ class Game:
 
     def save_game(self):
         # Save game data with the save manager
-        game_data = {"character": self.character, "difficulty": self.difficulty, "dungeon": self.dungeon.get_data()}
+        game_data = {
+            "character": self.character,
+            "difficulty": self.difficulty,
+            "dungeon": self.dungeon.get_data(),
+            "score": self.player_score,
+            "player_name": self.player_name
+        }
         self.save_manager.save(game_data)
 
     def load_game(self):
@@ -112,6 +120,8 @@ class Game:
         self.character = data["character"]
         self.difficulty = data["difficulty"]
         self.dungeon = Dungeon(self, game_data=data["dungeon"])
+        self.player_score = data["score"]
+        self.player_name = data["player_name"]
         self.change_state(self.dungeon)
 
     # Sound volume management functions
@@ -169,10 +179,8 @@ class Game:
         # Show the main menu by changing to the main menu state
         self.change_state(MainMenu(self))
 
-    def victory(self):
-        # Go to the victory screen by changing to the victory screen state
-        print("Victory!")
-        self.change_state(VictoryScreen(self))
+    def see_score(self):
+        self.change_state(ScoreScreen(self))
 
     def game_over(self):
         self.change_state(GameOverScreen(self))

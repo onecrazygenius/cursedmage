@@ -2,6 +2,7 @@ import json
 import random
 
 import numpy
+from matplotlib import pyplot as plt
 from pygame.locals import *
 
 from app.constants import *
@@ -11,7 +12,6 @@ from app.states.combat import Combat
 from app.states.components.popup import Popup
 from app.states.components.room import Room
 from app.states.state import State
-from app.util.run_once import run_once
 
 
 class Dungeon(State):
@@ -20,20 +20,37 @@ class Dungeon(State):
         # Call the parent class (State) constructor
         super().__init__(game)
 
-
         self.game = game
-        self.player_position = (0, 0)
+        self.root = []
         self.rooms = []
-        self.boss_room = self.generate_boss_room() # The boss room is always the same at the moment, so can be generated
 
         self.active_popup = None
 
+        self.scroll_offset = [0, SCREEN_HEIGHT * 0.9]  # The current scroll offset
+        self.dragging = False  # Whether the mouse is currently dragging
+        self.drag_start = [0, 0]  # The position where the last drag started
+        self.zoom_level = 1.0
+
+        self.generated_difficulties = {}
+
         if game_data:
-            self.load_data(game_data)
+            self.rooms = self.generate_rooms(game_data["structure"])
+            self.root = self.rooms[0][0]
+
+            self.player_room = next(room for room in self.rooms[game_data["player_position"][1]] if room.position[0] == game_data["player_position"][0])
+            self.boss_room_position = game_data["boss_room_position"]
+            if self.boss_room_position is not None:
+                self.generate_boss_room(self.boss_room_position)
         else:
-            self.generate_rooms()
-            # set first room as next
-            self.rooms[0][0].next = True
+            self.rooms = self.generate_rooms()
+            self.root = self.rooms[0][0]
+            self.root.next = True
+
+            self.player_room = self.root
+            self.boss_room_position = None
+
+        if DEBUG:
+            self.plot_difficulties()
 
     def draw(self, surface):
         # Set background as background image
@@ -41,18 +58,9 @@ class Dungeon(State):
         # scale background image to fit screen
         background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
         surface.blit(background, (0, 0))
-        # Generate map
 
-        # If the boss requirements are met, draw the room
-        if self.game.character.boss_requirements_met():
-            self.boss_appeared_popup("The boss has finally shown itself! Challenge it at the red-outlined door.")
-            # If you managed to get to the boss, you completed the first floor. So for now override it
-            # TODO: In map rework give this a proper position
-            self.rooms[self.boss_room.position[0]][self.boss_room.position[1]] = self.boss_room
-        for x in range(DUNGEON_SIZE_X):
-            for y in range(DUNGEON_SIZE_Y):
-                room = self.rooms[x][y]
-                room.draw(surface)
+        # Draw all of the rooms on the map
+        self.draw_room(surface)
 
         # If there are any active popups, show them on the screen
         if self.active_popup is not None:
@@ -65,36 +73,122 @@ class Dungeon(State):
         # Update the display
         pygame.display.flip()
 
-    def generate_rooms(self):
-        for x in range(DUNGEON_SIZE_X):
-            self.rooms.append([])
-            for y in range(DUNGEON_SIZE_Y):
-                position = (x, y)
-                # Create the enemies for the room
-                enemies = self.create_enemies(x, y)
-                room = Room(self.game, position, enemies)
-                self.rooms[x].append(room)
+    def draw_room(self, surface):
+        # First draw lines to child rooms
+        for level in self.rooms:
+            for room in level:
+                for child in room.children:
+                    if room.rect is not None and child.rect is not None:
+                        # Calculate parent and child center coordinates for line drawing
+                        parent_center = ((room.rect.left + room.rect.width / 2),
+                                         (room.rect.bottom - room.rect.height))
+                        child_center = ((child.rect.left + child.rect.width / 2),
+                                        (child.rect.bottom))  # Don't add height for top of sprite
 
-    def generate_boss_room(self):
-        # Create boss room if requirements are met
-        boss_position = (0, 0)  # For now put this position at 0,0. This should be changed eventually
+                        # Draw a line between parent and child room
+                        pygame.draw.line(surface, pygame.Color(DUNGEON_LINE), parent_center, child_center, 3)
+
+                # Always draw rooms after lines so that the lines go behind rooms
+                room.draw(surface, self.scroll_offset, self.zoom_level)
+
+    def generate_rooms(self, loaded_structure=None):
+        # Create a list to hold all room layers
+        rooms = []
+
+        # Iterate over all layers
+        for i in range(DUNGEON_SIZE_Y):
+            # Determine the number of rooms for the current layer
+            if loaded_structure is not None:  # Loaded game
+                num_rooms = len(loaded_structure[i])
+            else:
+                if i < DUNGEON_MIN_SIZE_X:
+                    num_rooms = i + 1
+                else:
+                    prev_rooms = len(rooms[-1])
+                    num_rooms = random.randint(max(DUNGEON_MIN_SIZE_X, prev_rooms - 1),
+                                               min(DUNGEON_MAX_SIZE_X, prev_rooms + 1))
+
+
+            # Create the current layer with 'None' entries
+            current_layer = [None for _ in range(num_rooms)]
+
+            # Calculate the offset to center the rooms
+            offset = (DUNGEON_MAX_SIZE_X - num_rooms) / 2.0
+
+            # Iterate over all slots in the current layer
+            for j in range(num_rooms):
+                # Compute the position, adjusting for the offset
+                position = (j + offset, i)
+
+                if loaded_structure is not None:  # Loaded game
+                    position = loaded_structure[i][j]['position']
+                    room = Room(self.game, position, self.create_enemies(i), loaded_structure[i][j]['next'],
+                                loaded_structure[i][j]['visited'], loaded_structure[i][j]['completed'])
+                else:
+                    room = Room(self.game, position, self.create_enemies(i))
+
+                # Add the room to the current layer
+                current_layer[j] = room
+
+                # Assign parents and children
+                if i > 0:  # If it's not the first layer
+                    # Assign parent from the previous layer
+                    for dx in [-1, 0, 1]:  # Check the rooms above and to the left, right, and directly above
+                        parent_index = j + dx
+                        if 0 <= parent_index < len(rooms[i - 1]):
+                            parent_room = rooms[i - 1][parent_index]
+                            if parent_room is not None and room not in parent_room.children:
+                                # Avoid adding rooms as children if the relative distance is greater than 1
+                                if abs(parent_room.position[0] - room.position[0]) <= 1:
+                                    parent_room.children.append(room)
+                                    room.parents.append(parent_room)
+
+            # Add the current layer to the list of all layers
+            rooms.append(current_layer)
+
+        return rooms
+
+    def generate_boss_room(self, loaded_boss_position=None):
+        if loaded_boss_position is None:
+            # Randomly select a floor between 2-5 floors below
+            boss_floor = min(len(self.rooms) - 1, self.player_room.position[1] + random.randint(2, 5))
+            # Select a random room on the selected floor to be replaced with a boss room
+            boss_room_index = random.randint(0, len(self.rooms[boss_floor]) - 1)
+            replaced_room = self.rooms[boss_floor][boss_room_index]
+        else:
+            boss_floor = loaded_boss_position[1]
+            replaced_room = next((room for room in self.rooms[boss_floor] if room.position[0] == loaded_boss_position[0]))
+            boss_room_index = self.rooms[boss_floor].index(replaced_room)
+
+        # Room with boss configuration
         boss_enemy = Boss("Boss")
-        return Room(self.game, boss_position, [boss_enemy], is_boss_room=True)
+        boss_room = Room(self.game, replaced_room.position, [boss_enemy], is_boss_room=True)
+        boss_room.parents = replaced_room.parents
+        boss_room.children = replaced_room.children
+
+        # Iterate over all parents of the replaced room
+        for parent in replaced_room.parents:
+            # Find the index of the replaced room in the children list of the current parent
+            index = parent.children.index(replaced_room)
+            # Replace the replaced room with the boss room in the children list of the current parent
+            parent.children[index] = boss_room
+
+        self.rooms[boss_floor][boss_room_index] = boss_room
+
+        # Save boss room position
+        self.boss_room_position = boss_room.position
+
+        self.boss_appeared_popup("A boss room has appeared!")
 
     # Based on the position of the room, between 1 and 3 enemies will be created whereas you progress
     # Through the dungeon, there is a higher chance of more enemies being in the room
-    def create_enemies(self, room_position_x, room_position_y):
-        # These factors control how much each variable contributes to the output.
-        # Since DUNGEON_SIZE_Y should have a bigger impact, we give it a higher weight
-        base_factor_x = 0.3
-        base_factor_y = 0.7
 
+    def create_enemies(self, room_position_y):
         # Calculate the room's relative position in the dungeon
-        relative_position_x = room_position_x / DUNGEON_SIZE_X
-        relative_position_y = room_position_y / DUNGEON_SIZE_Y
+        relative_position_y = room_position_y / DIFFICULTY_SCALING_CONSTANT
 
-        # Based on the room position and the base factor of the X and Y dimensions, create a weighted position value
-        relative_position_weighted = base_factor_x * relative_position_x + base_factor_y * relative_position_y
+        # Use linear scaling for the relative position in Y
+        relative_position_weighted = min(relative_position_y, 1)  # Clamp to a maximum of 1
 
         # Add some randomness to the calculation. This will add a random value between -0.2 and 0.2 to the result
         # This randomness scales with the difficulty
@@ -102,26 +196,54 @@ class Dungeon(State):
         randomness = numpy.random.uniform(-0.2 / difficulty_multiplier, 0.2 * difficulty_multiplier)
 
         # Scale the relative position to the range of 1-3 and add randomness
-        # Use 1 + 2 to ensure the minimum value will be 1 before randomness instead of 0 if just 3 was used.
-        scaled_enemy_number = 1 + 2 * (relative_position_weighted + randomness)
+        scaled_enemy_number = 1 + 2 * relative_position_weighted + randomness
 
         # Make sure the result stays within the range of 1-3
         scaled_enemy_number_within_bounds = max(min(scaled_enemy_number, 3), 1)
 
         number_of_enemies = round(scaled_enemy_number_within_bounds)
         enemy_names = self.choose_enemy_names_from_difficulty(scaled_enemy_number_within_bounds, number_of_enemies)
+
+        # Add the calculated difficulty to the dictionary
+        if DEBUG:
+            if room_position_y in self.generated_difficulties:
+                self.generated_difficulties[room_position_y].append(scaled_enemy_number_within_bounds)
+            else:
+                self.generated_difficulties[room_position_y] = [scaled_enemy_number_within_bounds]
+
         enemies = []
         for name in enemy_names:
             enemies.append(Enemy(name))
 
-        # These are extremely useful to debug this method. Leaving these here intentionally
-        # print("Room ["+str(room_position_x)+","+str(room_position_y)+"]")
-        # print("Room Difficulty: " + str(scaled_enemy_number_within_bounds))
-        # print("Randomness: " + str(randomness))
-        # print("Number Of Enemies: " + str(number_of_enemies))
-        # print("Enemies: " + str(enemy_names))
-        # print("\n")
         return enemies
+
+    # Used to plot a graph of the dungeon difficulty. Excellent for debugging
+    def plot_difficulties(self):
+        # Calculate the average difficulty for each floor
+        average_difficulties = {floor: sum(difficulties) / len(difficulties) for floor, difficulties in
+                                self.generated_difficulties.items()}
+
+        # Sort the floors so they are plotted in order
+        sorted_floors = sorted(average_difficulties.keys())
+        sorted_difficulties = [average_difficulties[floor] for floor in sorted_floors]
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(sorted_floors, sorted_difficulties)
+
+        # Add horizontal lines at 1.5 and 2.5 (For the enemy number thresholds)
+        plt.axhline(y=2.5, color='red', linestyle='--', label='Threshold for 3 Enemies')
+        plt.axhline(y=1.5, color='orange', linestyle='--', label='Threshold for 2 Enemies')
+        # Add a vertical line at DIFFICULTY_SCALING_CONSTANT
+        plt.axvline(x=DIFFICULTY_SCALING_CONSTANT, color='pink', linestyle='--', label='Difficulty Scaling Constant')
+
+        plt.scatter(sorted_floors[:DIFFICULTY_SCALING_CONSTANT], sorted_difficulties[:DIFFICULTY_SCALING_CONSTANT], marker='x', color='blue', label="First {} Rooms Marked".format(DIFFICULTY_SCALING_CONSTANT))
+
+        plt.xlabel('Floor')
+        plt.ylabel('Average Generated Difficulty')
+        plt.title('Average Generated Difficulty for Each Floor')
+        plt.grid(True)
+        plt.legend()
+        plt.savefig('average_floor_difficulty_graph.png')
 
     def choose_enemy_names_from_difficulty(self, difficulty_threshold, number_of_enemies):
         json_file = (relative_resource_path('app/assets/data/enemies.json'))
@@ -132,70 +254,102 @@ class Dungeon(State):
         eligible_names = [enemy['name'] for enemy in data if enemy['difficulty'] <= difficulty_threshold]
         return random.choices(eligible_names, k=number_of_enemies)
 
-    def move_to_room(self, position):
-        self.player_position = position
-        room = self.rooms[position[0]][position[1]]
-        room.visited = True
+    def move_to_room(self, room):
+        # The player is now in the new room
+        self.player_room = room
 
         if not room.enemies_defeated():
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.change_state(self.game.combat)
-        else:
-            self.update_player_position()
-            self.draw(self.surface)
+
+    def update_rooms_recursive(self, room):
+        room.next = (room.position == self.player_room)
+        for child_room in room.children:
+            self.update_rooms_recursive(child_room)
 
     def progress_to_next_room(self):
-        x, y = self.player_position
-        room = self.rooms[x][y]
-        room.completed = True
-        room.next = False
-        self.update_player_position()
-        self.rooms[self.player_position[0]][self.player_position[1]].next = True
-        self.draw(self.surface)
+        # This method is called when a player has completed the room, so add the score here
+        self.update_player_score()
+
+        self.player_room.completed = True
+        self.player_room.next = False
+
+        # First, for the room you just cleared, set its siblings' children next to false, blocking the tree
+        for parent in self.player_room.parents:
+            for sibling in parent.children:
+                sibling.next = False
+
+        # Then, set the player's current room children next to true, opening the tree
+        for child in self.player_room.children:
+            child.next = True
+
+        # After progressing the player's character. Check if they meet the boss requirements.
+        # If they do, check there is not an upcoming boss room which they could access.
+        if self.game.character.boss_requirements_met() and \
+                (self.boss_room_position is None or self.player_room.position[1] > self.boss_room_position[1]):
+            self.generate_boss_room()
 
         self.game.save_game()
 
-    def update_player_position(self):
-        # move the player 1 room forward
-        x, y = self.player_position
-        if x == DUNGEON_SIZE_X - 1:
-            # update the player position to the next row
-            self.player_position = (0, y + 1)
-        else:
-            # update the player position to the next column
-            self.player_position = (x + 1, y)
-
-    def win_conditions_met(self):
-        return self.player_position == self.boss_room.position and self.game.character.boss_requirements_met()
+    def update_player_score(self):
+        room_score = self.player_room.calculate_score()
+        self.game.player_score += room_score
 
     def handle_event(self, event):
+        # Handle dragging the map around
+        if event.type == pygame.MOUSEMOTION:
+            # If currently dragging, adjust the scroll offset based on the mouse motion
+            if self.dragging:
+                dx, dy = event.rel  # The relative motion of the mouse since the last event
+                self.scroll_offset[1] += dy
+
+        # Handle zooming in and out of the map
+        if event.type == pygame.MOUSEWHEEL:
+            # Adjust the zoom level based on the mouse wheel motion
+            self.zoom_level *= 1.1 ** event.y
+            # Limit to 70% - 130% Zoom Levels
+            self.zoom_level = min(max(self.zoom_level, 0.7), 1.3)
+
+        # Handle check if a room was clicked or begin dragging the map
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # Start dragging
+            self.dragging = True
+            self.drag_start = list(event.pos)
+
+        # Handle letting go of the map to stop dragging
         if event.type == MOUSEBUTTONUP:
-            # The Boss Room is not in Rooms as it's not part of the standard dungeon. Also check if it was clicked
-            self.boss_room.handle_click(event)
-            # Iterate over all rooms to see if one was clicked
-            for row in self.rooms:
-                for room in row:
-                    room.handle_click(event)
+            # Stop dragging
+            self.dragging = False
+            self.handle_room_click(event)
+
+    def handle_room_click(self, event):
+        current_layer_index = self.player_room.position[1]
+        # Due to an oversight in the player positioning, the first 2 rows will have the player at the root position
+        if self.player_room == self.root and self.root.next:
+            next_layer_index = current_layer_index
+        else:
+            next_layer_index = current_layer_index + 1
+
+        # Check if there's a layer below the player's current position
+        if next_layer_index < len(self.rooms):
+            # Iterate over the rooms in the next layer
+            for room in self.rooms[next_layer_index]:
+                # Check if the room is a "next" room and collides with the click position
+                if room.next and room.rect.collidepoint(event.pos):
+                    # Move to the room and return True
+                    self.move_to_room(room)
+                    return True
+
+        return False
 
     def get_data(self):
         return {
-            "player_position": self.player_position,
-            "rooms": [[room.get_data() for room in row] for row in self.rooms],
+            "player_position": self.player_room.position,
+            "boss_room_position": self.boss_room_position,
+            "structure": [[room.get_data() for room in row] for row in self.rooms]
         }
-    
-    def load_data(self, game_data):
-        self.player_position = game_data["player_position"]
-        for x, row in enumerate(game_data["rooms"]):
-            self.rooms.append([])
-            for y, room_data in enumerate(row):
-                position = (x, y)
-                enemies = room_data["enemies"]
-                next = room_data["next"]
-                visited = room_data["visited"]
-                completed = room_data["completed"]
-                room = Room(self.game, position, enemies, next, visited, completed)
-                self.rooms[x].append(room)
-    @run_once
+
+
     def boss_appeared_popup(self, text):
         popup = Popup(
             SCREEN_WIDTH // 2,

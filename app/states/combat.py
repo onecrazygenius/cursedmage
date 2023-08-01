@@ -47,15 +47,11 @@ class Combat(State):
             pygame.event.get()
             pygame.event.clear()
             # Block all events except the PLAYER_TURN and ENEMY_TURN events while paused
-            pygame.event.set_allowed([PLAYER_TURN_EVENT, ENEMY_TURN_EVENT, GAME_OVER_EVENT, PAUSE])
+            pygame.event.set_allowed([PLAYER_TURN_EVENT, ENEMY_TURN_EVENT, PAUSE])
 
         if event.type == PLAYER_TURN_EVENT:
             # refresh the player's energy
             self.battle_manager.player.replenish()
-
-        if event.type == GAME_OVER_EVENT:
-            print("Game Over")
-            self.game.quit_game()
 
         if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
             turn_result = CONTINUE
@@ -162,16 +158,13 @@ class Combat(State):
         if turn_result == GAME_OVER:
             self.game.game_over()
         if turn_result == FLOOR_COMPLETE:
-            if self.game.dungeon.win_conditions_met():
-                self.game.victory()
-            else:
-                self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
-                # After completing a floor, you have a chance to pickup a cursed card
-                if random.randint(1, 100) <= CURSED_CARD_CHANCE:
-                    # Use push_state instead of change_state because this state is informational
-                    # and afterwards we want to return to the card pickup screen without coming back
-                    # to the combat class
-                    self.game.push_state(CursedCardPickupScreen(self.game, self.battle_manager.player))
+            self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
+            # After completing a floor, you have a chance to pickup a cursed card
+            if random.randint(1, 100) <= CURSED_CARD_CHANCE:
+                # Use push_state instead of change_state because this state is informational
+                # and afterwards we want to return to the card pickup screen without coming back
+                # to the combat class
+                self.game.push_state(CursedCardPickupScreen(self.game, self.battle_manager.player))
 
     def draw(self, surface):
         # Set background as background image 

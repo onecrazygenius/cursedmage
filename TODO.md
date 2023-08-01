@@ -12,14 +12,16 @@
 7. Tutorial
 8. Animation
 9. Re-implement automated testing
+10. Implement a score-like system
+11. Decide what to do with victory screen.
+    1. Probably change it to a "Score" screen showing the players score after they die
 
+## Nice To Have:
+1. Add a message saying "Generating Dungeon" or similar after clicking 'New Game'
+2. Implement a sprite to replace the lines between dungeons
 
 # Bugs
-1. When you load a game and are on the room select screen. If you don't click on a door the game crashes
-   1. This **DOES NOT** happen when you make a new game
-2. When there are 2 enemies, if the left most enemy is dead, the top text will still says "X's Turn" where X is the leftmost enemy
-3. AI Logic breaks when they have a heal card. It displayes the 'Out of Mana' popup and gets stuck in an infinite loop
-   1. _James suspects this is something to do with how the card is played rather than the logic itself_
-4. After completing a room and going back to the room select screen. If you quit and load the room you just completed needs finishing again
-   1. _The fix for this is almost definitely just changing the save order_
-
+1. Loading the game seems to have worse performance than a new game
+   1. _Check if multiple states are being drawn._
+2. When you load game the escape button doesn't work
+3. You cannot generate large dungeons (15+ Floors)

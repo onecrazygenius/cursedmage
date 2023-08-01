@@ -38,3 +38,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+average_floor_difficulty_graph.png

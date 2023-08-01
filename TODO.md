@@ -7,7 +7,6 @@
 2. Implement card upgrade after boss
 3. Implement Shield Cards
 4. Implement new card effects
-5. Random dungeon paths
 6. See hand & deck from combat screen
 7. Tutorial
 8. Animation
@@ -23,5 +22,4 @@
 # Bugs
 1. Loading the game seems to have worse performance than a new game
    1. _Check if multiple states are being drawn._
-2. When you load game the escape button doesn't work
-3. You cannot generate large dungeons (15+ Floors)
+2. When you load game, clicking escape doesn't work

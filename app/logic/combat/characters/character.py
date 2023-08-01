@@ -1,5 +1,6 @@
 import json
-import os
+
+import pygame
 
 from app.constants import relative_resource_path, BOSS_CURSED_CARD_REQUIREMENT
 from app.logic.combat.deck.card import Card
@@ -28,17 +29,28 @@ class Character:
         self.cost = self.get_stat_for_character("cost")
         self.max_cost = self.cost
         self.level = 1
+
         # TODO: Long term this won't be necessary. It's because we are missing 2 character sprites
         sprite = self.get_stat_for_character("sprite")
         if sprite is None or sprite == "None":
             sprite = "mage"
         self.sprite = "app/assets/images/sprites/" + sprite + ".png"
+        self.spritesheet_path = "app/assets/images/sprites/" + sprite + "_spritesheet.png"
+
+        self.character_frames = self.spritesheet_to_frames()
+
         self.deck = Deck(
             cards=self.starting_deck(),
         )
 
         # do the first card draw
         self.deck.draw_card()
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        # Don't pickle character_frames
+        del state["character_frames"]
+        return state
 
     def is_dead(self):
         return self.cur_health <= 0
@@ -87,3 +99,19 @@ class Character:
                 return character[stat_name]
 
         return None
+
+    def spritesheet_to_frames(self):
+        # Cut the spritesheet into frames
+        spritesheet = pygame.image.load(relative_resource_path(self.spritesheet_path))
+        spritesheet_width, spritesheet_height = spritesheet.get_size()
+
+        # Calculate the dimensions of each frame
+        FRAME_WIDTH = spritesheet_width // 8
+        FRAME_HEIGHT = spritesheet_height  # Assuming there's only one row
+
+        character_frames = []
+        for i in range(8):  # Assuming there are 8 frames horizontally in your spritesheet
+            frame = spritesheet.subsurface((i * FRAME_WIDTH, 0, FRAME_WIDTH, FRAME_HEIGHT))
+            character_frames.append(pygame.transform.scale(frame, (250, 250)))  # Scale the frames
+
+        return character_frames

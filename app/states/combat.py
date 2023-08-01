@@ -1,6 +1,9 @@
 import random
+import threading
+from collections import deque
 
 from app.constants import *
+from app.logging_config import logger
 from app.logic.battle_manager import BattleManager
 from app.states.card_pickup import CardPickupScreen
 from app.states.components.button import Button
@@ -10,6 +13,7 @@ from app.states.state import State
 
 
 class Combat(State):
+    event_queue = deque()
     def __init__(self, game, player, enemies):
         super().__init__(game)
         self.game = game
@@ -23,14 +27,21 @@ class Combat(State):
 
         self.game_difficulty = DIFFICULTY_INT_MAPPING[self.game.difficulty]
 
+        # Initialize the animation state
+        self.current_frame = 0
+        self.frame_time = 0
+
+        self.paused = False
+        self.pause_timer = None
+
     def update_health_bars(self):
         player_health_ratio = self.battle_manager.player.cur_health / self.battle_manager.player.max_health
         player_bar_width = int(player_health_ratio * 200)
-        
+
         pygame.draw.rect(self.surface, GREEN, (50, 50, player_bar_width, 20))
         # add a border to the health bar
         pygame.draw.rect(self.surface, WHITE, (50, 50, 200, 20), 2)
-        
+
         # draw the enemies health bars
         for i, enemy in enumerate(self.battle_manager.enemies):
             enemy_health_ratio = enemy.cur_health / enemy.max_health
@@ -39,21 +50,50 @@ class Combat(State):
             # add a border to the health bar
             pygame.draw.rect(self.surface, WHITE, (SCREEN_WIDTH - 50 - 200, 50 + (40*i), 200, 20), 2)
 
+    def unpause(self):
+        while self.paused:
+            # Check if the pause timer has reached zero
+            if self.paused and pygame.time.get_ticks() >= self.pause_timer:
+                self.paused = False
+                logger.debug("Game Unpaused")
+                pygame.event.post(pygame.event.Event(UNPAUSE))
+
     def handle_event(self, event):
         if event.type == PAUSE:
-            # Pause pygame so no events can take place
-            pygame.time.delay(PAUSE_TIME_MS)
-            # Get the events queue and clear it
-            pygame.event.get()
-            pygame.event.clear()
-            # Block all events except the PLAYER_TURN and ENEMY_TURN events while paused
-            pygame.event.set_allowed([PLAYER_TURN_EVENT, ENEMY_TURN_EVENT, PAUSE])
+            self.paused = True
+            self.pause_timer = pygame.time.get_ticks() + PAUSE_TIME_MS
+            logger.debug("Game Paused")
+
+            thread = threading.Thread(target=self.unpause)
+            thread.start()
+
+        if self.paused:
+            # Queue allowed events
+            for allowed_event in [PLAYER_TURN_EVENT, ENEMY_TURN_EVENT, GAME_OVER_EVENT]:
+                if event.type == allowed_event:
+                    self.event_queue.append(event)
+                    return
+
+        if event.type == UNPAUSE:
+            logger.debug("Event Queue has {} events".format(len(self.event_queue)))
+            # Process queued events
+            while self.event_queue:
+                queued_event = self.event_queue.popleft()
+                self.handle_event(queued_event)
+                return
 
         if event.type == PLAYER_TURN_EVENT:
+            logger.debug("Player Turn Event Received")
             # refresh the player's energy
             self.battle_manager.player.replenish()
 
+        if event.type == GAME_OVER_EVENT:
+            logger.debug("Game Over Event Received")
+            print("Game Over")
+            self.game.quit_game()
+
         if self.battle_manager.current_turn != self.battle_manager.player and event.type == ENEMY_TURN_EVENT:
+            logger.debug("Enemy Turn Event Received")
             turn_result = CONTINUE
             while turn_result == CONTINUE:
                 turn_result = self.battle_manager.simulate_enemy_turn(self.battle_manager.current_turn, self.game_difficulty)
@@ -174,20 +214,19 @@ class Combat(State):
         surface.blit(background, (0, 0))
         # draw health bars
         self.update_health_bars()
+        self.increment_frametime()
+
         # Visually draw an enemy and player respectively
         # Multiple enmies will be offset from each other
         for i, enemy in enumerate(self.battle_manager.enemies):
             if enemy.is_dead():
                 continue
-            # draw the enemy from their sprite
-            enemy_sprite = pygame.image.load(relative_resource_path(enemy.sprite))
-            enemy_sprite = pygame.transform.scale(enemy_sprite, (250, 250))
+            # Draw the enemy's frame
+            enemy_sprite = enemy.character_frames[self.current_frame]
             surface.blit(enemy_sprite, (SCREEN_WIDTH / 2 + (i * 300), SCREEN_HEIGHT / 2 - 100))
 
-
-        # draw the player from their sprite
-        player_sprite = pygame.image.load(relative_resource_path(self.battle_manager.player.sprite))
-        player_sprite = pygame.transform.scale(player_sprite, (250, 250))
+        # Draw the player frame
+        player_sprite = self.battle_manager.player.character_frames[self.current_frame]
         surface.blit(player_sprite, (SCREEN_WIDTH / 4, SCREEN_HEIGHT / 2 - 100))
 
 
@@ -237,6 +276,14 @@ class Combat(State):
 
         # update the display
         pygame.display.flip()
+
+    # Used to manage the frametime
+    def increment_frametime(self):
+        animation_speed = 5  # The lower this number the faster the animation plays
+        self.frame_time += 1
+        if self.frame_time > animation_speed:
+            self.current_frame = (self.current_frame + 1) % 8  # Loop back to the start if we've gone through all the frames
+            self.frame_time = 0
 
     def end_turn(self):
         # end the player's turn

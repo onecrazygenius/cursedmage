@@ -33,6 +33,9 @@ class Dungeon(State):
 
         self.generated_difficulties = {}
 
+        self.vignette_image = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/vignette.svg")).convert_alpha()
+        self.vignette_pos = None
+
         if game_data:
             self.rooms = self.generate_rooms(game_data["structure"])
             self.root = self.rooms[0][0]
@@ -70,6 +73,11 @@ class Dungeon(State):
             else:
                 self.active_popup = None
 
+        # Draw the vignette around the players room position
+        # Only calculate the vignette position if it was set to none, this indicates that it should have moved
+        self.vignette_pos = self.calculate_vignette_pos()
+        surface.blit(self.vignette_image, self.vignette_pos)
+
         # Update the display
         pygame.display.flip()
 
@@ -79,17 +87,25 @@ class Dungeon(State):
             for room in level:
                 for child in room.children:
                     if room.rect is not None and child.rect is not None:
-                        # Calculate parent and child center coordinates for line drawing
-                        parent_center = ((room.rect.left + room.rect.width / 2),
-                                         (room.rect.bottom - room.rect.height))
-                        child_center = ((child.rect.left + child.rect.width / 2),
-                                        (child.rect.bottom))  # Don't add height for top of sprite
+                        if room is self.player_room:
+                            # Calculate parent and child center coordinates for line drawing
+                            parent_center = ((room.rect.left + room.rect.width / 2),
+                                             (room.rect.bottom - room.rect.height))
+                            child_center = ((child.rect.left + child.rect.width / 2),
+                                            (child.rect.bottom))  # Don't add height for top of sprite
 
-                        # Draw a line between parent and child room
-                        pygame.draw.line(surface, pygame.Color(DUNGEON_LINE), parent_center, child_center, 3)
+                            # Draw a line between parent and child room
+                            pygame.draw.line(surface, pygame.Color(DUNGEON_LINE), parent_center, child_center, 3)
 
                 # Always draw rooms after lines so that the lines go behind rooms
                 room.draw(surface, self.scroll_offset, self.zoom_level)
+
+    def calculate_vignette_pos(self):
+        vignette_pos = (
+            self.player_room.rect.centerx - self.vignette_image.get_width() // 2,
+            self.player_room.rect.centery - self.vignette_image.get_height() // 2
+        )
+        return vignette_pos
 
     def generate_rooms(self, loaded_structure=None):
         # Create a list to hold all room layers
@@ -261,6 +277,9 @@ class Dungeon(State):
         if not room.enemies_defeated():
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.change_state(self.game.combat)
+
+        # Set the vignette to none so it's recalculated
+        self.vignette = None
 
     def update_rooms_recursive(self, room):
         room.next = (room.position == self.player_room)

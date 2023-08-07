@@ -317,7 +317,8 @@ class Dungeon(State):
             # If currently dragging, adjust the scroll offset based on the mouse motion
             if self.dragging:
                 dx, dy = event.rel  # The relative motion of the mouse since the last event
-                self.scroll_offset[1] += dy
+                if self.player_room.rect.y <= SCREEN_HEIGHT and dy >= 0 or self.player_room.rect.y >= 0 and dy <= 0:
+                    self.scroll_offset[1] += dy
 
         # Handle zooming in and out of the map
         if event.type == pygame.MOUSEWHEEL:

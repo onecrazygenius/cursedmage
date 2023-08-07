@@ -278,9 +278,6 @@ class Dungeon(State):
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.change_state(self.game.combat)
 
-        # Set the vignette to none so it's recalculated
-        self.vignette = None
-
     def update_rooms_recursive(self, room):
         room.next = (room.position == self.player_room)
         for child_room in room.children:

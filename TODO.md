@@ -2,18 +2,13 @@
 1. ~~Implement Bosses~~
    1. Add boss sprite
    2. Add boss door sprite
-   3. Better Place Boss Room (Probably blocked by dungeon paths)
-   4. [Optional] - Add more bosses, maybe even for different difficulties
+   3. [Optional] - Add more bosses, maybe even for different difficulties
 2. Implement card upgrade after boss
 3. Implement Shield Cards
 4. Implement new card effects
-6. See hand & deck from combat screen
-7. Tutorial
-8. Animation
-9. Re-implement automated testing
-10. Implement a score-like system
-11. Decide what to do with victory screen.
-    1. Probably change it to a "Score" screen showing the players score after they die
+5. See hand & deck from combat screen
+6. Tutorial
+7. Re-implement automated testing
 
 ## Nice To Have:
 1. Add a message saying "Generating Dungeon" or similar after clicking 'New Game'

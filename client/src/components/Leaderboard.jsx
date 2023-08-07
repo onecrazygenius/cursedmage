@@ -10,7 +10,7 @@ function Leaderboard() {
     // Fetch the leaderboard scores when the component mounts
     async function fetchScores() {
       try {
-        const response = await axios.get('/api/score');
+        const response = await axios.get('http://localhost:5000/api/score');
         console.log(response.data)
         setScores(response.data);
       } catch (error) {
@@ -24,15 +24,23 @@ function Leaderboard() {
   return (
     <>
       <h2 className="title">
-                Leaderboard
-            </h2>
-      <ul>
+        Leaderboard
+      </h2>
+      <h2 style={{ marginTop: '-0.5em' }}>
         {scores.map((score, index) => (
-          <li key={index}>
-            {index + 1}. {score.name} - {score.score}
-          </li>
+          <>
+            {/* Only div every 3 scores */}
+            {index % 3 === 0 && index !== 0 && <br />}
+            <span
+              style={{
+                width: '33%',
+                display: 'inline-block',
+                textAlign: 'center',
+              }}
+            >{index + 1}. {score.name} - {score.score}</span>
+          </>
         ))}
-      </ul>
+      </h2>
     </>
   );
 }

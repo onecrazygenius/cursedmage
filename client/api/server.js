@@ -29,12 +29,12 @@ const writeLeaderboard = async (data) => {
     await fs.writeFile(DATA_FILE_PATH, JSON.stringify(data, null, 2), 'utf-8');
 };
 
-app.get('/api/score', async (req, res) => {
+app.get('/score', async (req, res) => {
     const leaderboard = await readLeaderboard();
     res.json(leaderboard.slice(0, 10)); // Return only the top 10 scores
 });
 
-app.post('/api/score', async (req, res) => {
+app.post('/score', async (req, res) => {
     const { name, score } = req.body;
     console.log(req.body);
     if (!name || typeof score !== 'number') {

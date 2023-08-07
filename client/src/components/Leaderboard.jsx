@@ -10,7 +10,7 @@ function Leaderboard() {
     // Fetch the leaderboard scores when the component mounts
     async function fetchScores() {
       try {
-        const response = await axios.get('http://localhost:5000/api/score');
+        const response = await axios.get('https://cursedmage.com/api/score');
         console.log(response.data)
         setScores(response.data);
       } catch (error) {

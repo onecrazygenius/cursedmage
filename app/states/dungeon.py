@@ -49,9 +49,6 @@ class Dungeon(State):
             self.player_room = self.root
             self.boss_room_position = None
 
-        if DEBUG:
-            self.plot_difficulties()
-
     def draw(self, surface):
         # Set background as background image
         background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/brick.png"))
@@ -122,10 +119,10 @@ class Dungeon(State):
 
                 if loaded_structure is not None:  # Loaded game
                     position = loaded_structure[i][j]['position']
-                    room = Room(self.game, position, self.create_enemies(i), loaded_structure[i][j]['next'],
+                    room = Room(self.game, position, loaded_structure[i][j]['next'],
                                 loaded_structure[i][j]['visited'], loaded_structure[i][j]['completed'])
                 else:
-                    room = Room(self.game, position, self.create_enemies(i))
+                    room = Room(self.game, position)
 
                 # Add the room to the current layer
                 current_layer[j] = room
@@ -215,6 +212,9 @@ class Dungeon(State):
         for name in enemy_names:
             enemies.append(Enemy(name))
 
+        if DEBUG:
+            self.plot_difficulties()
+
         return enemies
 
     # Used to plot a graph of the dungeon difficulty. Excellent for debugging
@@ -258,6 +258,12 @@ class Dungeon(State):
         # The player is now in the new room
         self.player_room = room
 
+        # Generate the enemies in the room
+        room_depth = next(index for index, room_list in enumerate(self.rooms) if room in room_list)
+        if not room.is_boss_room:
+            room.enemies = self.create_enemies(room_depth)
+        # Boss rooms have an enemy when created, no need to create enemies for it
+
         if not room.enemies_defeated():
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.change_state(self.game.combat)
@@ -273,6 +279,9 @@ class Dungeon(State):
 
         self.player_room.completed = True
         self.player_room.next = False
+
+        # Delete all the enemies to prevent increased memory usage
+        self.player_room.enemies = None
 
         # First, for the room you just cleared, set its siblings' children next to false, blocking the tree
         for parent in self.player_room.parents:

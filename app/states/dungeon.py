@@ -291,6 +291,10 @@ class Dungeon(State):
 
         self.game.save_game()
 
+        # Scroll the camera up to the next room
+        # TODO: James can u ajust these numbers as u altered the room spacing for the rework :)
+        self.scroll_offset[1] += (240) * self.zoom_level
+
     def update_player_score(self):
         room_score = self.player_room.calculate_score()
         self.game.player_score += room_score

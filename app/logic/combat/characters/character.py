@@ -52,6 +52,12 @@ class Character:
         del state["character_frames"]
         return state
 
+    def __setstate__(self, state):
+        # Update the object's state with the data that was pickled
+        self.__dict__.update(state)
+        # Recreate character_frames after unpickling
+        self.character_frames = self.spritesheet_to_frames()
+
     def is_dead(self):
         return self.cur_health <= 0
 

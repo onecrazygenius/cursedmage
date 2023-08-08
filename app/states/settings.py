@@ -52,6 +52,7 @@ class SettingsMenu(State):
         pygame.display.flip()
 
     def return_to_main_menu(self):
+        self.game.settings_menu_open = False
         self.game.show_main_menu()
 
     def exit_game(self):

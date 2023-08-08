@@ -159,9 +159,14 @@ class Dungeon(State):
 
         # Room with boss configuration
         boss_enemy = Boss("Boss")
-        boss_room = Room(self.game, replaced_room.position, [boss_enemy], is_boss_room=True)
+        boss_room = Room(self.game, position=replaced_room.position, enemies=[boss_enemy], is_boss_room=True)
         boss_room.parents = replaced_room.parents
         boss_room.children = replaced_room.children
+
+        if replaced_room.next:
+            boss_room.next = True
+        if replaced_room.visited:
+            boss_room.visited = True
 
         # Iterate over all parents of the replaced room
         for parent in replaced_room.parents:
@@ -258,11 +263,19 @@ class Dungeon(State):
         # The player is now in the new room
         self.player_room = room
 
+        for parent in room.parents:
+            for sibling in parent.children:
+                if sibling != room and sibling.next:
+                    sibling.next = False
+        room.visited = True
+
         # Generate the enemies in the room
         room_depth = next(index for index, room_list in enumerate(self.rooms) if room in room_list)
         if not room.is_boss_room:
             room.enemies = self.create_enemies(room_depth)
         # Boss rooms have an enemy when created, no need to create enemies for it
+
+        self.game.save_game()
 
         if not room.enemies_defeated():
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
@@ -279,6 +292,7 @@ class Dungeon(State):
 
         self.player_room.completed = True
         self.player_room.next = False
+        self.player_room.visited = False
 
         # Delete all the enemies to prevent increased memory usage
         self.player_room.enemies = None
@@ -334,7 +348,8 @@ class Dungeon(State):
     def handle_room_click(self, event):
         current_layer_index = self.player_room.position[1]
         # Due to an oversight in the player positioning, the first 2 rows will have the player at the root position
-        if self.player_room == self.root and self.root.next:
+        # Or if you have exited and loaded mid-room the player will have updated, so you need to check the current layer
+        if (self.player_room == self.root and self.root.next) or (self.player_room.visited and self.player_room.next):
             next_layer_index = current_layer_index
         else:
             next_layer_index = current_layer_index + 1
@@ -344,7 +359,7 @@ class Dungeon(State):
             # Iterate over the rooms in the next layer
             for room in self.rooms[next_layer_index]:
                 # Check if the room is a "next" room and collides with the click position
-                if room.next and room.rect.collidepoint(event.pos):
+                if (room.next or room.visited) and room.rect.collidepoint(self.game.screen_to_surface(event.pos)):
                     # Move to the room and return True
                     self.move_to_room(room)
                     return True

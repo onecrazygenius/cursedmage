@@ -303,15 +303,15 @@ class Dungeon(State):
                 dx, dy = event.rel  # The relative motion of the mouse since the last event
                 self.scroll_offset[1] += dy
         if event.type == pygame.MOUSEWHEEL:
-            # Adjust the scroll offset based on the mouse wheel motion
-            self.scroll_offset[1] += event.y * 30
-
-        # Handle zooming in and out of the map if wheel is used while holding CTRL
-        if event.type == pygame.MOUSEWHEEL and pygame.key.get_mods() & pygame.KMOD_CTRL:
-            # Adjust the zoom level based on the mouse wheel motion
-            self.zoom_level *= 1.1 ** event.y
-            # Limit to 70% - 130% Zoom Levels
-            self.zoom_level = min(max(self.zoom_level, 0.7), 1.3)
+            # Handle zooming in and out of the map if wheel is used while holding CTRL
+            if pygame.key.get_mods() & pygame.KMOD_CTRL:
+                # Adjust the zoom level based on the mouse wheel motion
+                self.zoom_level *= 1.1 ** event.y
+                # Limit to 70% - 130% Zoom Levels
+                self.zoom_level = min(max(self.zoom_level, 0.7), 1.3)
+            else:
+                # Adjust the scroll offset based on the mouse wheel motion
+                self.scroll_offset[1] += event.y * 30 
 
         # Handle check if a room was clicked or begin dragging the map
         if event.type == pygame.MOUSEBUTTONDOWN:

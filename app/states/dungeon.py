@@ -119,8 +119,8 @@ class Dungeon(State):
 
                 if loaded_structure is not None:  # Loaded game
                     position = loaded_structure[i][j]['position']
-                    room = Room(self.game, position, loaded_structure[i][j]['next'],
-                                loaded_structure[i][j]['visited'], loaded_structure[i][j]['completed'])
+                    room = Room(self.game, position, next=loaded_structure[i][j]['next'],
+                                visited=loaded_structure[i][j]['visited'], completed=loaded_structure[i][j]['completed'])
                 else:
                     room = Room(self.game, position)
 

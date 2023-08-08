@@ -119,6 +119,7 @@ class Game:
         self.dungeon = Dungeon(self, game_data=data["dungeon"])
         self.player_score = data["score"]
         self.player_name = data["player_name"]
+
         self.change_state(self.dungeon)
 
     # Sound volume management functions

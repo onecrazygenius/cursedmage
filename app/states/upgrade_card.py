@@ -16,10 +16,10 @@ class UpgradeCardScreen(State):
         self.cards_to_show = []
         self.hovered_card = None
 
-        # TODO: What if the player has less than 4 cards
-        # TODO: Upgraded cards cannot be upgraded
-        cards_picked = random.sample(range(0, len(player.deck.cards)), 4)
-        self.cards_to_show = list(map(player.deck.cards.__getitem__, cards_picked))
+        filtered_cards = [card for card in player.deck.cards if card.cursed or (card.upgrades_to != "MAXLEVEL" and card.upgrades_to != "None")]
+        self.cards_to_show = filtered_cards  # This means if there is less than 4 cards, all are picked
+        if len(filtered_cards) >= 4:
+            self.cards_to_show = random.sample(filtered_cards, 4)
 
         self.button = Button("Back to Main Menu", SCREEN_WIDTH // 2, 950, self.back_to_main_menu)
 
@@ -84,8 +84,12 @@ class UpgradeCardScreen(State):
 
     def upgrade_card(self, card):
         # Remove the old card and add the new card to the players deck
-        self.player.deck.remove_card(card)
-        self.player.deck.add_card(Card(card.upgrades_to))
+        # If they clicked a cursed card just remove it
+        if card.cursed:
+            self.player.deck.remove_card(card)
+        else:
+            self.player.deck.remove_card(card)
+            self.player.deck.add_card(Card(card.upgrades_to))
 
         self.game.dungeon.progress_to_next_room()
 

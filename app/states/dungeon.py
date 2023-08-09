@@ -356,7 +356,8 @@ class Dungeon(State):
                 self.zoom_level = min(max(self.zoom_level, 0.7), 1.3)
             else:
                 # Adjust the scroll offset based on the mouse wheel motion
-                self.scroll_offset[1] += event.y * 30
+                if self.player_room.rect.y <= SCREEN_HEIGHT and event.y >= 0 or self.player_room.rect.y >= 0 and event.y <= 0:
+                    self.scroll_offset[1] += event.y * 30
 
         # Handle check if a room was clicked or begin dragging the map
         if event.type == pygame.MOUSEBUTTONDOWN:

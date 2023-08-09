@@ -54,14 +54,12 @@ class Room:
 
         door_type = "locked"
         # if the room is complete make the door open
-        if self.completed:
-            door_type = "broken"
-        if self.visited:
-            door_type = "open"
-        # if the room is the next room the player should go to make the door unlocked
         if self.next:
             door_type = "unlocked"
-
+        if self.visited:
+            door_type = "open"
+        if self.completed:
+            door_type = "broken"
         # if the room is a boss room
         if self.is_boss_room:
             door_type = "unlocked_boss"

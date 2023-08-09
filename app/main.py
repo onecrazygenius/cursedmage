@@ -31,7 +31,6 @@ class Game:
             difficulty: The game difficulty level.
 
             states (list): A list representing the stack of game states.
-            just_switched (bool): A flag indicating whether the game state has just changed.
             
             settings_menu_open (bool): A flag indicating whether the settings menu is currently open.
     """
@@ -64,7 +63,6 @@ class Game:
         self.done = False
         self.character = None
         self.difficulty = None
-        self.just_switched = False
         self.player_name = ""
         self.player_score = 0
 
@@ -90,7 +88,6 @@ class Game:
         if self.states:
             self.pop_state()
         self.push_state(state)
-        self.just_switched = True
 
     def screen_to_surface(self, pos):
         # Convert screen coordinates to canvas coordinates
@@ -122,6 +119,7 @@ class Game:
         self.dungeon = Dungeon(self, game_data=data["dungeon"])
         self.player_score = data["score"]
         self.player_name = data["player_name"]
+
         self.change_state(self.dungeon)
 
     # Sound volume management functions
@@ -176,8 +174,9 @@ class Game:
         self.change_state(CharacterSelection(self))
 
     def show_main_menu(self):
-        # Show the main menu by changing to the main menu state
-        self.change_state(MainMenu(self))
+        # Show the main menu by setting the state to main menu.
+        # Set instead of change as this change is irreversible, so any states below it could never be reached anyway
+        self.states = [MainMenu(self)]
 
     def see_score(self):
         self.change_state(ScoreScreen(self))

@@ -12,7 +12,7 @@ venv
 
 poetry.lock
 yarn.lock
-client/package-lock.json
+package-lock.json
 
 # Logs
 logs

@@ -23,7 +23,7 @@ class ScoreScreen(State):
             "score": self.game.player_score
         }
         response = requests.post(url, headers=headers, data=json.dumps(data))
-        if response.status_code != 200:
+        if response.status_code != 201:
             print("Unable to publish your score to the leaderboard. {} {}".format(response.status_code, response.reason))
 
     def back_to_main_menu(self):

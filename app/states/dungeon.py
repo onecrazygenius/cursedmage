@@ -52,9 +52,6 @@ class Dungeon(State):
             self.player_room = self.root
             self.boss_room_position = None
 
-        if DEBUG:
-            self.plot_difficulties()
-
     def draw(self, surface):
         # Set background as background image
         background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/brick.png"))
@@ -138,10 +135,10 @@ class Dungeon(State):
 
                 if loaded_structure is not None:  # Loaded game
                     position = loaded_structure[i][j]['position']
-                    room = Room(self.game, position, self.create_enemies(i), loaded_structure[i][j]['next'],
-                                loaded_structure[i][j]['visited'], loaded_structure[i][j]['completed'])
+                    room = Room(self.game, position, next=loaded_structure[i][j]['next'],
+                                visited=loaded_structure[i][j]['visited'], completed=loaded_structure[i][j]['completed'])
                 else:
-                    room = Room(self.game, position, self.create_enemies(i))
+                    room = Room(self.game, position)
 
                 # Add the room to the current layer
                 current_layer[j] = room
@@ -178,9 +175,14 @@ class Dungeon(State):
 
         # Room with boss configuration
         boss_enemy = Boss("Boss")
-        boss_room = Room(self.game, replaced_room.position, [boss_enemy], is_boss_room=True)
+        boss_room = Room(self.game, position=replaced_room.position, enemies=[boss_enemy], is_boss_room=True)
         boss_room.parents = replaced_room.parents
         boss_room.children = replaced_room.children
+
+        if replaced_room.next:
+            boss_room.next = True
+        if replaced_room.visited:
+            boss_room.visited = True
 
         # Iterate over all parents of the replaced room
         for parent in replaced_room.parents:
@@ -231,6 +233,9 @@ class Dungeon(State):
         for name in enemy_names:
             enemies.append(Enemy(name))
 
+        if DEBUG:
+            self.plot_difficulties()
+
         return enemies
 
     # Used to plot a graph of the dungeon difficulty. Excellent for debugging
@@ -274,6 +279,20 @@ class Dungeon(State):
         # The player is now in the new room
         self.player_room = room
 
+        for parent in room.parents:
+            for sibling in parent.children:
+                if sibling != room and sibling.next:
+                    sibling.next = False
+        room.visited = True
+
+        # Generate the enemies in the room
+        room_depth = next(index for index, room_list in enumerate(self.rooms) if room in room_list)
+        if not room.is_boss_room:
+            room.enemies = self.create_enemies(room_depth)
+        # Boss rooms have an enemy when created, no need to create enemies for it
+
+        self.game.save_game()
+
         if not room.enemies_defeated():
             self.game.combat = Combat(self.game, self.game.character, room.enemies)
             self.game.change_state(self.game.combat)
@@ -289,6 +308,10 @@ class Dungeon(State):
 
         self.player_room.completed = True
         self.player_room.next = False
+        self.player_room.visited = False
+
+        # Delete all the enemies to prevent increased memory usage
+        self.player_room.enemies = None
 
         # First, for the room you just cleared, set its siblings' children next to false, blocking the tree
         for parent in self.player_room.parents:
@@ -307,6 +330,9 @@ class Dungeon(State):
 
         self.game.save_game()
 
+        # Scroll the camera up to the next room
+        self.scroll_offset[1] += self.player_room.rect.height + (140 * self.zoom_level)
+
     def update_player_score(self):
         room_score = self.player_room.calculate_score()
         self.game.player_score += room_score
@@ -322,10 +348,15 @@ class Dungeon(State):
 
         # Handle zooming in and out of the map
         if event.type == pygame.MOUSEWHEEL:
-            # Adjust the zoom level based on the mouse wheel motion
-            self.zoom_level *= 1.1 ** event.y
-            # Limit to 70% - 130% Zoom Levels
-            self.zoom_level = min(max(self.zoom_level, 0.7), 1.3)
+            # Handle zooming in and out of the map if wheel is used while holding CTRL
+            if pygame.key.get_mods() & pygame.KMOD_CTRL:
+                # Adjust the zoom level based on the mouse wheel motion
+                self.zoom_level *= 1.1 ** event.y
+                # Limit to 70% - 130% Zoom Levels
+                self.zoom_level = min(max(self.zoom_level, 0.7), 1.3)
+            else:
+                # Adjust the scroll offset based on the mouse wheel motion
+                self.scroll_offset[1] += event.y * 30
 
         # Handle check if a room was clicked or begin dragging the map
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -342,7 +373,8 @@ class Dungeon(State):
     def handle_room_click(self, event):
         current_layer_index = self.player_room.position[1]
         # Due to an oversight in the player positioning, the first 2 rows will have the player at the root position
-        if self.player_room == self.root and self.root.next:
+        # Or if you have exited and loaded mid-room the player will have updated, so you need to check the current layer
+        if (self.player_room == self.root and self.root.next) or (self.player_room.visited and self.player_room.next):
             next_layer_index = current_layer_index
         else:
             next_layer_index = current_layer_index + 1
@@ -352,7 +384,7 @@ class Dungeon(State):
             # Iterate over the rooms in the next layer
             for room in self.rooms[next_layer_index]:
                 # Check if the room is a "next" room and collides with the click position
-                if room.next and room.rect.collidepoint(event.pos):
+                if (room.next or room.visited) and room.rect.collidepoint(self.game.screen_to_surface(event.pos)):
                     # Move to the room and return True
                     self.move_to_room(room)
                     return True

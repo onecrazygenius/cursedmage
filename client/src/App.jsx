@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Blog from './components/Blog'
 import Member from './components/Member'
+import Leaderboard from './components/Leaderboard'
 
 function App() {
 
@@ -96,7 +97,9 @@ function App() {
                 Cursed Mage is a dungeon full of magic, demons and roguelike action.<br /><br />
                 Your character has been kidnapped and lost their power! The world is falling apart and people are DYING! Someone needs to be a hero! But who?
             </h2>
-            <hr></hr>
+            <hr />
+            <Leaderboard />
+            <hr />
             <h2 className="title">
                 Blogs
             </h2>

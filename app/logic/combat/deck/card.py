@@ -17,6 +17,7 @@ class Card:
         self.power = self.get_stat_for_card("power")
         self.cost = self.get_stat_for_card("cost")
         self.cursed = self.get_stat_for_card("cursed")
+        self.upgrades_to = self.get_stat_for_card("upgrades_to")
         self.image = self.get_card_image()
         self.target = None
         self.position = (0, 0)

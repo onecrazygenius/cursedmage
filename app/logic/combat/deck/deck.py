@@ -51,7 +51,26 @@ class Deck:
         # Add card to the full deck list
         self.cards.append(card)
         # Add card to the discard pile
-        self.discard.append(card)
+        self.deck.append(card)
+
+    # Removes the card entirely. NOT to be confused with discard_card
+    def remove_card(self, card):
+        self.cards.remove(card)
+        try:
+            self.deck.remove(card)
+        except ValueError:
+            # Do nothing
+            pass
+        try:
+            self.hand.remove(card)
+        except ValueError:
+            # Do nothing
+            pass
+        try:
+            self.discard.remove(card)
+        except ValueError:
+            # Do nothing
+            pass
 
     def ready_deck_for_combat(self):
         self.move_discard_to_deck()

@@ -10,6 +10,7 @@ from app.states.components.button import Button
 from app.states.components.popup import Popup
 from app.states.cursed_card_pickup import CursedCardPickupScreen
 from app.states.state import State
+from app.states.upgrade_card import UpgradeCardScreen
 
 
 class Combat(State):
@@ -198,7 +199,12 @@ class Combat(State):
         if turn_result == GAME_OVER:
             self.game.game_over()
         if turn_result == FLOOR_COMPLETE:
-            self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
+            # Boss rooms allow you to upgrade a card instead of picking up a card.
+            if self.game.dungeon.player_room.is_boss_room:
+                self.game.change_state(UpgradeCardScreen(self.game, self.battle_manager.player))
+            else:
+                self.game.change_state(CardPickupScreen(self.game, self.battle_manager.player, self.battle_manager.enemies))
+
             # After completing a floor, you have a chance to pickup a cursed card
             if random.randint(1, 100) <= CURSED_CARD_CHANCE:
                 # Use push_state instead of change_state because this state is informational

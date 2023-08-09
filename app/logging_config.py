@@ -2,6 +2,9 @@
 
 import logging
 
+from app.constants import LOG_LEVEL
+
+
 def setup_logging():
     # Create a logger
     logger = logging.getLogger('cursedmage')
@@ -11,7 +14,7 @@ def setup_logging():
 
     # Create a console handler to print logs to the console
     console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
+    console_handler.setLevel(LOG_LEVEL)
 
     # Create a formatter to define the log message format
     formatter = logging.Formatter('[%(levelname)s] %(filename)s:%(lineno)d - %(message)s')

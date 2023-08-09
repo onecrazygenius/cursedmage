@@ -1,9 +1,13 @@
+import logging
 import os
 import pygame
 import sys
 
 # Debug Mode
 DEBUG = False
+
+# Logging Level. Make sure this is INFO for a production build
+LOG_LEVEL = logging.DEBUG
 
 # Screen size
 SCREEN_WIDTH = 1920

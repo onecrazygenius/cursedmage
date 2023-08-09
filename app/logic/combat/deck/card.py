@@ -70,6 +70,8 @@ class Card:
 
         # Make the text white and bold
         text = font.render(self.name, True, WHITE)
+        if self.upgrades_to == "MAXLEVEL":
+            text = font.render(self.name, True, GOLD)
         # Calculate the scaled position of the text, accounting for the base position and scale factor
         text_position = (
         position[0] + 75 * scale - text.get_width() // 2, position[1] + 86 * scale - text.get_height() // 2)

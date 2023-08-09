@@ -38,7 +38,7 @@ class Dungeon(State):
 
         self.generated_difficulties = {}
 
-        self.vignette_image = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/vignette.svg")).convert_alpha()
+        self.vignette_image = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/vignette.png")).convert_alpha()
         self.vignette_pos = None
 
         logger.debug(f"Constants Setup in {time.perf_counter() - start_time:0.4f} seconds")

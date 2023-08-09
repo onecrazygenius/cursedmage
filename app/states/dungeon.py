@@ -62,6 +62,11 @@ class Dungeon(State):
         # Draw all of the rooms on the map
         self.draw_room(surface)
 
+        # Draw the vignette around the players room position
+        # Only calculate the vignette position if it was set to none, this indicates that it should have moved
+        self.vignette_pos = self.calculate_vignette_pos()
+        surface.blit(self.vignette_image, self.vignette_pos)
+
         # If there are any active popups, show them on the screen
         if self.active_popup is not None:
             # Draw the popup only if the difference between current time and popup start time is less than 2 seconds
@@ -69,11 +74,6 @@ class Dungeon(State):
                 self.active_popup.draw(surface)
             else:
                 self.active_popup = None
-
-        # Draw the vignette around the players room position
-        # Only calculate the vignette position if it was set to none, this indicates that it should have moved
-        self.vignette_pos = self.calculate_vignette_pos()
-        surface.blit(self.vignette_image, self.vignette_pos)
 
         # Update the display
         pygame.display.flip()

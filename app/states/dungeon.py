@@ -1,11 +1,13 @@
 import json
 import random
+import time
 
 import numpy
 from matplotlib import pyplot as plt
 from pygame.locals import *
 
 from app.constants import *
+from app.logging_config import logger
 from app.logic.combat.characters.boss import Boss
 from app.logic.combat.characters.enemy import Enemy
 from app.states.combat import Combat
@@ -17,6 +19,9 @@ from app.states.state import State
 class Dungeon(State):
 
     def __init__(self, game, game_data=None):
+        logger.debug("Beginning Dungeon Initialisation")
+        start_time = time.perf_counter()
+
         # Call the parent class (State) constructor
         super().__init__(game)
 
@@ -33,8 +38,10 @@ class Dungeon(State):
 
         self.generated_difficulties = {}
 
-        self.vignette_image = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/vignette.svg")).convert_alpha()
+        self.vignette_image = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/vignette.png")).convert_alpha()
         self.vignette_pos = None
+
+        logger.debug(f"Constants Setup in {time.perf_counter() - start_time:0.4f} seconds")
 
         if game_data:
             self.rooms = self.generate_rooms(game_data["structure"])
@@ -51,6 +58,8 @@ class Dungeon(State):
 
             self.player_room = self.root
             self.boss_room_position = None
+
+        logger.debug(f"Dungeon Initialised in {time.perf_counter() - start_time:0.4f} seconds")
 
     def draw(self, surface):
         # Set background as background image
@@ -105,6 +114,8 @@ class Dungeon(State):
         return vignette_pos
 
     def generate_rooms(self, loaded_structure=None):
+        logger.debug("Generating Rooms...")
+        start_time = time.perf_counter()
         # Create a list to hold all room layers
         rooms = []
 
@@ -159,9 +170,11 @@ class Dungeon(State):
             # Add the current layer to the list of all layers
             rooms.append(current_layer)
 
+        logger.debug(f"Rooms Generated in {time.perf_counter() - start_time:0.4f} seconds")
         return rooms
 
     def generate_boss_room(self, loaded_boss_position=None):
+        logger.debug("Creating a boss room")
         if loaded_boss_position is None:
             # Randomly select a floor between 2-5 floors below
             boss_floor = min(len(self.rooms) - 1, self.player_room.position[1] + random.randint(2, 5))
@@ -202,6 +215,7 @@ class Dungeon(State):
     # Through the dungeon, there is a higher chance of more enemies being in the room
 
     def create_enemies(self, room_position_y):
+        logger.debug("Creating enemies")
         # Calculate the room's relative position in the dungeon
         relative_position_y = room_position_y / DIFFICULTY_SCALING_CONSTANT
 
@@ -240,6 +254,7 @@ class Dungeon(State):
 
     # Used to plot a graph of the dungeon difficulty. Excellent for debugging
     def plot_difficulties(self):
+        logger.debug("Plotting Difficulty Graph")
         # Calculate the average difficulty for each floor
         average_difficulties = {floor: sum(difficulties) / len(difficulties) for floor, difficulties in
                                 self.generated_difficulties.items()}
@@ -267,6 +282,7 @@ class Dungeon(State):
         plt.savefig('average_floor_difficulty_graph.png')
 
     def choose_enemy_names_from_difficulty(self, difficulty_threshold, number_of_enemies):
+        logger.debug(f"Choosing enemies for the rooms difficulty: {str(difficulty_threshold)}")
         json_file = (relative_resource_path('app/assets/data/enemies.json'))
         with open(json_file, 'r') as file:
             data = json.load(file)
@@ -276,6 +292,7 @@ class Dungeon(State):
         return random.choices(eligible_names, k=number_of_enemies)
 
     def move_to_room(self, room):
+        logger.debug(f"Moving to a room on floor {str(room.position[1])}")
         # The player is now in the new room
         self.player_room = room
 
@@ -303,6 +320,7 @@ class Dungeon(State):
             self.update_rooms_recursive(child_room)
 
     def progress_to_next_room(self):
+        logger.debug("Player completed a room. Performing actions to ready their progression.")
         # This method is called when a player has completed the room, so add the score here
         self.update_player_score()
 
@@ -334,6 +352,7 @@ class Dungeon(State):
         self.scroll_offset[1] += self.player_room.rect.height + (140 * self.zoom_level)
 
     def update_player_score(self):
+        logger.debug("Updating the player's score")
         room_score = self.player_room.calculate_score()
         self.game.player_score += room_score
 

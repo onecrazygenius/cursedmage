@@ -7,7 +7,7 @@ import sys
 DEBUG = False
 
 # Logging Level. Make sure this is INFO for a production build
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 
 # Screen size
 SCREEN_WIDTH = 1920

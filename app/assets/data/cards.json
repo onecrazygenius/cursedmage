@@ -15,7 +15,7 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "fireball",
-		"upgrades_to": "None"
+		"upgrades_to": "Inferno"
 	},
 	{
 		"name": "Cleave",
@@ -24,7 +24,7 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "bleed",
-		"upgrades_to": "None"
+		"upgrades_to": "Sever"
 	},
 	{
 		"name": "Ice",
@@ -42,7 +42,7 @@
 		"cost": 2,
 		"cursed": false,
 		"image": "thunder",
-		"upgrades_to": "None"
+		"upgrades_to": "Tempest"
 	},
 	{
 		"name": "Wind",
@@ -51,7 +51,7 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "wind",
-		"upgrades_to": "None"
+		"upgrades_to": "Cyclone"
 	},
 	{
 		"name": "Heal",
@@ -60,15 +60,60 @@
 		"cost": 2,
 		"cursed": false,
 		"image": "heal",
-		"upgrades_to": "None"
+		"upgrades_to": "Restore"
 	},
-		{
+	{
+		"name": "Inferno",
+		"card_type": "attack",
+		"power": 35,
+		"cost": 1,
+		"cursed": false,
+		"image": "fireball",
+		"upgrades_to": "MAXLEVEL"
+	},
+	{
+		"name": "Sever",
+		"card_type": "attack",
+		"power": 60,
+		"cost": 2,
+		"cursed": false,
+		"image": "bleed",
+		"upgrades_to": "MAXLEVEL"
+	},
+	{
 		"name": "Blizzard",
 		"card_type": "attack",
 		"power": 75,
 		"cost": 3,
 		"cursed": false,
 		"image": "ice",
+		"upgrades_to": "MAXLEVEL"
+	},
+	{
+		"name": "Tempest",
+		"card_type": "attack",
+		"power": 50,
+		"cost": 1,
+		"cursed": false,
+		"image": "thunder",
+		"upgrades_to": "MAXLEVEL"
+	},
+	{
+		"name": "Cyclone",
+		"card_type": "attack",
+		"power": 100,
+		"cost": 4,
+		"cursed": false,
+		"image": "wind",
+		"upgrades_to": "MAXLEVEL"
+	},
+	{
+		"name": "Restore",
+		"card_type": "heal",
+		"power": 60,
+		"cost": 1,
+		"cursed": false,
+		"image": "heal",
 		"upgrades_to": "MAXLEVEL"
 	}
 ]

@@ -68,10 +68,10 @@ SCORE_VALUE = {
 }
 
 # % Chance to pickup a cursed card after each combat
-CURSED_CARD_CHANCE = 100
+CURSED_CARD_CHANCE = 25
 
 # Number of Cursed Cards required for the boss room to open
-BOSS_CURSED_CARD_REQUIREMENT = 2
+BOSS_CURSED_CARD_REQUIREMENT = 3
 
 # Turn Results
 CONTINUE = "continue"

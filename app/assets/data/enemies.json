@@ -1,13 +1,13 @@
 [
   {
-    "name": "Goblin",
+    "name": "Minotaur",
     "health": 100,
     "attack": 3,
     "defence": 4,
     "cost": 3,
     "card_indexes": [1,1,5],
     "difficulty": 1,
-    "sprite": "goblin"
+    "sprite": "minotaur"
   },
   {
     "name": "Brute",
@@ -20,13 +20,13 @@
     "sprite": "brute"
   },
   {
-    "name": "Reaper",
+    "name": "Skeleton",
     "health": 75,
     "attack": 4,
     "defence": 3,
     "cost": 4,
     "card_indexes": [3,4,5,6],
     "difficulty": 1.8,
-    "sprite": "reaper"
+    "sprite": "skeleton"
   }
 ]

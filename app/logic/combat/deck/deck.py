@@ -1,5 +1,8 @@
 import random
 
+from app.logging_config import logger
+
+
 class Deck:
     '''
     Base class for all decks in the game.
@@ -48,10 +51,42 @@ class Deck:
         self.hand = []
 
     def add_card(self, card):
+        logger.debug(f"Player had {len(self.deck)} cards in the deck, "
+                     f"{len([card for card in self.deck if card.cursed])} of which are cursed")
         # Add card to the full deck list
         self.cards.append(card)
         # Add card to the discard pile
-        self.discard.append(card)
+        self.deck.append(card)
+        logger.debug(f"After Adding a card, Player had {len(self.deck)} cards in the deck, "
+                     f"{len([card for card in self.deck if card.cursed])} of which are cursed")
+
+    # Removes the card entirely. NOT to be confused with discard_card
+    def remove_card(self, card):
+        # The card object does not actually exist in the deck, it's a new instance so remove the same type.
+        # Always use the 0 index from the returning list as it doesn't matter exactly which card is upgraded
+        card = [player_card for player_card in self.cards if player_card.name == card.name][0]
+
+        logger.debug(f"Player had {len(self.deck)} cards in the deck, "
+                     f"{len([card for card in self.deck if card.cursed])} of which are cursed")
+        self.cards.remove(card)
+        try:
+            self.deck.remove(card)
+        except ValueError:
+            # Do nothing
+            pass
+        try:
+            self.hand.remove(card)
+        except ValueError:
+            # Do nothing
+            pass
+        try:
+            self.discard.remove(card)
+        except ValueError:
+            # Do nothing
+            pass
+
+        logger.debug(f"After Removing a Card, Player had {len(self.deck)} cards in the deck, "
+                     f"{len([card for card in self.deck if card.cursed])} of which are cursed")
 
     def ready_deck_for_combat(self):
         self.move_discard_to_deck()

@@ -11,6 +11,6 @@
 7. Re-implement automated testing
 
 ## Nice To Have:
-2. Implement a sprite to replace the lines between dungeons
+1. Implement a sprite to replace the lines between dungeons
 
 # Bugs

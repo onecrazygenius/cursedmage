@@ -1,3 +1,5 @@
+import json
+
 from app.logic.combat.characters.character import Character
 from app.states.components.button import Button
 from app.states.components.popup import Popup
@@ -16,11 +18,8 @@ class CharacterSelection(State):
         super().__init__(game)
 
         self.game = game
-        self.characters = [
-            Character("Warrior"),
-            Character("Mage"),
-            Character("Rogue"),
-        ]
+        self.characters = self.get_characters()
+
         self.difficulties = DIFFICULTIES
         self.selected_character = 0
         self.selected_difficulty = 0
@@ -129,6 +128,17 @@ class CharacterSelection(State):
         self.game.dungeon = Dungeon(self.game)
         self.game.save_game()
         self.game.change_state(self.game.dungeon)
+
+    def get_characters(self):
+        characters = []
+        json_file = (relative_resource_path("/app/assets/data/characters.json"))
+        with open(json_file, 'r') as file:
+            data = json.load(file)
+
+        for character in data:
+            characters.append(Character(character['name']))
+
+        return characters
 
     def show_popup(self, text):
         popup = Popup(

@@ -59,9 +59,9 @@ DIFFICULTY_INT_MAPPING = {  # Used in difficulty scaling calculations
 
 # The score value of rooms and enemies
 SCORE_VALUE = {
-    "Goblin": 10,
+    "Minotaur": 10,
     "Brute": 25,
-    "Reaper": 50,
+    "Skeleton": 50,
     "Boss": 100,
     "Room": 5,
     "Boss_Room": 10

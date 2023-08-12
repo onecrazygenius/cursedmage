@@ -33,6 +33,10 @@ class CharacterSelection(State):
         self.input_box_active = False
         self.input_box_text = self.DEFAULT_NAME_TEXT
 
+        # Initialize the animation state
+        self.current_frame = 0
+        self.frame_time = 0
+
     def draw(self, surface):
         # Set background as background image 
         background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/main_menu.png"))
@@ -70,6 +74,14 @@ class CharacterSelection(State):
         text_x = self.input_box.x + (self.input_box.width - text_width) // 2
         text_y = self.input_box.y + (self.input_box.height - text_height) // 2
         surface.blit(txt_surface, (text_x, text_y))
+
+        # Draw the currently selected character
+        character = self.characters[self.selected_character]
+        player_sprite = character.character_frames[self.current_frame]
+        surface.blit(player_sprite, (SCREEN_WIDTH / 2 - player_sprite.get_width() / 2, SCREEN_HEIGHT / 4 - 50))
+
+        # Increment the frametime for animation
+        self.increment_frametime()
 
         # If there are any active popups, show them on the screen
         if self.active_popup is not None:
@@ -139,6 +151,13 @@ class CharacterSelection(State):
             characters.append(Character(character['name']))
 
         return characters
+
+    def increment_frametime(self):
+        animation_speed = 5  # The lower this number the faster the animation plays
+        self.frame_time += 1
+        if self.frame_time > animation_speed:
+            self.current_frame = (self.current_frame + 1) % 8  # Loop back to the start if we've gone through all the frames
+            self.frame_time = 0
 
     def show_popup(self, text):
         popup = Popup(

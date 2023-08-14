@@ -1,0 +1,9 @@
+[
+  {
+    "name": "bleed",
+    "power": 10,
+    "effect_type": "attack",
+    "target": "target",
+    "max_number_of_turns_active": 3
+  }
+]

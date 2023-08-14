@@ -182,6 +182,9 @@ class Combat(State):
         # Check Turn Result and perform the appropriate actions
         if turn_result == END_TURN:
             self.battle_manager.end_turn()
+
+            logger.debug("Applying Card Effects")
+            self.battle_manager.apply_effects()
         if turn_result == FAILED:
             # Not enough cost
             self.popup("Not Enough Mana")
@@ -198,7 +201,8 @@ class Combat(State):
     def post_combat_actions(self, turn_result):
         if turn_result == GAME_OVER:
             self.game.game_over()
-        if turn_result == FLOOR_COMPLETE:
+        # Card effects could kill even without a floor complete event so that check is required
+        if turn_result == FLOOR_COMPLETE or self.battle_manager.check_floor_cleared():
             # Boss rooms allow you to upgrade a card instead of picking up a card.
             if self.game.dungeon.player_room.is_boss_room:
                 self.game.change_state(UpgradeCardScreen(self.game, self.battle_manager.player))

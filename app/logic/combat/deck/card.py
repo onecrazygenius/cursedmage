@@ -1,6 +1,7 @@
 import json
 
 from app.constants import *
+from app.logic.combat.effect import Effect
 
 
 class Card:
@@ -21,6 +22,11 @@ class Card:
         self.image = self.get_card_image()
         self.target = None
         self.position = (0, 0)
+
+        self.effects = []
+        effect_names = self.get_stat_for_card("effects")
+        for effect_name in effect_names:
+            self.effects.append(Effect(effect_name))
 
     def get_stat_for_card(self, stat_name):
         json_file = (relative_resource_path('app/assets/data/cards.json'))

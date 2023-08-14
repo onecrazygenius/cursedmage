@@ -6,7 +6,8 @@
 		"cost": 999,
 		"cursed": true,
 		"image": "back",
-		"upgrades_to": "None"
+		"upgrades_to": "None",
+		"effects": []
 	},
     {
 		"name": "Fireball",
@@ -15,7 +16,8 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "fireball",
-		"upgrades_to": "Inferno"
+		"upgrades_to": "Inferno",
+		"effects": []
 	},
 	{
 		"name": "Cleave",
@@ -24,7 +26,8 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "bleed",
-		"upgrades_to": "Sever"
+		"upgrades_to": "Sever",
+		"effects": ["bleed"]
 	},
 	{
 		"name": "Ice",
@@ -33,7 +36,8 @@
 		"cost": 3,
 		"cursed": false,
 		"image": "ice",
-		"upgrades_to": "Blizzard"
+		"upgrades_to": "Blizzard",
+		"effects": []
 	},
 	{
 		"name": "Thunder",
@@ -42,7 +46,8 @@
 		"cost": 2,
 		"cursed": false,
 		"image": "thunder",
-		"upgrades_to": "Tempest"
+		"upgrades_to": "Tempest",
+		"effects": []
 	},
 	{
 		"name": "Wind",
@@ -51,7 +56,8 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "wind",
-		"upgrades_to": "Cyclone"
+		"upgrades_to": "Cyclone",
+		"effects": []
 	},
 	{
 		"name": "Heal",
@@ -60,7 +66,8 @@
 		"cost": 2,
 		"cursed": false,
 		"image": "heal",
-		"upgrades_to": "Restore"
+		"upgrades_to": "Restore",
+		"effects": []
 	},
 	{
 		"name": "Inferno",
@@ -69,7 +76,8 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "fireball",
-		"upgrades_to": "MAXLEVEL"
+		"upgrades_to": "MAXLEVEL",
+		"effects": []
 	},
 	{
 		"name": "Sever",
@@ -78,7 +86,8 @@
 		"cost": 2,
 		"cursed": false,
 		"image": "bleed",
-		"upgrades_to": "MAXLEVEL"
+		"upgrades_to": "MAXLEVEL",
+		"effects": []
 	},
 	{
 		"name": "Blizzard",
@@ -87,7 +96,8 @@
 		"cost": 3,
 		"cursed": false,
 		"image": "ice",
-		"upgrades_to": "MAXLEVEL"
+		"upgrades_to": "MAXLEVEL",
+		"effects": []
 	},
 	{
 		"name": "Tempest",
@@ -96,7 +106,8 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "thunder",
-		"upgrades_to": "MAXLEVEL"
+		"upgrades_to": "MAXLEVEL",
+		"effects": []
 	},
 	{
 		"name": "Cyclone",
@@ -105,7 +116,8 @@
 		"cost": 4,
 		"cursed": false,
 		"image": "wind",
-		"upgrades_to": "MAXLEVEL"
+		"upgrades_to": "MAXLEVEL",
+		"effects": []
 	},
 	{
 		"name": "Restore",
@@ -114,6 +126,7 @@
 		"cost": 1,
 		"cursed": false,
 		"image": "heal",
-		"upgrades_to": "MAXLEVEL"
+		"upgrades_to": "MAXLEVEL",
+		"effects": []
 	}
 ]

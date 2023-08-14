@@ -58,6 +58,8 @@ class BattleManager:
         # apply cost to player
         self.apply_cost(card)
 
+        self.apply_effects("on_card_played")
+
         # Discard card from who currently playing
         self.current_turn.deck.discard_card(card)
         return True
@@ -82,30 +84,31 @@ class BattleManager:
 
             if effect.target == "multihit":
                 if self.current_turn == self.player:
-                    if not self.player.has_effect(effect.name):
-                        logger.debug(f"Multihit Effect {effect.name} added to players team")
-                        self.player.active_effects.append(Effect(effect.name))
-                else:
                     for enemy in self.enemies:
                         if not enemy.has_effect(effect.name):
                             logger.debug(f"Multihit Effect {effect.name} added to enemy team")
                             enemy.active_effects.append(Effect(effect.name))
+                else:
+                    if not self.player.has_effect(effect.name):
+                        logger.debug(f"Multihit Effect {effect.name} added to players team")
+                        self.player.active_effects.append(Effect(effect.name))
+
 
             if effect.target == "self":
                 if not self.current_turn.has_effect(effect.name):
                     logger.debug(f"Self Effect {effect.name} added to {self.current_turn.name}")
                     self.current_turn.active_effects.append(Effect(effect.name))
 
-    # This iterates though all players and
-    def apply_effects(self):
-        for effect in self.player.active_effects:
+    # This will apply all effects which apply to the phase parameter
+    def apply_effects(self, phase):
+        for effect in [e for e in self.player.active_effects if e.phase == phase]:
             self.apply_effect_to_character(effect, self.player)
             effect.reduce_counter(self.player)
             logger.debug(f"Effect {effect.name} happened to the player. It has {effect.turns_remaining} turns remaining")
 
         # TODO: What about multiple enemies where some are dead
         for enemy in self.enemies:
-            for effect in enemy.active_effects:
+            for effect in [e for e in enemy.active_effects if e.phase == phase]:
                 self.apply_effect_to_character(effect, enemy)
                 effect.reduce_counter(enemy)
                 logger.debug(f"Effect {effect.name} happened to {enemy.name}. It has {effect.turns_remaining} turns remaining")

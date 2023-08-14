@@ -4,6 +4,15 @@
     "power": 10,
     "effect_type": "attack",
     "target": "target",
-    "max_number_of_turns_active": 3
+    "max_number_of_turns_active": 3,
+    "phase": "end_of_turn"
+  },
+  {
+    "name": "Chain Lightning",
+    "power": 20,
+    "effect_type": "attack",
+    "target": "multihit",
+    "max_number_of_turns_active": 1,
+    "phase": "on_card_played"
   }
 ]

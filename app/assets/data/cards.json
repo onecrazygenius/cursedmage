@@ -47,7 +47,7 @@
 		"cursed": false,
 		"image": "thunder",
 		"upgrades_to": "Tempest",
-		"effects": []
+		"effects": ["Chain Lightning"]
 	},
 	{
 		"name": "Wind",

@@ -21,6 +21,8 @@ class Effect:
         self.max_number_of_turns_active = self.get_stat_for_effect("max_number_of_turns_active")
         self.turns_remaining = self.max_number_of_turns_active
 
+        self.phase = self.get_stat_for_effect("phase")
+
     def get_stat_for_effect(self, stat_name):
         json_file = (relative_resource_path("app/assets/data/effects.json"))
         with open(json_file, 'r') as file:

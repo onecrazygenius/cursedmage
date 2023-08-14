@@ -184,7 +184,7 @@ class Combat(State):
             self.battle_manager.end_turn()
 
             logger.debug("Applying Card Effects")
-            self.battle_manager.apply_effects()
+            self.battle_manager.apply_effects("end_of_turn")
         if turn_result == FAILED:
             # Not enough cost
             self.popup("Not Enough Mana")

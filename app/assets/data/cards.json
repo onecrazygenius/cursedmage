@@ -87,7 +87,7 @@
 		"cursed": false,
 		"image": "bleed",
 		"upgrades_to": "MAXLEVEL",
-		"effects": []
+		"effects": ["bleed"]
 	},
 	{
 		"name": "Blizzard",
@@ -107,7 +107,7 @@
 		"cursed": false,
 		"image": "thunder",
 		"upgrades_to": "MAXLEVEL",
-		"effects": []
+		"effects": ["Chain Lightning"]
 	},
 	{
 		"name": "Cyclone",

@@ -30,10 +30,7 @@ class Character:
         self.max_cost = self.cost
         self.level = 1
 
-        # TODO: Long term this won't be necessary. It's because we are missing 2 character sprites
         sprite = self.get_stat_for_character("sprite")
-        if sprite is None or sprite == "None":
-            sprite = "mage"
         self.sprite = "app/assets/images/sprites/" + sprite + ".png"
         self.spritesheet_path = "app/assets/images/sprites/" + sprite + "_spritesheet.png"
 

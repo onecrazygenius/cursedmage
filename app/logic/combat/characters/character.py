@@ -29,6 +29,7 @@ class Character:
         self.cost = self.get_stat_for_character("cost")
         self.max_cost = self.cost
         self.level = 1
+        self.active_effects = []
 
         sprite = self.get_stat_for_character("sprite")
         self.sprite = "app/assets/images/sprites/" + sprite + ".png"
@@ -62,6 +63,10 @@ class Character:
         # For now the only requirement is the player has X or more cursed cards.
         # We may want to add more in the future
         return [card.name for card in self.deck.cards].count("Cursed Card") >= BOSS_CURSED_CARD_REQUIREMENT
+
+    def has_effect(self, effect_name):
+        """Check if an effect with a given name already exists for this character."""
+        return any(effect.name == effect_name for effect in self.active_effects)
 
     # Used to replenish the players health, cost and put all their cards back into the deck
     def replenish(self, health=False):

@@ -3,6 +3,7 @@ from collections import deque
 
 from app.constants import *
 from app.logging_config import logger
+from app.logic.combat.effect import Effect
 from app.logic.combat.enemy_logic import EnemyLogic
 
 
@@ -42,6 +43,9 @@ class BattleManager:
         # Check if the card can be played
         if not self.check_cost(card):
             return False
+
+        self.add_effects(card)
+
         # check if playing heal
         if card.is_heal():
             # check who the card is targeting
@@ -54,10 +58,70 @@ class BattleManager:
         # apply cost to player
         self.apply_cost(card)
 
+        self.apply_effects("on_card_played")
+
         # Discard card from who currently playing
         self.current_turn.deck.discard_card(card)
         return True
-    
+
+    # Applies an effect to the appropriate target
+    def add_effects(self, card):
+        # If the card has no effects don't try to add any
+        if not card.effects:
+            logger.debug(f"Card {card.name} has no effects, therefore no effect was applied")
+            return
+
+        # The target will be none if an enemy is trying to play it. In this case set the target to the player
+        if card.target is None and self.current_turn in self.enemies:
+            logger.debug(f"Card target was none. Presuming it's being played against the player. {self.current_turn.name} played the card.")
+            card.target = self.player
+
+        for effect in card.effects:
+            if effect.target == "target":
+                if not card.target.has_effect(effect.name):
+                    logger.debug(f"Target Effect {effect.name} added to {card.target.name}")
+                    card.target.active_effects.append(Effect(effect.name))
+
+            if effect.target == "multihit":
+                if self.current_turn == self.player:
+                    for enemy in self.enemies:
+                        if not enemy.has_effect(effect.name):
+                            logger.debug(f"Multihit Effect {effect.name} added to enemy team")
+                            enemy.active_effects.append(Effect(effect.name))
+                else:
+                    if not self.player.has_effect(effect.name):
+                        logger.debug(f"Multihit Effect {effect.name} added to players team")
+                        self.player.active_effects.append(Effect(effect.name))
+
+
+            if effect.target == "self":
+                if not self.current_turn.has_effect(effect.name):
+                    logger.debug(f"Self Effect {effect.name} added to {self.current_turn.name}")
+                    self.current_turn.active_effects.append(Effect(effect.name))
+
+    # This will apply all effects which apply to the phase parameter
+    def apply_effects(self, phase):
+        for effect in [e for e in self.player.active_effects if e.phase == phase]:
+            self.apply_effect_to_character(effect, self.player)
+            effect.reduce_counter(self.player)
+            logger.debug(f"Effect {effect.name} happened to the player. It has {effect.turns_remaining} turns remaining")
+
+        # TODO: What about multiple enemies where some are dead
+        for enemy in self.enemies:
+            for effect in [e for e in enemy.active_effects if e.phase == phase]:
+                self.apply_effect_to_character(effect, enemy)
+                effect.reduce_counter(enemy)
+                logger.debug(f"Effect {effect.name} happened to {enemy.name}. It has {effect.turns_remaining} turns remaining")
+
+    def apply_effect_to_character(self, effect, target):
+        if effect.is_heal():
+            if target.cur_health + effect.power < target.max_health:
+                target.cur_health += effect.power
+            else:
+                target.cur_health = target.max_health
+        else:  # It must be a damage effect
+            target.cur_health -= effect.power - target.defense - target.shield
+
     # Handle heal cards
     def apply_heal(self, card):
         # check if the card is targeting the player

@@ -7,6 +7,7 @@ from app.states.game_over import GameOverScreen
 from app.states.settings import SettingsMenu
 from app.states.main_menu import MainMenu
 from app.states.dungeon import Dungeon
+from app.states.tutorial import Tutorial
 import pygame
 
 # Game class definition
@@ -201,7 +202,8 @@ class Game:
             self.settings_menu_open = False
 
     def show_tutorial(self):
-        pass
+        # Show the tutorial by changing to the tutorial state
+        self.change_state(Tutorial(self))
 
     def quit_game(self):
         # Quit the game by setting the 'done' flag

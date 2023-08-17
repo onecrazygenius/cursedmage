@@ -200,6 +200,9 @@ class Game:
             self.states.pop()
             self.settings_menu_open = False
 
+    def show_tutorial(self):
+        pass
+
     def quit_game(self):
         # Quit the game by setting the 'done' flag
         self.done = True

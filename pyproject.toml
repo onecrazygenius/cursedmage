@@ -19,6 +19,7 @@ numpy = "^1.24.3"
 pyinstaller = "^5.12.0"
 matplotlib = "^3.7.2"
 requests = "^2.31.0"
+pyvidplayer2 = "^0.9.7"
 
 [build-system]
 requires = ["poetry-core"]

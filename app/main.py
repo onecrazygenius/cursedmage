@@ -231,8 +231,9 @@ class Game:
             # Draw the current state
             for state in self.states:
                 state.draw(self.surface)
-            # Scale the surface to the screen size and display it
-            pygame.transform.scale(self.surface, (self.config.get_width(), self.config.get_height()), self.screen)
+            # Scale the surface to the screen size and display it if not tutorial
+            if not isinstance(self.states[-1], Tutorial):
+                pygame.transform.scale(self.surface, (self.config.get_width(), self.config.get_height()), self.screen)
             pygame.display.flip()
 
 if __name__ == "__main__":

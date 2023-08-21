@@ -9,8 +9,10 @@ class Room:
         "broken": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/broken.png")),
         "open": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/open.png")),
         "unlocked": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/unlocked.png")),
-        "unlocked_boss": pygame.image.load(
-            relative_resource_path("app/assets/images/backgrounds/doors/unlocked_boss.png"))
+        "unlocked_boss": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/unlocked_boss.png")),
+        "locked_boss": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/locked_boss.png")),
+        "broken_boss": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/broken_boss.png")),
+        "open_boss": pygame.image.load(relative_resource_path("app/assets/images/backgrounds/doors/open_boss.png"))
     }
 
     def __init__(self, game, position, enemies=None, next=False, visited=False, completed=False, is_boss_room=False):
@@ -62,7 +64,7 @@ class Room:
             door_type = "broken"
         # if the room is a boss room
         if self.is_boss_room:
-            door_type = "unlocked_boss"
+            door_type = door_type + "_boss"
 
         # To prevent loading from files every time you draw the room, save the sprite and just check if it's none or changed
         if self.room_sprite is None or Room.DOOR_SPRITES[door_type] is not self.room_sprite:

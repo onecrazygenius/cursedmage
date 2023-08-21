@@ -77,24 +77,26 @@ class Card:
         # Make the text white and bold
         text = font.render(self.name, True, WHITE)
         if self.upgrades_to == "MAXLEVEL":
-            text = font.render(self.name, True, GOLD)
+            text = font.render(self.name, True, UPGRADED_CARD_GREEN)
         # Calculate the scaled position of the text, accounting for the base position and scale factor
-        text_position = (
-        position[0] + 75 * scale - text.get_width() // 2, position[1] + 86 * scale - text.get_height() // 2)
+        text_position = (position[0] + 75 * scale - text.get_width() // 2,
+                         position[1] + 33 * scale - text.get_height() // 2)
         # Blit the text to the screen
         screen.blit(text, text_position)
 
         # Mana cost
         text = font.render(str(self.cost), True, BLUE)
         # Calculate the scaled position of the text, accounting for the base position and scale factor
-        text_position = (position[0] + 28 * scale - text.get_width() // 2, position[1] + 30 * scale - text.get_height() // 2)
+        text_position = (position[0] + 31 * scale - text.get_width() // 2,
+                         position[1] + 63 * scale - text.get_height() // 2)
         # Blit the text to the screen
         screen.blit(text, text_position)
 
         # Power
         text = font.render(str(self.power), True, WHITE)
         # Calculate the scaled position of the text, accounting for the base position and scale factor
-        text_position = (position[0] + 122 * scale - text.get_width() // 2, position[1] + 30 * scale - text.get_height() // 2)
+        text_position = (position[0] + 122 * scale - text.get_width() // 2,
+                         position[1] + 63 * scale - text.get_height() // 2)
         # Blit the text to the screen
         screen.blit(text, text_position)
 

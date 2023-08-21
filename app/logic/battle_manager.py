@@ -55,6 +55,12 @@ class BattleManager:
             # Apply damage to enemy
             self.apply_damage(card)
 
+            # if the turn is the player's, play the card hit sound
+            if self.current_turn == self.player: 
+                pygame.mixer.Sound.play(
+                    card.hit_sound
+                )
+
         # apply cost to player
         self.apply_cost(card)
 

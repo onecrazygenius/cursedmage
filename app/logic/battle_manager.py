@@ -60,10 +60,6 @@ class BattleManager:
         if self.current_turn == self.player:
             card.hit_sound.play()
             card.hit_sound.set_volume(float(self.game.config.get("audio", "sfx_volume")))
-            # pygame.mixer.Sound.play(
-            #     card.hit_sound
-            # )
-            # pygame.mixer.Sound.set_volume(self.game.config.get())
 
         # apply cost to player
         self.apply_cost(card)

@@ -1,8 +1,6 @@
 import configparser
 import os
 
-from app.constants import relative_resource_path
-
 
 # Create a config manager class to handle saving and loading
 class ConfigManager:

@@ -18,7 +18,7 @@ class Combat(State):
     def __init__(self, game, player, enemies):
         super().__init__(game)
         self.game = game
-        self.battle_manager = BattleManager(player, enemies)
+        self.battle_manager = BattleManager(player, enemies, game)
         self.dragging_card = None
         self.dragging_card_offset = (0, 0)
         self.end_turn_button = Button("End Turn", 150, SCREEN_HEIGHT // 2, self.end_turn)

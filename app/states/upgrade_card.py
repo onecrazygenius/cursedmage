@@ -45,10 +45,14 @@ class UpgradeCardScreen(State):
             card_x = 585 + (100 + 100) * i
             card_y = 450
             # Draw the Card. If the card can be upgraded show the upgraded card
-            if i == self.hovered_card and card.upgrades_to != "None":
-                card = Card(card.upgrades_to)
-                card.draw(surface, (card_x, card_y), 1.2)
+            if i == self.hovered_card:
+                if card.cursed:
+                    card.draw(surface, (card_x, card_y), 1.2, opacity=0.6)
+                else:
+                    card = Card(card.upgrades_to)
+                    card.draw(surface, (card_x, card_y), 1.2)
             else:
+                # These are cursed cards
                 card.draw(surface, (card_x, card_y))
 
         # Update the display

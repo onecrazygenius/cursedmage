@@ -7,7 +7,6 @@ from app.states.game_over import GameOverScreen
 from app.states.settings import SettingsMenu
 from app.states.main_menu import MainMenu
 from app.states.dungeon import Dungeon
-from app.states.tutorial import Tutorial
 import pygame
 
 # Game class definition
@@ -201,10 +200,6 @@ class Game:
             self.states.pop()
             self.settings_menu_open = False
 
-    def show_tutorial(self):
-        # Show the tutorial by changing to the tutorial state
-        self.change_state(Tutorial(self))
-
     def quit_game(self):
         # Quit the game by setting the 'done' flag
         self.done = True
@@ -216,9 +211,6 @@ class Game:
             # Process pygame events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    # if tutorial video is playing, stop it
-                    if isinstance(self.states[-1], Tutorial):
-                        self.states[-1].vid.stop()
                     self.quit_game()
                 elif event.type == pygame.VIDEORESIZE:
                     # Update the display surface with the new size
@@ -226,18 +218,16 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         # If ESC is pressed, show/hide settings depending on current state
-                        if not isinstance(self.states[-1], Tutorial):
-                            if isinstance(self.states[-1], SettingsMenu):
-                                self.hide_settings()
-                            else:
-                                self.show_settings()
+                        if isinstance(self.states[-1], SettingsMenu):
+                            self.hide_settings()
+                        else:
+                            self.show_settings()
                 self.states[-1].handle_event(event)
             # Draw the current state
             for state in self.states:
                 state.draw(self.surface)
-            # Scale the surface to the screen size and display it if not tutorial
-            if not isinstance(self.states[-1], Tutorial):
-                pygame.transform.scale(self.surface, (self.config.get_width(), self.config.get_height()), self.screen)
+            # Scale the surface to the screen size and display it
+            pygame.transform.scale(self.surface, (self.config.get_width(), self.config.get_height()), self.screen)
             pygame.display.flip()
 
 if __name__ == "__main__":

@@ -2,7 +2,6 @@ from app.states.components.button import Button
 from app.states.components.slider import Slider
 from app.states.state import State
 from app.constants import *
-from pygame.locals import *
 import pygame
 
 

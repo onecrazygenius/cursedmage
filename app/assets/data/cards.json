@@ -67,7 +67,8 @@
 		"cursed": false,
 		"image": "heal",
 		"upgrades_to": "Restore",
-		"effects": []
+		"effects": [],
+		"hit_sound": "card_heal"
 	},
 	{
 		"name": "Inferno",

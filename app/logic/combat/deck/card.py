@@ -46,8 +46,8 @@ class Card:
     def get_hit_sound(self):
         sound_name = self.get_stat_for_card("hit_sound")
         if sound_name is None or sound_name == "":
-            sound_name = "card_hit.mp3"
-        return pygame.mixer.Sound(relative_resource_path("app/assets/music/sounds/" + sound_name))
+            sound_name = "card_hit"
+        return pygame.mixer.Sound(relative_resource_path("app/assets/music/sounds/" + sound_name + ".mp3"))
 
     def is_cursed(self):
         return self.cursed

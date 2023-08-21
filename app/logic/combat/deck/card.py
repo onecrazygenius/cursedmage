@@ -61,7 +61,7 @@ class Card:
             image_name = "blank"
         return "app/assets/images/cards/" + image_name + ".png"
 
-    def draw(self, screen, position=None, scale=1.0):
+    def draw(self, screen, position=None, scale=1.0, opacity=1.0):
         # Position set to default if not specified
         if position is None:
             position = self.position
@@ -70,7 +70,8 @@ class Card:
         size = (int(150 * scale), int(225 * scale))
 
         # Draw the card on the screen using the image
-        image = pygame.image.load(relative_resource_path(self.image))
+        image = pygame.image.load(relative_resource_path(self.image)).convert()
+        image.set_alpha(int(256 * opacity))
         # Scale the image to fit the card
         image = pygame.transform.scale(image, size)
         # Blit the image to the screen

@@ -31,7 +31,7 @@ class Dungeon(State):
 
         self.active_popup = None
 
-        self.scroll_offset = [0, SCREEN_HEIGHT * 0.9]  # The current scroll offset
+        self.scroll_offset = [0, SCREEN_HEIGHT / 2]  # The current scroll offset
         self.dragging = False  # Whether the mouse is currently dragging
         self.drag_start = [0, 0]  # The position where the last drag started
         self.zoom_level = 1.0
@@ -349,7 +349,7 @@ class Dungeon(State):
         self.game.save_game()
 
         # Scroll the camera up to the next room
-        self.scroll_offset[1] += self.player_room.rect.height + (140 * self.zoom_level)
+        self.scroll_offset[1] += self.player_room.rect.height + (100 * self.zoom_level)
 
     def update_player_score(self):
         logger.debug("Updating the player's score")

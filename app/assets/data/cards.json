@@ -27,7 +27,8 @@
 		"cursed": false,
 		"image": "bleed",
 		"upgrades_to": "Sever",
-		"effects": ["bleed"]
+		"effects": ["bleed"],
+		"hit_sound": "card_slice"
 	},
 	{
 		"name": "Ice",
@@ -67,7 +68,8 @@
 		"cursed": false,
 		"image": "heal",
 		"upgrades_to": "Restore",
-		"effects": []
+		"effects": [],
+		"hit_sound": "card_heal"
 	},
 	{
 		"name": "Inferno",
@@ -87,7 +89,8 @@
 		"cursed": false,
 		"image": "bleed",
 		"upgrades_to": "MAXLEVEL",
-		"effects": ["bleed"]
+		"effects": ["bleed"],
+		"hit_sound": "card_slice"
 	},
 	{
 		"name": "Blizzard",
@@ -127,6 +130,7 @@
 		"cursed": false,
 		"image": "heal",
 		"upgrades_to": "MAXLEVEL",
-		"effects": []
+		"effects": [],
+		"hit_sound": "card_heal"
 	}
 ]

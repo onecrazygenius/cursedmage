@@ -1,5 +1,7 @@
 import pygame
-from pygame.locals import *
+
+from app.logging_config import logger
+
 
 class Slider:
 
@@ -33,9 +35,11 @@ class Slider:
             self.dragging = False
         elif event.type == pygame.MOUSEMOTION and self.dragging:
             relative_x, _ = pygame.mouse.get_rel()
-            self.value = max(0, min(self.max_value, self.value + relative_x))
-            self.handle_x = self.x + (self.value / self.max_value) * self.width
+            self.handle_x += relative_x  # Update the handle's x position
+            self.handle_x = max(self.x, min(self.x + self.width, self.handle_x))  # Ensure handle stays within slider bounds
+            self.value = (self.handle_x - self.x) / self.width * self.max_value  # Update the value based on handle position
             self.callback(self.value)
+            logger.debug("New Volume: " + str(self.value))
 
     def _is_on_handle(self, pos):
         distance = ((pos[0] - self.handle_x) ** 2 + (pos[1] - (self.y + self.slider_height // 2)) ** 2) ** 0.5

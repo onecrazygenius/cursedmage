@@ -2,7 +2,6 @@ from app.states.components.button import Button
 from app.states.components.slider import Slider
 from app.states.state import State
 from app.constants import *
-from pygame.locals import *
 import pygame
 
 
@@ -16,18 +15,18 @@ class SettingsMenu(State):
         current_screen_size = self.game.config.get_width(), self.game.config.get_height()
         text = "Screen Size: {}x{}".format(current_screen_size[0], current_screen_size[1])
         self.buttons = [
-            Button(text, 200, 250, self.change_screen_size),
-            Button("Toggle Fullscreen", 200, 350, self.game.toggle_fullscreen),
-            Button("Return to Main Menu", SCREEN_WIDTH // 2, SCREEN_HEIGHT - 200, self.return_to_main_menu),
+            Button(text, SCREEN_WIDTH // 4, 350, self.change_screen_size, width=300, height=75),
+            Button(" Toggle Fullscreen ", SCREEN_WIDTH // 4, 475, self.game.toggle_fullscreen, width=300, height=75),
+            Button(" Return to Main Menu ", SCREEN_WIDTH // 2, SCREEN_HEIGHT - 200, self.return_to_main_menu, width=400, height=75),
             Button("Exit", SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100, self.exit_game)
         ]
         self.sliders = [
-            Slider(SCREEN_WIDTH // 2 + 100, 250, 200, self.game.get_master_volume(), 100, self.game.change_master_volume),
-            Slider(SCREEN_WIDTH // 2 + 100, 350, 200, self.game.get_sfx_volume(), 100, self.game.change_sfx_volume)
+            Slider((SCREEN_WIDTH // 4) * 3 - 100, 350, 200, self.game.get_master_volume(), 100, self.game.change_master_volume),
+            Slider((SCREEN_WIDTH // 4) * 3 - 100, 475, 200, self.game.get_sfx_volume(), 100, self.game.change_sfx_volume)
         ]
         self.slider_labels = [
-            ("Master Volume", (SCREEN_WIDTH // 2 + 60, 220)),
-            ("SFX Volume", (SCREEN_WIDTH // 2 + 60, 320))
+            ("Music Volume:", ((SCREEN_WIDTH // 4) * 3 - 340, 340)),
+            ("Sfx Volume:", ((SCREEN_WIDTH // 4) * 3 - 340, 465))
         ]
 
     def change_screen_size(self):
@@ -81,8 +80,12 @@ class SettingsMenu(State):
                     button.callback()
 
     def draw(self, surface):
-        surface.fill((0, 0, 0))
-        font = pygame.font.Font(None, 36)
+        background = pygame.image.load(relative_resource_path("app/assets/images/backgrounds/brick.png"))
+        # scale background image to fit screen
+        background = pygame.transform.scale(background, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        surface.blit(background, (0, 0))
+
+        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 64)
         text_surface = font.render("Settings Menu", True, (255, 255, 255))  # White text
         text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 100))
         surface.blit(text_surface, text_rect)
@@ -95,6 +98,6 @@ class SettingsMenu(State):
             slider.draw(surface)
 
     def draw_label(self, surface, text, position):
-        font = pygame.font.Font(None, 24)
+        font = pygame.font.Font(relative_resource_path("app/assets/fonts/pixel_font.ttf"), 36)
         text_surface = font.render(text, True, (255, 255, 255))  # White text
         surface.blit(text_surface, position)

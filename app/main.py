@@ -216,6 +216,9 @@ class Game:
             # Process pygame events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    # if tutorial video is playing, stop it
+                    if isinstance(self.states[-1], Tutorial):
+                        self.states[-1].vid.stop()
                     self.quit_game()
                 elif event.type == pygame.VIDEORESIZE:
                     # Update the display surface with the new size
@@ -223,10 +226,11 @@ class Game:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         # If ESC is pressed, show/hide settings depending on current state
-                        if isinstance(self.states[-1], SettingsMenu):
-                            self.hide_settings()
-                        else:
-                            self.show_settings()
+                        if not isinstance(self.states[-1], Tutorial):
+                            if isinstance(self.states[-1], SettingsMenu):
+                                self.hide_settings()
+                            else:
+                                self.show_settings()
                 self.states[-1].handle_event(event)
             # Draw the current state
             for state in self.states:

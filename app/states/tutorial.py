@@ -27,14 +27,21 @@ class Tutorial(State):
         pygame.display.flip()
 
     def handle_event(self, event):
-        if event.type == pygame.QUIT:
-            self.game.done = True
+        # if spacebar is pressed, toggle play/pause
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            self.vid.toggle_pause()
+        # if escape is pressed, stop the video and return to main menu
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.vid.stop()
+            self.game.show_main_menu()
+        # if video is finished, return to main menu
+        elif event.type == pygame.USEREVENT and event.code == "finished":
+            self.game.show_main_menu()
+        # if video is paused, seek forward/backward
         elif event.type == pygame.KEYDOWN:
             key = pygame.key.name(event.key)
             if key == "r":
                 self.vid.restart()
-            elif key == "p":
-                self.vid.toggle_pause()
             elif key == "right":
                 self.vid.seek(15)
             elif key == "left":

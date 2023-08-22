@@ -14,7 +14,7 @@ function App() {
             image: "welcome.png"
         },
         {
-            title: "Over and Underhaul! 26/07",
+            title: "Overhaul! 26/07",
             content: "Get ready to experience Cursed Mage like never before! Our latest update brings an exciting twist to your gameplay, \
             introducing a complete overhaul of the map system. Say farewell to the old static grids and step into the realm of dynamically \
             generated dungeon maps. Brace yourself for a fresh challenge with every ascent as no two dungeons are alike. Your path will be \

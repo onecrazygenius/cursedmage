@@ -7,6 +7,27 @@ function App() {
 
     const [blogs, setBlogs] = useState([
         {
+            title: "MVP Day! 26/08",
+            content: "It is the 1.0.0a release of the game! We have completed an intensive round of testing and the introduction of \
+            many new features since the last live demo of our game, like animations, bosses and a vast dungeon to explore. We bring to \
+            you the most fun, action packed release yet! Are you Excited? Because we are, checkout the game via the download button above!",
+            image: "welcome.png"
+        },
+        {
+            title: "Over and Underhaul! 26/07",
+            content: "Get ready to experience Cursed Mage like never before! Our latest update brings an exciting twist to your gameplay, \
+            introducing a complete overhaul of the map system. Say farewell to the old static grids and step into the realm of dynamically \
+            generated dungeon maps. Brace yourself for a fresh challenge with every ascent as no two dungeons are alike. Your path will be \
+            concealed, testing your skills and intuition to the fullest. Adapt, strategize, and collect the most powerful artefacts by slaying \
+            bosses, unleashing their full power.",
+            image: "welcome.png"
+        },
+        {
+            title: "Testing! 29/06",
+            content: "Placeholder text",
+            image: "welcome.png"
+        },
+        {
             title: "New Magic! 02/06",
             content: "Introducing the Cursed Mage's revolutionary deck building feature! \
             In this immersive game, each character possesses a distinctive deck, creating endless strategic possibilities. But that's not all - we've recently added an exciting twist. \

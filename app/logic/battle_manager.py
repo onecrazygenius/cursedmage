@@ -60,6 +60,8 @@ class BattleManager:
     def apply_heal(self, card):
         # check if the card is targeting the player
         if card.target == self.player:
+            #if self.player.cur_health == self.player.max_health:
+                #return False
             # apply heal to self.player, can't go over max health
             if self.player.cur_health + card.power < self.player.max_health:
                 self.player.cur_health += card.power

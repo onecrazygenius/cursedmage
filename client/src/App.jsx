@@ -23,8 +23,12 @@ function App() {
             image: "welcome.png"
         },
         {
-            title: "Testing! 29/06",
-            content: "Placeholder text",
+            title: "Big changes! 29/06",
+            content: "Welcome to the new and improved cursed mage! We have added a leaderboard system where you and all \
+            of your friends can compete to get the top score! When you go through the dungeons, defeat the mighty enemies \
+            and come out victorious your score will go up each battle you win, don't think it will be a walk in the park though \
+            the enemies will get stronger and them cursed cards will fill up your inventory so be careful not to fall into the \
+            depths of the dungeon!",
             image: "welcome.png"
         },
         {
@@ -106,7 +110,7 @@ function App() {
         <div className="parallax-wrapper">
             <div className="logo">
                 <img src="images/cursedmage.svg" />
-                <a className="button" href="/dist/CursedMage.exe" target="_blank" download>Play the Demo Now</a>
+                <a className="button" href="/dist/CursedMage.exe" target="_blank" download>Play Now!</a>
             </div>
             <div className="parallax" id="level0"></div>
             <div className="parallax" id="level1"></div>

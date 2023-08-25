@@ -170,6 +170,8 @@ class Game:
     # Scene change functions
 
     def new_game(self):
+        # Make sure the score is 0!
+        self.player_score = 0
         # Start a new game by changing to the character selection state
         self.change_state(CharacterSelection(self))
 
